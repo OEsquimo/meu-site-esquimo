@@ -1,143 +1,46 @@
-const CLEANING_TEXT = `
-Limpeza a partir de R$ 180,00.
-Pode variar conforme a dificuldade
-para retirada do ar-condicionado.
-`;
-
-const MAINTENANCE_TEXT = 
-  "Serviço de manutenção: valor sob avaliação após vistoria.";
-
-const BASIC_INSTALLATION_TEXT = `
-Materiais utilizados:
-- 2 metros de tubulação
-- Cabo PP
-- Esponjoso
-- Fita PVC
-- Suporte
-- Buchas e parafusos
-Valor: R$ 480,80
-`;
-
-const STANDARD_INSTALLATION_TEXT = "Valor da instalação: R$ 780,00.";
-
-const serviceRadios = document.querySelectorAll('input[name="service"]');
-const installTypeRadios = document.querySelectorAll('input[name="installType"]');
-const installOptions = document.getElementById("installOptions");
-const responseArea = document.getElementById("responseArea");
-const errorMsg = document.getElementById("errorMsg");
-const confirmBtn = document.getElementById("confirmBtn");
-
-function resetInstallType() {
-  installTypeRadios.forEach(radio => radio.checked = false);
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  margin: 0;
+  padding: 0;
 }
 
-function hideResponse() {
-  responseArea.classList.add("hidden");
-  responseArea.textContent = "";
+.container {
+  max-width: 500px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-function showResponse(text) {
-  responseArea.textContent = text;
-  responseArea.classList.remove("hidden");
+h1 {
+  color: #004080;
+  font-size: 22px;
+  margin-bottom: 20px;
 }
 
-function hideError() {
-  errorMsg.classList.add("hidden");
-  errorMsg.textContent = "";
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
 }
 
-function showError(msg) {
-  errorMsg.textContent = msg;
-  errorMsg.classList.remove("hidden");
+p {
+  margin-top: 15px;
+  font-weight: bold;
 }
 
-function updateUI() {
-  hideError();
-  hideResponse();
-  confirmBtn.disabled = true;
-
-  const selectedService = [...serviceRadios].find(r => r.checked);
-  if (!selectedService) {
-    installOptions.classList.add("hidden");
-    resetInstallType();
-    return;
-  }
-
-  if (selectedService.value === "instalacao") {
-    installOptions.classList.remove("hidden");
-  } else {
-    installOptions.classList.add("hidden");
-    resetInstallType();
-
-    if (selectedService.value === "limpeza") {
-      showResponse(CLEANING_TEXT);
-      confirmBtn.disabled = false;
-    } else if (selectedService.value === "manutencao") {
-      showResponse(MAINTENANCE_TEXT);
-      confirmBtn.disabled = false;
-    }
-  }
+#responseArea {
+  margin-top: 20px;
+  background: #e6f7ff;
+  padding: 15px;
+  border-left: 4px solid #007acc;
+  border-radius: 5px;
+  display: none;
 }
 
-function checkConfirmEnabled() {
-  const selectedService = [...serviceRadios].find(r => r.checked);
-  if (!selectedService) {
-    confirmBtn.disabled = true;
-    return;
-  }
-
-  if (selectedService.value === "instalacao") {
-    const selectedInstall = [...installTypeRadios].find(r => r.checked);
-    confirmBtn.disabled = !selectedInstall;
-  } else {
-    confirmBtn.disabled = false;
-  }
+.hidden {
+  display: none;
 }
-
-function handleConfirm() {
-  hideError();
-
-  const selectedService = [...serviceRadios].find(r => r.checked);
-  if (!selectedService) {
-    showError("Por favor, escolha um serviço.");
-    return;
-  }
-
-  if (selectedService.value === "instalacao") {
-    const selectedInstall = [...installTypeRadios].find(r => r.checked);
-    if (!selectedInstall) {
-      showError("Por favor, escolha o tipo de instalação.");
-      return;
-    }
-
-    if (selectedInstall.value === "básico") {
-      showResponse(BASIC_INSTALLATION_TEXT);
-    } else if (selectedInstall.value === "padrao") {
-      showResponse(STANDARD_INSTALLATION_TEXT);
-    } else {
-      hideResponse();
-    }
-  } else if (selectedService.value === "limpeza") {
-    showResponse(CLEANING_TEXT);
-  } else if (selectedService.value === "manutencao") {
-    showResponse(MAINTENANCE_TEXT);
-  }
-}
-
-// Eventos
-serviceRadios.forEach(radio => {
-  radio.addEventListener("change", () => {
-    updateUI();
-    checkConfirmEnabled();
-  });
-});
-
-installTypeRadios.forEach(radio => {
-  radio.addEventListener("change", checkConfirmEnabled);
-});
-
-confirmBtn.addEventListener("click", handleConfirm);
-
-// Inicializa a UI
-updateUI();
-checkConfirmEnabled();
