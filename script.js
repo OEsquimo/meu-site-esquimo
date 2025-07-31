@@ -12,7 +12,9 @@ function handleServiceChange() {
     installOptions.classList.add("hidden");
 
     if (service === "limpeza") {
-      responseArea.innerHTML = "Serviço de limpeza: a partir de R$ 250,00.";
+      responseArea.innerHTML =  "Limpeza a partir de R$ 180,00.\n" +
+"Pode variar conforme a dificuldade\n" +
+"para retirada do ar-condicionado." ;
       responseArea.style.display = "block";
     } else if (service === "manutencao") {
       responseArea.innerHTML = "Serviço de manutenção: valor sob avaliação após vistoria.";
