@@ -26,7 +26,13 @@ function handleInstallType() {
   const responseArea = document.getElementById("responseArea");
 
   if (type === "generica") {
-    responseArea.innerHTML = "Valor da instalação: \n2 metros tubulação \n Esponjoso \n R$ 480,00.";
+    responseArea.innerHTML = "Valor da instalação:\n" +
+"2 metros de tubulação.\n" +
+"Cabo PP.\n" +
+"Esponjoso.\n" +
+"Fita PVC.\n" +
+"Suporte.\n" +
+"Buchas e parafusos.";
     responseArea.style.display = "block";
   } else if (type === "padrao") {
     responseArea.innerHTML = "Valor da instalação: R$ 780,00.";
