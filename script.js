@@ -28,15 +28,18 @@ function handleInstallType() {
   const responseArea = document.getElementById("responseArea");
 
   if (type === "Básico") {
-    responseArea.innerHTML = 
-"Materiais utilizados:\n" +
-"2 metros de tubulação.\n" +
-"Cabo PP.\n" +
-"Esponjoso.\n" +
-"Fita PVC.\n" +
-"Suporte.\n" +
-"Buchas e parafusos.\n" +
-"Valor: 480,80";
+    responseArea.innerHTML = `
+<pre>
+Materiais utilizados:
+2 metros de tubulação
+Cabo PP
+Esponjoso
+Fita PVC
+Suporte
+Buchas e parafusos
+Valor: 480,80
+</pre>`;
+
     responseArea.style.display = "block";
   } else if (type === "padrao") {
     responseArea.innerHTML = "Valor da instalação: R$ 780,00.";
