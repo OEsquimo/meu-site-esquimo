@@ -2,32 +2,34 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Serviços de Ar-Condicionado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente Virtual - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Escolha o serviço desejado</h1>
+  <div class="container">
+    <h1>Assistente Virtual - O Esquimó</h1>
+    <div id="chat">
+      <p>Escolha o serviço desejado:</p>
+      <select id="service" onchange="handleServiceChange()">
+        <option value="">-- Selecione --</option>
+        <option value="instalacao">Instalação</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="manutencao">Manutenção</option>
+      </select>
 
-  <label for="service">Serviço:</label>
-  <select id="service" onchange="handleServiceChange()">
-    <option value="">-- Selecione --</option>
-    <option value="instalacao">Instalação</option>
-    <option value="limpeza">Limpeza</option>
-    <option value="manutencao">Manutenção</option>
-  </select>
+      <div id="installOptions" class="hidden">
+        <p>Tipo de instalação:</p>
+        <select id="installType" onchange="handleInstallType()">
+          <option value="">-- Selecione --</option>
+          <option value="generica">Genérica</option>
+          <option value="padrao">Seguindo o padrão</option>
+        </select>
+      </div>
 
-  <div id="installOptions" class="hidden">
-    <label for="installType">Tipo de instalação:</label>
-    <select id="installType" onchange="handleInstallType()">
-      <option value="">-- Selecione --</option>
-      <option value="básico">Básico</option>
-      <option value="padrao">Padrão</option>
-    </select>
+      <div id="responseArea"></div>
+    </div>
   </div>
-
-  <div id="responseArea" class="response hidden"></div>
-
   <script src="script.js"></script>
 </body>
 </html>
