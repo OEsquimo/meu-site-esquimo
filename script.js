@@ -32,8 +32,8 @@ function handleInstallType() {
 "Esponjoso.\n" +
 "Fita PVC.\n" +
 "Suporte.\n" +
-"Buchas e parafusos. +
-"valor:480,80";
+"Buchas e parafusos.\n" +
+"Valor: 480,80";
     responseArea.style.display = "block";
   } else if (type === "padrao") {
     responseArea.innerHTML = "Valor da instalação: R$ 780,00.";
