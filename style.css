@@ -5,120 +5,17 @@ body {
   padding: 0 1rem;
   background-color: #f9f9f9;
   color: #333;
-  line-height: 1.5;
 }
 
-.option-group {
-  margin-bottom: 1.5rem;
-}
-
-.option-group p {
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-}
-
-label {
-  display: inline-block;
-  margin-right: 1rem;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem 1.2rem;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  cursor: pointer;
-  user-select: none;
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-  font-size: 1rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-
-input[type="radio"] {
+.hidden {
   display: none;
 }
 
-input[type="radio"]:checked + label,
-label:hover {
-  background-color: #00acc1;
-  color: white;
-  border-color: #00838f;
-  box-shadow: 0 4px 10px rgba(0,172,193,0.5);
-}
-
-button {
-  padding: 0.8rem 1.8rem;
-  background-color: #00838f;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  font-weight: bold;
-  transition: background-color 0.3s, box-shadow 0.3s;
-  box-shadow: 0 2px 8px rgba(0,131,143,0.6);
-}
-
-button:hover:not(:disabled) {
-  background-color: #006f75;
-  box-shadow: 0 4px 12px rgba(0,111,117,0.8);
-}
-
-button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-}
-
-.response,
-.error {
-  margin-top: 1rem;
-  padding: 1rem 1.2rem;
-  border-radius: 8px;
-  white-space: pre-wrap;
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.5s ease, max-height 0.5s ease;
-}
-
-.response.show,
-.error.show {
-  opacity: 1;
-  max-height: 500px; /* suficiente para o conteúdo */
-}
-
 .response {
+  margin-top: 1rem;
+  padding: 1rem;
   background-color: #e0f7fa;
   border: 1px solid #00acc1;
-  color: #006064;
-  box-shadow: 0 3px 8px rgba(0,172,193,0.3);
-}
-
-.error {
-  background-color: #ffcccc;
-  border: 1px solid #ff4d4d;
-  color: #b20000;
-  box-shadow: 0 3px 8px rgba(255,77,77,0.3);
-}
-
-/* Responsividade */
-
-@media (max-width: 480px) {
-  body {
-    padding: 0 1rem;
-    margin: 1rem auto;
-  }
-
-  label {
-    display: block;
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 0.8rem;
-    text-align: center;
-    font-size: 1.2rem;
-  }
-
-  button {
-    width: 100%;
-    font-size: 1.2rem;
-  }
+  border-radius: 5px;
+  white-space: pre-wrap; /* para respeitar quebras de linha */
 }
