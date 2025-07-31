@@ -1,81 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Busca Musical - O Esquimó</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
-      background-color: #f1f1f1;
-    }
-    input, button {
-      padding: 8px;
-      margin: 5px;
-      font-size: 16px;
-    }
-    #resultados {
-      margin-top: 20px;
-    }
-    .resultado-item {
-      background: #fff;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-left: 4px solid #007BFF;
-    }
-    .botoes {
-      margin-top: 10px;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente Virtual - O Esquimó</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body onload="document.getElementById('cantor').focus()">
+<body>
+  <div class="container">
+    <h1>Assistente Virtual - O Esquimó</h1>
+    <div id="chat">
+      <p>Escolha o serviço desejado:</p>
+      <select id="service" onchange="handleServiceChange()">
+        <option value="">-- Selecione --</option>
+        <option value="instalacao">Instalação</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="manutencao">Manutenção</option>
+      </select>
 
-  <h2>Buscar Música no YouTube 🎶</h2>
-  
-  <input type="text" id="cantor" placeholder="Nome do cantor">
-  <input type="text" id="musica" placeholder="Nome ou trecho da música">
-  <div class="botoes">
-    <button onclick="buscarYoutube()">Buscar</button>
-    <button onclick="limparResultados()">Limpar Tudo</button>
+      <div id="installOptions" class="hidden">
+        <p>Tipo de instalação:</p>
+        <select id="installType" onchange="handleInstallType()">
+          <option value="">-- Selecione --</option>
+          <option value="generica">Genérica</option>
+          <option value="padrao">Seguindo o padrão</option>
+        </select>
+      </div>
+
+      <div id="responseArea"></div>
+    </div>
   </div>
-
-  <div id="resultados"></div>
-
-  <script>
-    function buscarYoutube() {
-      const cantorInput = document.getElementById('cantor');
-      const musicaInput = document.getElementById('musica');
-
-      const cantor = cantorInput.value.trim();
-      const musica = musicaInput.value.trim();
-      
-      if (cantor === "" && musica === "") return;
-
-      const termoBusca = encodeURIComponent(`${cantor} ${musica}`);
-      const link = `https://www.youtube.com/results?search_query=${termoBusca}`;
-
-      const resultadosDiv = document.getElementById('resultados');
-
-      const item = document.createElement('div');
-      item.className = 'resultado-item';
-      item.innerHTML = `
-        <strong>${cantor} - ${musica}</strong><br>
-        <a href="${link}" target="_blank">▶️ Assistir no YouTube</a>
-      `;
-
-      resultadosDiv.appendChild(item);
-
-      // Limpa os campos e foca no primeiro
-      cantorInput.value = "";
-      musicaInput.value = "";
-      cantorInput.focus();
-    }
-
-    function limparResultados() {
-      document.getElementById('resultados').innerHTML = "";
-      document.getElementById('cantor').focus();
-    }
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
