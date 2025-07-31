@@ -9,38 +9,24 @@
 <body>
   <h1>Escolha o serviço desejado</h1>
 
-  <div class="option-group">
-    <p>Serviço:</p>
-    <label>
-      <input type="radio" name="service" value="instalacao" />
-      Instalação
-    </label>
-    <label>
-      <input type="radio" name="service" value="limpeza" />
-      Limpeza
-    </label>
-    <label>
-      <input type="radio" name="service" value="manutencao" />
-      Manutenção
-    </label>
-  </div>
+  <label for="service">Serviço:</label>
+  <select id="service" onchange="handleServiceChange()">
+    <option value="">-- Selecione --</option>
+    <option value="instalacao">Instalação</option>
+    <option value="limpeza">Limpeza</option>
+    <option value="manutencao">Manutenção</option>
+  </select>
 
-  <div id="installOptions" class="hidden option-group">
-    <p>Tipo de instalação:</p>
-    <label>
-      <input type="radio" name="installType" value="básico" />
-      Básico
-    </label>
-    <label>
-      <input type="radio" name="installType" value="padrao" />
-      Padrão
-    </label>
+  <div id="installOptions" class="hidden">
+    <label for="installType">Tipo de instalação:</label>
+    <select id="installType" onchange="handleInstallType()">
+      <option value="">-- Selecione --</option>
+      <option value="básico">Básico</option>
+      <option value="padrao">Padrão</option>
+    </select>
   </div>
-
-  <button id="confirmBtn" disabled>Confirmar</button>
 
   <div id="responseArea" class="response hidden"></div>
-  <div id="errorMsg" class="error hidden"></div>
 
   <script src="script.js"></script>
 </body>
