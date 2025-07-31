@@ -25,7 +25,7 @@ function handleInstallType() {
   const type = document.getElementById("installType").value;
   const responseArea = document.getElementById("responseArea");
 
-  if (type === "Básica") {
+  if (type === "Básico") {
     responseArea.innerHTML = "Valor da instalação:\n" +
 "2 metros de tubulação.\n" +
 "Cabo PP.\n" +
