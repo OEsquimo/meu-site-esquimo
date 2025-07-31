@@ -28,7 +28,8 @@ function handleInstallType() {
   const responseArea = document.getElementById("responseArea");
 
   if (type === "Básico") {
-    responseArea.innerHTML = "Valor da instalação:\n" +
+    responseArea.innerHTML = 
+"Materiais utilizados:\n" +
 "2 metros de tubulação.\n" +
 "Cabo PP.\n" +
 "Esponjoso.\n" +
