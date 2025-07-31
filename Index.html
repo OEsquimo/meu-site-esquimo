@@ -23,22 +23,31 @@
       margin-bottom: 10px;
       border-left: 4px solid #007BFF;
     }
+    .botoes {
+      margin-top: 10px;
+    }
   </style>
 </head>
-<body>
+<body onload="document.getElementById('cantor').focus()">
 
   <h2>Buscar Música no YouTube 🎶</h2>
   
   <input type="text" id="cantor" placeholder="Nome do cantor">
   <input type="text" id="musica" placeholder="Nome ou trecho da música">
-  <button onclick="buscarYoutube()">Buscar</button>
+  <div class="botoes">
+    <button onclick="buscarYoutube()">Buscar</button>
+    <button onclick="limparResultados()">Limpar Tudo</button>
+  </div>
 
   <div id="resultados"></div>
 
   <script>
     function buscarYoutube() {
-      const cantor = document.getElementById('cantor').value.trim();
-      const musica = document.getElementById('musica').value.trim();
+      const cantorInput = document.getElementById('cantor');
+      const musicaInput = document.getElementById('musica');
+
+      const cantor = cantorInput.value.trim();
+      const musica = musicaInput.value.trim();
       
       if (cantor === "" && musica === "") return;
 
@@ -55,6 +64,16 @@
       `;
 
       resultadosDiv.appendChild(item);
+
+      // Limpa os campos e foca no primeiro
+      cantorInput.value = "";
+      musicaInput.value = "";
+      cantorInput.focus();
+    }
+
+    function limparResultados() {
+      document.getElementById('resultados').innerHTML = "";
+      document.getElementById('cantor').focus();
     }
   </script>
 
