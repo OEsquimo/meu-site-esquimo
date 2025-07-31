@@ -1,41 +1,106 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>O Esquimó - Ar-condicionado</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>O Esquimó - Climatização</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f8ff;
+      color: #333;
+    }
+
+    header {
+      background-color: #0077b6;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 30px 20px;
+    }
+
+    .hero img {
+      width: 100%;
+      max-width: 600px;
+      border-radius: 12px;
+    }
+
+    .hero h2 {
+      margin-top: 20px;
+      font-size: 1.6rem;
+    }
+
+    .description {
+      max-width: 800px;
+      margin: 30px auto;
+      text-align: center;
+      font-size: 1.2rem;
+      padding: 0 20px;
+    }
+
+    .whatsapp-button {
+      display: block;
+      width: max-content;
+      margin: 30px auto;
+      padding: 12px 24px;
+      background-color: #25d366;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1rem;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+
+    .whatsapp-button:hover {
+      background-color: #1ebe5d;
+    }
+
+    footer {
+      background-color: #0077b6;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      position: relative;
+      bottom: 0;
+      width: 100%;
+      margin-top: 50px;
+    }
+  </style>
 </head>
 <body>
+
   <header>
     <h1>O Esquimó</h1>
-    <p>Especialistas em instalação, limpeza e manutenção de ar-condicionado</p>
+    <p>Climatização e Refrigeração em São Lourenço da Mata - PE</p>
   </header>
 
-  <main>
-    <section>
-      <h2>Serviços</h2>
-      <ul>
-        <li>Instalação residencial e comercial</li>
-        <li>Limpeza profunda</li>
-        <li>Recarga de gás</li>
-        <li>Manutenção preventiva e corretiva</li>
-      </ul>
-    </section>
+  <section class="hero">
+    <img src="https://i.imgur.com/DbNAbO9.jpg" alt="Técnico em climatização trabalhando" />
+    <h2>Instalação, Manutenção e Higienização de Ar-condicionado</h2>
+  </section>
 
-    <section>
-      <h2>Fale conosco</h2>
-      <p>📞 <a href="https://wa.me/5583983259341" target="_blank">(83) 98325-9341</a></p>
-      <p>📍 São Lourenço da Mata - PE</p>
-    </section>
+  <section class="description">
+    <p>Atendimento com qualidade e confiança! Serviços técnicos de climatização com garantia e compromisso. Ligue ou mande mensagem pelo WhatsApp e tenha seu ar-condicionado funcionando perfeitamente.</p>
+  </section>
 
-    <button onclick="mostrarMensagem()">Clique para saber mais</button>
-  </main>
+  <a class="whatsapp-button" href="https://wa.me/5583983259341" target="_blank">
+    Fale Conosco no WhatsApp
+  </a>
 
   <footer>
-    <p>&copy; 2025 O Esquimó. Todos os direitos .</p>
+    <p>© 2025 O Esquimó. Todos os direitos reservados.</p>
   </footer>
 
-  <script src="script.js"></script>
 </body>
 </html>
