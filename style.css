@@ -1,21 +1,69 @@
+/* Reset básico */
+body, h1, label, select {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  background-color: #f9f9f9;
+  background-color: #f2f2f2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 28px;
+  margin-bottom: 30px;
   color: #333;
+}
+
+label {
+  font-size: 20px;
+  margin-top: 20px;
+  display: block;
+  color: #444;
+}
+
+select {
+  font-size: 18px;
+  padding: 12px 18px;
+  width: 300px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+#responseArea {
+  margin-top: 30px;
+  font-size: 18px;
+  color: #222;
+  background-color: #e8f0fe;
+  border-left: 5px solid #4285f4;
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  border-radius: 8px;
+  white-space: pre-line;
 }
 
 .hidden {
   display: none;
 }
 
-.response {
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #e0f7fa;
-  border: 1px solid #00acc1;
-  border-radius: 5px;
-  white-space: pre-wrap; /* para respeitar quebras de linha */
+@media (max-width: 600px) {
+  select {
+    width: 90%;
+  }
+
+  #responseArea {
+    width: 90%;
+  }
 }
