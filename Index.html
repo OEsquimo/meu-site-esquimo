@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Busca Musical</title>
-    <script>
-        function buscarYoutube() {
-            const cantor = document.getElementById("cantor").value;
-            const musica = document.getElementById("musica").value;
-            const busca = encodeURIComponent(cantor + " " + musica + " site:youtube.com");
-            window.open("https://www.google.com/search?q=" + busca, "_blank");
-        }
-    </script>
+  <meta charset="UTF-8">
+  <title>Busca Musical - O Esquimó</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f1f1f1;
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+      font-size: 16px;
+    }
+    #resultados {
+      margin-top: 20px;
+    }
+    .resultado-item {
+      background: #fff;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-left: 4px solid #007BFF;
+    }
+  </style>
 </head>
 <body>
-    <h1>Buscar Música no YouTube</h1>
-    <input type="text" id="cantor" placeholder="Nome do cantor">
-    <input type="text" id="musica" placeholder="Nome ou trecho da música">
-    <button onclick="buscarYoutube()">Buscar</button>
+
+  <h2>Buscar Música no YouTube 🎶</h2>
+  
+  <input type="text" id="cantor" placeholder="Nome do cantor">
+  <input type="text" id="musica" placeholder="Nome ou trecho da música">
+  <button onclick="buscarYoutube()">Buscar</button>
+
+  <div id="resultados"></div>
+
+  <script>
+    function buscarYoutube() {
+      const cantor = document.getElementById('cantor').value.trim();
+      const musica = document.getElementById('musica').value.trim();
+      
+      if (cantor === "" && musica === "") return;
+
+      const termoBusca = encodeURIComponent(`${cantor} ${musica}`);
+      const link = `https://www.youtube.com/results?search_query=${termoBusca}`;
+
+      const resultadosDiv = document.getElementById('resultados');
+
+      const item = document.createElement('div');
+      item.className = 'resultado-item';
+      item.innerHTML = `
+        <strong>${cantor} - ${musica}</strong><br>
+        <a href="${link}" target="_blank">▶️ Assistir no YouTube</a>
+      `;
+
+      resultadosDiv.appendChild(item);
+    }
+  </script>
+
 </body>
 </html>
