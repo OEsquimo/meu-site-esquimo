@@ -1,42 +1,10 @@
-const CLEANING_TEXT = `
-Limpeza a partir de R$ 180,00.
-Pode variar conforme a dificuldade
-para retirada do ar-condicionado.
-`;
-
-const MAINTENANCE_TEXT = 
-  "Serviço de manutenção: valor sob avaliação após vistoria.";
-
-const BASIC_INSTALLATION_TEXT = `
-Materiais utilizados:
-- 2 metros de tubulação
-- Cabo PP
-- Esponjoso
-- Fita PVC
-- Suporte
-- Buchas e parafusos
-Valor: R$ 480,80
-`;
-
-const STANDARD_INSTALLATION_TEXT = "Valor da instalação: R$ 780,00.";
-
-function showResponse(text) {
-  const responseArea = document.getElementById("responseArea");
-  responseArea.textContent = text;
-  responseArea.classList.remove("hidden");
-}
-
-function hideResponse() {
-  const responseArea = document.getElementById("responseArea");
-  responseArea.classList.add("hidden");
-  responseArea.textContent = "";
-}
-
 function handleServiceChange() {
-  const service = document.getElementById("service").value.toLowerCase();
+  const service = document.getElementById("service").value;
   const installOptions = document.getElementById("installOptions");
+  const responseArea = document.getElementById("responseArea");
 
-  hideResponse();
+  responseArea.style.display = "none";
+  responseArea.innerHTML = "";
 
   if (service === "instalacao") {
     installOptions.classList.remove("hidden");
@@ -44,21 +12,26 @@ function handleServiceChange() {
     installOptions.classList.add("hidden");
 
     if (service === "limpeza") {
-      showResponse(CLEANING_TEXT);
+      responseArea.innerHTML = "Serviço de limpeza: a partir de R$ 250,00.";
+      responseArea.style.display = "block";
     } else if (service === "manutencao") {
-      showResponse(MAINTENANCE_TEXT);
+      responseArea.innerHTML = "Serviço de manutenção: valor sob avaliação após vistoria.";
+      responseArea.style.display = "block";
     }
   }
 }
 
 function handleInstallType() {
-  const type = document.getElementById("installType").value.toLowerCase();
+  const type = document.getElementById("installType").value;
+  const responseArea = document.getElementById("responseArea");
 
-  if (type === "básico") {
-    showResponse(BASIC_INSTALLATION_TEXT);
+  if (type === "generica") {
+    responseArea.innerHTML = "Valor da instalação: R$ 480,00.";
+    responseArea.style.display = "block";
   } else if (type === "padrao") {
-    showResponse(STANDARD_INSTALLATION_TEXT);
+    responseArea.innerHTML = "Valor da instalação: R$ 780,00.";
+    responseArea.style.display = "block";
   } else {
-    hideResponse();
+    responseArea.style.display = "none";
   }
 }
