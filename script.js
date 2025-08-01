@@ -8,6 +8,7 @@ const MAINTENANCE_TEXT =
   "Serviço de manutenção: valor sob avaliação após vistoria.";
 
 const BASIC_INSTALLATION_TEXT = `
+<pre>
 Materiais utilizados:
 - 2 metros de tubulação
 - Cabo PP
@@ -16,6 +17,7 @@ Materiais utilizados:
 - Suporte
 - Buchas e parafusos
 Valor: R$ 480,80
+</pre>
 `;
 
 const STANDARD_INSTALLATION_TEXT = "Valor da instalação: R$ 780,00.";
