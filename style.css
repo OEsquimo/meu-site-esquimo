@@ -42,8 +42,24 @@ select {
   width: 90%;
   max-width: 500px;
   text-align: center;
+  white-space: pre-line;
 }
 
 .hidden {
   display: none;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #25D366;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #1ebe5c;
 }
