@@ -1,78 +1,48 @@
-const CLEANING_TEXT = `
-Limpeza a partir de R$ 180,00.
-Pode variar conforme a dificuldade
-para retirada do ar-condicionado.
-`;
-
-const MAINTENANCE_TEXT = 
-  "Serviço de manutenção: valor sob avaliação após vistoria.";
-
-const BASIC_INSTALLATION_TEXT = `
-Materiais utilizados:
-- 2 metros de tubulação
-- Cabo PP
-- Esponjoso
-- Fita PVC
-- Suporte
-- Buchas e parafusos
-Valor: R$ 480,80
-`;
-
-const STANDARD_INSTALLATION_TEXT = "Valor da instalação: R$ 780,00.";
-
-function showResponse(text) {
+function gerarOrcamento() {
+  const servico = document.getElementById("servico").value;
+  const descricao = document.getElementById("descricao").value.trim();
   const responseArea = document.getElementById("responseArea");
-  responseArea.textContent = text;
+  const btnEnviar = document.getElementById("btnEnviar");
+
+  if (!servico) {
+    alert("Por favor, selecione um serviço.");
+    return;
+  }
+
+  let texto = `Orçamento solicitado:\nServiço: ${servico}`;
+
+  if (descricao) {
+    texto += `\nDescrição: ${descricao}`;
+  }
+
+  // Preços baseados no serviço
+  switch(servico.toLowerCase()) {
+    case "instalação":
+      texto += "\n\nValor estimado:\n- Instalação básica a partir de R$ 480,00";
+      break;
+    case "limpeza":
+      texto += "\n\nValor estimado:\n- Limpeza a partir de R$ 180,00, dependendo da dificuldade.";
+      break;
+    case "manutenção":
+      texto += "\n\nValor estimado:\n- Manutenção sob avaliação após vistoria.";
+      break;
+  }
+
+  responseArea.textContent = texto;
   responseArea.classList.remove("hidden");
-
-  const whatsappButton = document.getElementById("whatsappButton");
-  whatsappButton.classList.remove("hidden");
+  btnEnviar.classList.remove("hidden");
 }
 
-function hideResponse() {
-  const responseArea = document.getElementById("responseArea");
-  responseArea.classList.add("hidden");
-  responseArea.textContent = "";
+function enviarParaWhatsApp() {
+  const telefoneInput = document.getElementById("whatsapp").value;
+  const telefone = telefoneInput.replace(/\D/g, ""); // Remove qualquer caractere que não seja número
 
-  const whatsappButton = document.getElementById("whatsappButton");
-  whatsappButton.classList.add("hidden");
-}
-
-function handleServiceChange() {
-  const service = document.getElementById("service").value.toLowerCase();
-  const installOptions = document.getElementById("installOptions");
-
-  hideResponse();
-
-  if (service === "instalacao") {
-    installOptions.classList.remove("hidden");
-  } else {
-    installOptions.classList.add("hidden");
-
-    if (service === "limpeza") {
-      showResponse(CLEANING_TEXT);
-    } else if (service === "manutencao") {
-      showResponse(MAINTENANCE_TEXT);
-    }
+  if (telefone.length < 10) {
+    alert("Por favor, insira um número de WhatsApp válido com DDD.");
+    return;
   }
-}
 
-function handleInstallType() {
-  const type = document.getElementById("installType").value.toLowerCase();
-
-  if (type === "básico") {
-    showResponse(BASIC_INSTALLATION_TEXT);
-  } else if (type === "padrao") {
-    showResponse(STANDARD_INSTALLATION_TEXT);
-  } else {
-    hideResponse();
-  }
-}
-
-function sendToWhatsApp() {
   const responseText = document.getElementById("responseArea").textContent;
-  const phone = "5581983259341"; // Número do O Esquimó com DDI + DDD
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(responseText)}`;
-
-  window.open(url, '_blank');
+  const url = `https://wa.me/55${telefone}?text=${encodeURIComponent(responseText)}`;
+  window.open(url, "_blank");
 }
