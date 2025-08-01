@@ -3,12 +3,12 @@ document.getElementById("tipo").addEventListener("change", function() {
   document.getElementById("btusDiv").classList.add("hidden");
   document.getElementById("manutencaoDiv").classList.add("hidden");
   document.getElementById("valor").textContent = "";
+  // Reseta a seleção de BTUs ao trocar o serviço
+  document.getElementById("btus").value = ""; 
 
-  if (tipo === "instalacao") {
+  if (tipo === "instalacao" || tipo === "limpeza") {
     document.getElementById("btusDiv").classList.remove("hidden");
-    atualizarValor();
-  } else if (tipo === "limpeza") {
-    document.getElementById("valor").textContent = "Valor base: R$180,00\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)";
+    // O valor só aparecerá quando o cliente selecionar os BTUs
   } else if (tipo === "manutencao") {
     document.getElementById("manutencaoDiv").classList.remove("hidden");
     document.getElementById("valor").textContent = "O valor depende do tipo de defeito informado.";
@@ -18,17 +18,33 @@ document.getElementById("tipo").addEventListener("change", function() {
 document.getElementById("btus").addEventListener("change", atualizarValor);
 
 function atualizarValor() {
+  const tipo = document.getElementById("tipo").value;
   const btus = parseInt(document.getElementById("btus").value);
-  const valorBase = calcularValorInstalacao(btus);
-  const texto = 
-    `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
-    `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
-    `Obs: O valor pode variar conforme a infraestrutura do local.`;
+  let texto = "";
+
+  // Só atualiza se um BTU válido for selecionado
+  if (!btus) {
+    document.getElementById("valor").textContent = "";
+    return;
+  }
+
+  if (tipo === "instalacao") {
+    const valorBase = calcularValorInstalacao(btus);
+    texto = 
+      `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
+      `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
+      `Obs: O valor pode variar conforme a infraestrutura do local.`;
+  } else if (tipo === "limpeza") {
+    const valorBase = calcularValorLimpeza(btus);
+    texto = 
+      `Limpeza de ar-condicionado:\nValor base: R$${valorBase.toFixed(2)}\n` +
+      `(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
+  }
+  
   document.getElementById("valor").textContent = texto;
 }
 
 function calcularValorInstalacao(btus) {
-  // Valores fixos
   const tabela = {
     9000: 480,
     12000: 550,
@@ -36,13 +52,24 @@ function calcularValorInstalacao(btus) {
     24000: 750,
     30000: 850,
   };
-  // Se BTUs maior que 30000, incrementa R$100 para cada 6000 BTUs a mais
   if (tabela[btus]) return tabela[btus];
   if (btus > 30000) {
     let extra = Math.floor((btus - 30000) / 6000);
     return 850 + extra * 100;
   }
-  return 0; // se não estiver na tabela
+  return 0;
+}
+
+// Nova função para calcular o valor da limpeza
+function calcularValorLimpeza(btus) {
+  const tabela = {
+    9000: 180,
+    12000: 230, // 180 + 50
+    18000: 280, // 230 + 50
+    24000: 330, // 280 + 50
+    30000: 380, // 330 + 50
+  };
+  return tabela[btus] || 180; // Retorna 180 se não encontrar
 }
 
 document.getElementById("orcamentoForm").addEventListener("submit", function(e) {
@@ -59,6 +86,12 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
     alert("Por favor, preencha todos os campos obrigatórios.");
     return;
   }
+  
+  // Validação específica para BTUs
+  if ((tipo === "instalacao" || tipo === "limpeza") && !btus) {
+    alert("Por favor, selecione a capacidade em BTUs.");
+    return;
+  }
 
   let mensagem = `ORÇAMENTO\n\nCliente: ${nome}\nEndereço: ${endereco}\nWhatsApp: ${telefone}\n\nServiço: `;
 
@@ -66,7 +99,8 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
     const valorInst = calcularValorInstalacao(parseInt(btus));
     mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
-    mensagem += "Limpeza de ar-condicionado\nValor base: R$180,00\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)";
+    const valorLimpeza = calcularValorLimpeza(parseInt(btus));
+    mensagem += `Limpeza de ar-condicionado de ${btus} BTUs\nValor base: R$${valorLimpeza.toFixed(2)}\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
   } else if (tipo === "manutencao") {
     mensagem += `Manutenção\nDescrição do defeito: ${defeito || "Não informado"}\nValor depende do tipo de defeito.`;
   }
