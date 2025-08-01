@@ -71,7 +71,7 @@ function handleInstallType() {
 
 function sendToWhatsApp() {
   const responseText = document.getElementById("responseArea").textContent;
-  const phone = "5583983259341"; // Número do O Esquimó com DDI + DDD
+  const phone = "5581983259341"; // Número do O Esquimó com DDI + DDD
   const url = `https://wa.me/${phone}?text=${encodeURIComponent(responseText)}`;
 
   window.open(url, '_blank');
