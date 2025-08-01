@@ -1,55 +1,49 @@
-document.getElementById('tipo').addEventListener('change', function () {
-  const tipo = this.value;
-  const detalhes = document.getElementById('detalhesServico');
-  const instalacao = document.getElementById('instalacao-opcoes');
-  const limpeza = document.getElementById('limpeza-opcoes');
-  const manutencao = document.getElementById('manutencao-opcoes');
-  const resumo = document.getElementById('resumo');
-  const textoResumo = document.getElementById('textoResumo');
+document.getElementById("servico").addEventListener("change", function () {
+  const servicoSelecionado = this.value;
+  const container = document.getElementById("opcoes-servico");
 
-  detalhes.classList.remove('hidden');
-  instalacao.classList.add('hidden');
-  limpeza.classList.add('hidden');
-  manutencao.classList.add('hidden');
-  resumo.classList.add('hidden');
-  textoResumo.textContent = '';
+  container.innerHTML = ""; // Limpa antes
 
-  if (tipo === 'instalacao') {
-    instalacao.classList.remove('hidden');
-  } else if (tipo === 'limpeza') {
-    limpeza.classList.remove('hidden');
-    textoResumo.textContent = "Serviço de limpeza a partir de R$ 180,00 (dependendo do grau de dificuldade para retirada do ar-condicionado).";
-    resumo.classList.remove('hidden');
-  } else if (tipo === 'manutencao') {
-    manutencao.classList.remove('hidden');
-    textoResumo.textContent = "Serviço de manutenção sujeito à análise no local. Valor sob consulta.";
-    resumo.classList.remove('hidden');
+  if (servicoSelecionado === "instalacao") {
+    const select = document.createElement("select");
+    select.id = "detalhes";
+
+    const op1 = document.createElement("option");
+    op1.value = "Instalação padrão respeitando o manual do fabricante. Inclui até 3 metros de tubulação, suporte, esponjoso, cabo PP, fita PVC, dreno e fixação.";
+    op1.textContent = "Instalação padrão (respeitando o manual)";
+
+    const op2 = document.createElement("option");
+    op2.value = "Instalação básica com tubulação em par, sem exigências técnicas específicas do fabricante.";
+    op2.textContent = "Instalação básica";
+
+    select.appendChild(op1);
+    select.appendChild(op2);
+    container.appendChild(select);
+
+  } else if (servicoSelecionado === "limpeza") {
+    container.innerHTML = `Limpeza técnica completa a partir de R$ 180,00, dependendo do grau de dificuldade para a retirada do ar-condicionado.`;
+
+  } else if (servicoSelecionado === "manutencao") {
+    container.innerHTML = `Manutenção preventiva ou corretiva, com inspeção completa do equipamento.`;
+
+  } else if (servicoSelecionado === "reparo") {
+    container.innerHTML = `Análise técnica para identificar defeito e realizar o reparo. Valor sob consulta.`;
+
+  } else if (servicoSelecionado === "reinstalacao") {
+    container.innerHTML = `Reinstalação do equipamento em novo local. Inclui revisão da tubulação, suporte e complementos.`;
   }
 });
 
-document.getElementById('opcaoInstalacao').addEventListener('change', function () {
-  const textoResumo = document.getElementById('textoResumo');
-  const resumo = document.getElementById('resumo');
-  if (this.value) {
-    textoResumo.textContent = this.value;
-    resumo.classList.remove('hidden');
-  } else {
-    textoResumo.textContent = '';
-    resumo.classList.add('hidden');
-  }
-});
+document.getElementById("enviar").addEventListener("click", function () {
+  const servico = document.getElementById("servico").value;
+  const detalhes = document.getElementById("detalhes")?.value || "";
+  const whatsapp = document.getElementById("whatsapp").value;
 
-document.getElementById('enviarWhatsapp').addEventListener('click', function () {
-  const numero = document.getElementById('numeroWhatsapp').value;
-  const texto = document.getElementById('textoResumo').textContent;
-
-  if (numero.length < 10 || numero.length > 11) {
-    alert("Digite um número de WhatsApp válido com DDD.");
+  if (!servico || !whatsapp || whatsapp.length < 10) {
+    alert("Preencha todos os campos corretamente!");
     return;
   }
 
-  const mensagem = encodeURIComponent(`Olá! Gostaria de solicitar esse serviço:\n\n${texto}`);
-  const link = `https://wa.me/55${numero}?text=${mensagem}`;
-
-  window.open(link, '_blank');
+  const texto = encodeURIComponent(`Orçamento solicitado:\n\nServiço: ${servico.toUpperCase()}\n${detalhes}`);
+  window.open(`https://wa.me/55${whatsapp}?text=${texto}`, "_blank");
 });
