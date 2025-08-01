@@ -3,34 +3,52 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento O Esquimó</title>
+  <title>Orçamento - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Solicite seu orçamento</h1>
+    <h1>Solicite seu Orçamento</h1>
 
     <label for="servico">Escolha o serviço desejado:</label>
     <select id="servico">
-      <option value="">-- Selecione --</option>
-      <option value="Instalação">Instalação</option>
-      <option value="Limpeza">Limpeza</option>
-      <option value="Manutenção">Manutenção</option>
+      <option value="">Selecione...</option>
+      <option value="instalacao">Instalação</option>
+      <option value="limpeza">Limpeza</option>
+      <option value="manutencao">Manutenção</option>
     </select>
 
-    <label for="descricao">Descreva o problema (opcional):</label>
-    <textarea id="descricao" rows="4" placeholder="Ex: ar não está gelando..."></textarea>
+    <div id="tipo-instalacao" class="hidden">
+      <label for="instalacao">Tipo de Instalação:</label>
+      <select id="instalacao">
+        <option value="">Selecione...</option>
+        <option value="basica">Instalação Básica</option>
+        <option value="padrao">Instalação Padrão</option>
+      </select>
+    </div>
 
-    <label for="whatsapp">Seu WhatsApp com DDD:</label>
-    <input type="tel" id="whatsapp" placeholder="Ex: 81999999999" />
+    <div id="descricao-instalacao" class="descricao"></div>
 
-    <button onclick="gerarOrcamento()">Gerar orçamento</button>
+    <div id="manutencao-info" class="hidden">
+      <label for="descricao-manutencao">Descreva o problema do ar-condicionado:</label>
+      <textarea id="descricao-manutencao" rows="4" placeholder="Ex: Não está gelando, barulho estranho..."></textarea>
+    </div>
 
-    <pre id="responseArea" class="hidden"></pre>
+    <label for="observacoes" class="hidden" id="label-observacoes">Observações adicionais:</label>
+    <textarea id="observacoes" rows="3" placeholder="Digite aqui se quiser adicionar algo..." class="hidden"></textarea>
 
-    <button onclick="enviarParaWhatsApp()" id="btnEnviar" class="hidden">
-      Enviar orçamento pelo WhatsApp
-    </button>
+    <div id="resumo" class="resumo hidden"></div>
+
+    <label for="whatsapp" class="hidden" id="label-whatsapp">Seu número do WhatsApp:</label>
+    <input type="tel" id="whatsapp" placeholder="(XX) 9XXXX-XXXX" class="hidden" />
+
+    <button id="btn-enviar" class="hidden">Enviar orçamento via WhatsApp</button>
+
+    <div id="historico" class="historico hidden">
+      <h2>Orçamentos anteriores</h2>
+      <ul id="lista-historico"></ul>
+      <button id="btn-limpar-historico">Limpar histórico</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
