@@ -51,7 +51,7 @@ function gerarOrcamento() {
       return;
     }
     if (tipoInstalacao === "basica") {
-      texto +=
+      texto +='
         "Material utilizado:\n" +
         "- 2 metros de tubulação\n" +
         "- Cabo PP\n" +
