@@ -2,58 +2,38 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento O Esquimó</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente Virtual - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Solicite seu orçamento</h1>
+    <h1>Assistente Virtual - O Esquimó</h1>
+    <p>Escolha o serviço desejado:</p>
 
-    <label for="nome">Nome completo:</label>
-    <input type="text" id="nome" placeholder="Seu nome" />
+    <form id="formulario">
+      <label for="nomeCliente">Nome do Cliente:</label>
+      <input type="text" id="nomeCliente" required />
 
-    <label for="endereco">Endereço completo:</label>
-    <input type="text" id="endereco" placeholder="Rua, nº, bairro..." />
+      <label for="enderecoCliente">Endereço:</label>
+      <input type="text" id="enderecoCliente" required />
 
-    <label for="btus">Capacidade do ar-condicionado (BTUs):</label>
-    <input type="text" id="btus" placeholder="Ex: 9000 BTUs" />
+      <label for="btus">Capacidade Térmica (BTUs):</label>
+      <input type="text" id="btus" required />
 
-    <label for="servico">Escolha o serviço desejado:</label>
-    <select id="servico">
-      <option value="">-- Selecione --</option>
-      <option value="instalacao">Instalação</option>
-      <option value="limpeza">Limpeza</option>
-      <option value="manutencao">Manutenção</option>
-    </select>
+      <label for="whatsappCliente">WhatsApp do Cliente:</label>
+      <input type="tel" id="whatsappCliente" placeholder="Ex: 81999999999" required />
 
-    <div id="tipo-instalacao-container" class="hidden">
-      <label for="tipo-instalacao">Tipo de instalação:</label>
-      <select id="tipo-instalacao">
-        <option value="">-- Selecione --</option>
-        <option value="basica">Instalação Básica</option>
-        <option value="fabricante">Instalação Segundo o Fabricante</option>
+      <label for="servico">Serviço:</label>
+      <select id="servico" required>
+        <option value="" disabled selected>Selecione</option>
+        <option value="instalacao">Instalação</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="manutencao">Manutenção</option>
       </select>
-    </div>
 
-    <div id="descricao-manutencao-container" class="hidden">
-      <label for="descricao-manutencao">Descreva o problema do seu ar-condicionado:</label>
-      <textarea id="descricao-manutencao" rows="4" placeholder="Ex: ar não está gelando..."></textarea>
-    </div>
-
-    <pre id="resumo-orcamento" class="hidden"></pre>
-
-    <label for="whatsapp" id="label-whatsapp" class="hidden">Seu WhatsApp com DDD:</label>
-    <input
-      type="tel"
-      id="whatsapp"
-      placeholder="(XX) XXXXX-XXXX"
-      maxlength="15"
-      class="hidden"
-      autocomplete="off"
-    />
-
-    <button id="btnEnviar" class="hidden">Enviar orçamento</button>
+      <button type="submit">Enviar orçamento</button>
+    </form>
   </div>
 
   <script src="script.js"></script>
