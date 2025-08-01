@@ -4,28 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Orçamento - O Esquimó</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
-    <h1>Solicitar Orçamento</h1>
+    <h1>Orçamento - O Esquimó</h1>
 
-    <label for="servico">Escolha o serviço:</label>
-    <select id="servico">
-      <option value="">-- Selecione --</option>
+    <label for="tipo">Escolha o tipo de serviço:</label>
+    <select id="tipo">
+      <option value="">Selecione</option>
       <option value="instalacao">Instalação</option>
       <option value="limpeza">Limpeza</option>
       <option value="manutencao">Manutenção</option>
     </select>
 
-    <div id="opcoesExtras"></div>
+    <div id="detalhesServico" class="hidden">
+      <div id="instalacao-opcoes" class="hidden">
+        <label for="opcaoInstalacao">Opção de Instalação:</label>
+        <select id="opcaoInstalacao">
+          <option value="">Selecione</option>
+          <option value="Instalação básica: tubulação em par, cabo PP, esponjoso, fita PVC, suporte, buchas e parafusos.">Instalação básica</option>
+          <option value="Instalação respeitando o manual do fabricante.">Instalação respeitando o manual do fabricante</option>
+        </select>
+      </div>
 
-    <div id="resumo"></div>
+      <div id="limpeza-opcoes" class="hidden">
+        <p>
+          Limpeza a partir de R$ 180,00, dependendo do grau de dificuldade para retirada do ar-condicionado.
+        </p>
+      </div>
 
-    <label for="numero">Digite seu número do WhatsApp (com DDD):</label>
-    <input type="tel" id="numero" maxlength="11" placeholder="Ex: 81999999999" />
+      <div id="manutencao-opcoes" class="hidden">
+        <p>
+          Serviço de manutenção sujeito à análise no local. Valor sob consulta.
+        </p>
+      </div>
+    </div>
 
-    <button onclick="enviarWhatsapp()">Enviar para o WhatsApp</button>
+    <div id="resumo" class="hidden">
+      <h2>Resumo do Orçamento:</h2>
+      <p id="textoResumo"></p>
+
+      <label for="numeroWhatsapp">Digite seu número do WhatsApp (apenas números, com DDD):</label>
+      <input type="tel" id="numeroWhatsapp" maxlength="11" placeholder="Ex: 81999999999"/>
+
+      <button id="enviarWhatsapp">Enviar para o WhatsApp</button>
+    </div>
   </div>
 
   <script src="script.js"></script>
