@@ -24,12 +24,18 @@ function showResponse(text) {
   const responseArea = document.getElementById("responseArea");
   responseArea.textContent = text;
   responseArea.classList.remove("hidden");
+
+  const whatsappButton = document.getElementById("whatsappButton");
+  whatsappButton.classList.remove("hidden");
 }
 
 function hideResponse() {
   const responseArea = document.getElementById("responseArea");
   responseArea.classList.add("hidden");
   responseArea.textContent = "";
+
+  const whatsappButton = document.getElementById("whatsappButton");
+  whatsappButton.classList.add("hidden");
 }
 
 function handleServiceChange() {
@@ -61,4 +67,12 @@ function handleInstallType() {
   } else {
     hideResponse();
   }
+}
+
+function sendToWhatsApp() {
+  const responseText = document.getElementById("responseArea").textContent;
+  const phone = "5583983259341"; // Número do O Esquimó com DDI + DDD
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(responseText)}`;
+
+  window.open(url, '_blank');
 }
