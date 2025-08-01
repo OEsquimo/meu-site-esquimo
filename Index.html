@@ -2,14 +2,14 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Serviços de Ar-Condicionado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orçamento O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Escolha o serviço desejado</h1>
+  <h1>Orçamento O Esquimó</h1>
 
-  <label for="service">Serviço:</label>
+  <label for="service">Escolha o serviço desejado:</label>
   <select id="service" onchange="handleServiceChange()">
     <option value="">-- Selecione --</option>
     <option value="instalacao">Instalação</option>
@@ -21,12 +21,14 @@
     <label for="installType">Tipo de instalação:</label>
     <select id="installType" onchange="handleInstallType()">
       <option value="">-- Selecione --</option>
-      <option value="básico">Básico</option>
-      <option value="padrao">Padrão</option>
+      <option value="básico">Instalação básica</option>
+      <option value="padrao">Instalação padrão</option>
     </select>
   </div>
 
   <div id="responseArea" class="response hidden"></div>
+
+  <button id="whatsappButton" class="hidden" onclick="sendToWhatsApp()">Enviar para WhatsApp</button>
 
   <script src="script.js"></script>
 </body>
