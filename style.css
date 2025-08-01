@@ -31,12 +31,6 @@ h1 {
   text-align: center;
 }
 
-p {
-  margin-bottom: 20px;
-  text-align: center;
-  font-weight: 500;
-}
-
 form label {
   display: block;
   margin-bottom: 6px;
@@ -44,8 +38,7 @@ form label {
   font-weight: bold;
 }
 
-form input,
-form select {
+form input {
   width: 100%;
   padding: 10px;
   border: 1px solid #ccc;
@@ -54,8 +47,7 @@ form select {
   transition: border-color 0.2s;
 }
 
-form input:focus,
-form select:focus {
+form input:focus {
   border-color: #0099cc;
   outline: none;
 }
@@ -76,4 +68,16 @@ button {
 
 button:hover {
   background-color: #007a99;
+}
+
+.resultado {
+  margin-top: 30px;
+  padding: 15px;
+  background: #e6f2f7;
+  border: 2px solid #0099cc;
+  border-radius: 8px;
+  white-space: pre-wrap;
+  font-family: monospace;
+  font-size: 1rem;
+  color: #004d66;
 }
