@@ -2,8 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento O Esquimó</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Orçamento - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,26 +11,36 @@
     <h1>Solicite seu orçamento</h1>
 
     <label for="servico">Escolha o serviço desejado:</label>
-    <select id="servico">
+    <select id="servico" onchange="onServicoChange()">
       <option value="">-- Selecione --</option>
-      <option value="Instalação">Instalação</option>
-      <option value="Limpeza">Limpeza</option>
-      <option value="Manutenção">Manutenção</option>
+      <option value="instalacao">Instalação</option>
+      <option value="limpeza">Limpeza</option>
+      <option value="manutencao">Manutenção</option>
     </select>
 
-    <label for="descricao">Descreva o problema (opcional):</label>
-    <textarea id="descricao" rows="4" placeholder="Ex: ar não está gelando..."></textarea>
+    <div id="opcoesInstalacao" class="hidden">
+      <label for="tipoInstalacao">Tipo de instalação:</label>
+      <select id="tipoInstalacao" onchange="onTipoInstalacaoChange()">
+        <option value="">-- Selecione --</option>
+        <option value="basica">Instalação básica</option>
+        <option value="fabricante">Instalação segundo o fabricante</option>
+      </select>
+    </div>
+
+    <div id="detalhesServico" class="info-box hidden"></div>
+
+    <div id="descricaoProblema" class="hidden">
+      <label for="descricao">Descreva o problema:</label>
+      <textarea id="descricao" rows="4" placeholder="Ex: Ar-condicionado não está gelando..."></textarea>
+    </div>
 
     <label for="whatsapp">Seu WhatsApp com DDD:</label>
-    <input type="tel" id="whatsapp" placeholder="Ex: 81999999999" />
+    <input type="tel" id="whatsapp" placeholder="(xx) xxxxx-xxxx" maxlength="15" />
 
-    <button onclick="gerarOrcamento()">Gerar orçamento</button>
+    <button onclick="gerarOrcamento()">Gerar Orçamento</button>
 
-    <pre id="responseArea" class="hidden"></pre>
-
-    <button onclick="enviarParaWhatsApp()" id="btnEnviar" class="hidden">
-      Enviar orçamento pelo WhatsApp
-    </button>
+    <pre id="resposta" class="hidden"></pre>
+    <button id="btnWhatsapp" class="hidden" onclick="enviarParaWhatsapp()">Enviar pelo WhatsApp</button>
   </div>
 
   <script src="script.js"></script>
