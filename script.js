@@ -1,183 +1,53 @@
-const servicoSelect = document.getElementById("servico");
-const tipoInstalacaoContainer = document.getElementById("tipo-instalacao-container");
-const tipoInstalacaoSelect = document.getElementById("tipo-instalacao");
-const descricaoManutencaoContainer = document.getElementById("descricao-manutencao-container");
-const descricaoManutencaoTextarea = document.getElementById("descricao-manutencao");
-const resumoOrcamento = document.getElementById("resumo-orcamento");
-const whatsappLabel = document.getElementById("label-whatsapp");
-const whatsappInput = document.getElementById("whatsapp");
-const btnEnviar = document.getElementById("btnEnviar");
+document.getElementById('orcamentoForm').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-const nomeInput = document.getElementById("nome");
-const enderecoInput = document.getElementById("endereco");
-const btusInput = document.getElementById("btus");
+  const nome = document.getElementById('nome').value.trim();
+  const endereco = document.getElementById('endereco').value.trim();
+  const btus = document.getElementById('btus').value.trim();
+  const whatsapp = document.getElementById('whatsapp').value.trim();
+  const servico = document.getElementById('servico').value;
+  const detalhes = document.getElementById('detalhes').value.trim();
 
-let orcamentoTexto = "";
-
-function resetAll() {
-  tipoInstalacaoContainer.classList.add("hidden");
-  tipoInstalacaoSelect.value = "";
-  descricaoManutencaoContainer.classList.add("hidden");
-  descricaoManutencaoTextarea.value = "";
-  resumoOrcamento.classList.add("hidden");
-  resumoOrcamento.textContent = "";
-  whatsappInput.classList.add("hidden");
-  whatsappLabel.classList.add("hidden");
-  whatsappInput.value = "";
-  btnEnviar.classList.add("hidden");
-}
-
-function gerarOrcamento() {
-  const servico = servicoSelect.value;
-  const tipoInstalacao = tipoInstalacaoSelect.value;
-  const manutencaoDescricao = descricaoManutencaoTextarea.value.trim();
-  const nome = nomeInput.value.trim();
-  const endereco = enderecoInput.value.trim();
-  const btus = btusInput.value.trim();
-
-  if (!nome || !endereco || !btus) {
-    resumoOrcamento.textContent = "Por favor, preencha nome, endereço e capacidade do ar-condicionado (BTUs).";
-    resumoOrcamento.classList.remove("hidden");
+  if (!nome || !endereco || !btus || !whatsapp || !servico) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
     return;
   }
 
-  if (!servico) {
-    resumoOrcamento.classList.add("hidden");
-    btnEnviar.classList.add("hidden");
-    whatsappInput.classList.add("hidden");
-    whatsappLabel.classList.add("hidden");
-    return;
+  let textoOrcamento = `🧊 *O Esquimó - Orçamento Técnico* 🧊\n\n`;
+  textoOrcamento += `👤 *Cliente:* ${nome}\n`;
+  textoOrcamento += `📍 *Endereço:* ${endereco}\n`;
+  textoOrcamento += `❄️ *Capacidade (BTUs):* ${btus}\n`;
+  textoOrcamento += `🔧 *Serviço solicitado:* ${servico}\n`;
+
+  if (servico === 'Instalação') {
+    textoOrcamento += `\n💰 *Orçamento Básico:*\n`;
+    textoOrcamento += `- Instalação padrão: R$ 300,00\n`;
+    textoOrcamento += `- Disjuntor não incluso.\n`;
+    textoOrcamento += `- Instalação de disjuntor (opcional): R$ 80,00 com até 2 metros de cabo.\n`;
+    textoOrcamento += `🔸 *Observação:* O valor pode sofrer alterações conforme a infraestrutura do local.\n`;
+
+    textoOrcamento += `\n📘 *Instalação seguindo o manual técnico:*\n`;
+    textoOrcamento += `- 3 metros de tubulação, esponjoso, cabo PP, fita PVC, suporte, buchas e parafusos.\n`;
+    textoOrcamento += `- Disjuntor incluso.\n`;
+    textoOrcamento += `🔸 *Observação:* O valor pode sofrer alterações conforme a infraestrutura do local.\n`;
   }
 
-  let texto = `CLIENTE: ${nome}\nENDEREÇO: ${endereco}\nCAPACIDADE: ${btus}\n\n`;
-
-  if (servico === "instalacao") {
-    if (!tipoInstalacao) {
-      resumoOrcamento.classList.add("hidden");
-      btnEnviar.classList.add("hidden");
-      whatsappInput.classList.add("hidden");
-      whatsappLabel.classList.add("hidden");
-      return;
-    }
-
-    if (tipoInstalacao === "basica") {
-      texto +=
-        "ORÇAMENTO DE INSTALAÇÃO BÁSICA\n" +
-        "Material utilizado:\n" +
-        "- 2 metros de tubulação\n" +
-        "- Cabo PP\n" +
-        "- Esponjoso\n" +
-        "- Fita PVC\n" +
-        "- Suporte\n" +
-        "- Buchas e parafusos\n" +
-        "Valor da instalação: R$ 480,00.\n\n" +
-        "Disjuntor não incluso.\n" +
-        "Valor do disjuntor (opcional): R$ 80,00 com 2m de cabo até a fonte de energia mais próxima.\n" +
-        "Obs: Este valor pode sofrer alterações conforme a infraestrutura do local.";
-    } else if (tipoInstalacao === "fabricante") {
-      texto +=
-        "ORÇAMENTO DE INSTALAÇÃO SEGUNDO O FABRICANTE\n" +
-        "Material utilizado:\n" +
-        "- 3 metros de tubulação\n" +
-        "- Cabo PP\n" +
-        "- Esponjoso\n" +
-        "- Fita PVC\n" +
-        "- Suporte\n" +
-        "- Buchas e parafusos\n" +
-        "Disjuntor incluso.\n" +
-        "Valor da instalação: R$ 750,00.\n\n" +
-        "Obs: Este valor pode sofrer alterações conforme a infraestrutura do local.";
-    }
-  } else if (servico === "limpeza") {
-    texto +=
-      "ORÇAMENTO DE LIMPEZA\n" +
-      "Valor: R$ 180,00.\n" +
-      "Obs: Pode variar conforme o grau de dificuldade de acesso ao equipamento.";
-  } else if (servico === "manutencao") {
-    if (manutencaoDescricao.length < 5) {
-      resumoOrcamento.textContent = "Por favor, descreva o problema do seu ar-condicionado.";
-      resumoOrcamento.classList.remove("hidden");
-      btnEnviar.classList.add("hidden");
-      whatsappInput.classList.add("hidden");
-      whatsappLabel.classList.add("hidden");
-      return;
-    }
-
-    texto +=
-      "ORÇAMENTO DE MANUTENÇÃO\n" +
-      `Descrição do problema: ${manutencaoDescricao}\n` +
-      "Valor: Sob avaliação após vistoria.";
+  if (detalhes) {
+    textoOrcamento += `\n📋 *Observações adicionais:* ${detalhes}\n`;
   }
 
-  orcamentoTexto = texto;
+  textoOrcamento += `\n📅 *Data:* ${new Date().toLocaleDateString()}`;
 
-  resumoOrcamento.textContent = texto;
-  resumoOrcamento.classList.remove("hidden");
-  whatsappInput.classList.remove("hidden");
-  whatsappLabel.classList.remove("hidden");
-  btnEnviar.classList.remove("hidden");
-}
+  // Link para o cliente
+  const msgCliente = `https://wa.me/55${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(textoOrcamento)}`;
 
-function validarWhatsApp(whatsapp) {
-  const regex = /^\(\d{2}\)\s?\d{5}-\d{4}$/;
-  return regex.test(whatsapp);
-}
+  // Link para você (Wellington)
+  const seuNumero = '5581983259341';
+  const msgWellington = `https://wa.me/${seuNumero}?text=${encodeURIComponent(textoOrcamento)}`;
 
-function enviarWhatsApp() {
-  if (!orcamentoTexto) {
-    alert("Por favor, gere o orçamento antes de enviar.");
-    return;
-  }
-
-  const whatsappCliente = whatsappInput.value.replace(/\D/g, "");
-  if (!validarWhatsApp(whatsappInput.value)) {
-    alert("Por favor, insira um número válido no formato (XX) XXXXX-XXXX.");
-    return;
-  }
-
-  const urlCliente = `https://wa.me/55${whatsappCliente}?text=${encodeURIComponent(orcamentoTexto)}`;
-  const urlTecnico = `https://wa.me/5581983259341?text=${encodeURIComponent(orcamentoTexto)}`;
-
-  window.open(urlCliente, "_blank");
-  window.open(urlTecnico, "_blank");
-}
-
-// Eventos
-servicoSelect.addEventListener("change", () => {
-  resetAll();
-
-  if (servicoSelect.value === "instalacao") {
-    tipoInstalacaoContainer.classList.remove("hidden");
-  } else if (servicoSelect.value === "limpeza") {
-    gerarOrcamento();
-  } else if (servicoSelect.value === "manutencao") {
-    descricaoManutencaoContainer.classList.remove("hidden");
-  }
-});
-
-tipoInstalacaoSelect.addEventListener("change", gerarOrcamento);
-descricaoManutencaoTextarea.addEventListener("input", () => {
-  if (descricaoManutencaoTextarea.value.trim().length >= 5) {
-    gerarOrcamento();
-  } else {
-    resumoOrcamento.classList.add("hidden");
-    btnEnviar.classList.add("hidden");
-    whatsappInput.classList.add("hidden");
-    whatsappLabel.classList.add("hidden");
-  }
-});
-btnEnviar.addEventListener("click", enviarWhatsApp);
-
-// Máscara WhatsApp
-whatsappInput.addEventListener("input", (e) => {
-  let v = e.target.value.replace(/\D/g, "");
-  if (v.length > 11) v = v.slice(0, 11);
-
-  if (v.length > 6) {
-    e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
-  } else if (v.length > 2) {
-    e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-  } else if (v.length > 0) {
-    e.target.value = `(${v}`;
-  }
+  // Abre duas abas: uma pro cliente, outra pra você
+  window.open(msgCliente, '_blank');
+  setTimeout(() => {
+    window.open(msgWellington, '_blank');
+  }, 1500); // delay para não travar popup em alguns navegadores
 });
