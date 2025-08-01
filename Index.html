@@ -10,6 +10,15 @@
   <div class="container">
     <h1>Solicite seu orçamento</h1>
 
+    <label for="nome">Nome completo:</label>
+    <input type="text" id="nome" placeholder="Seu nome" />
+
+    <label for="endereco">Endereço completo:</label>
+    <input type="text" id="endereco" placeholder="Rua, nº, bairro..." />
+
+    <label for="btus">Capacidade do ar-condicionado (BTUs):</label>
+    <input type="text" id="btus" placeholder="Ex: 9000 BTUs" />
+
     <label for="servico">Escolha o serviço desejado:</label>
     <select id="servico">
       <option value="">-- Selecione --</option>
@@ -44,7 +53,7 @@
       autocomplete="off"
     />
 
-    <button id="btnEnviar" class="hidden">Enviar orçamento pelo WhatsApp</button>
+    <button id="btnEnviar" class="hidden">Enviar orçamento</button>
   </div>
 
   <script src="script.js"></script>
