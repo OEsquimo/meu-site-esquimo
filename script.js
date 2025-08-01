@@ -1,72 +1,96 @@
-function exibirCampos() {
-  const servico = document.getElementById("servico").value;
-  document.getElementById("btusContainer").classList.add("hidden");
-  document.getElementById("grauInstalacaoContainer").classList.add("hidden");
-  document.getElementById("descricaoDefeitoContainer").classList.add("hidden");
-  document.getElementById("resumoContainer").classList.add("hidden");
+document.getElementById("tipo").addEventListener("change", function() {
+  const tipo = this.value;
+  document.getElementById("btusDiv").classList.add("hidden");
+  document.getElementById("manutencaoDiv").classList.add("hidden");
+  document.getElementById("valor").textContent = "";
 
-  if (servico === "instalacao") {
-    document.getElementById("btusContainer").classList.remove("hidden");
-    document.getElementById("grauInstalacaoContainer").classList.remove("hidden");
-  } else if (servico === "manutencao") {
-    document.getElementById("descricaoDefeitoContainer").classList.remove("hidden");
+  if (tipo === "instalacao") {
+    document.getElementById("btusDiv").classList.remove("hidden");
+    atualizarValor();
+  } else if (tipo === "limpeza") {
+    document.getElementById("valor").textContent = "Valor base: R$180,00\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)";
+  } else if (tipo === "manutencao") {
+    document.getElementById("manutencaoDiv").classList.remove("hidden");
+    document.getElementById("valor").textContent = "O valor depende do tipo de defeito informado.";
   }
-}
+});
 
-function gerarOrcamento() {
-  const servico = document.getElementById("servico").value;
-  const telefone = document.getElementById("telefone").value.trim();
-  let resumo = "";
-  let valor = 0;
+document.getElementById("btus").addEventListener("change", atualizarValor);
 
-  if (!servico || !telefone) {
-    alert("Preencha todos os campos obrigatórios.");
-    return;
-  }
-
-  if (servico === "limpeza") {
-    valor = 180;
-    resumo += `Serviço: Limpeza de ar-condicionado\n`;
-    resumo += `Valor base: R$ ${valor.toFixed(2)}\n`;
-    resumo += "Obs: O valor pode variar de acordo com o grau de dificuldade.";
-  } else if (servico === "instalacao") {
-    const btus = parseInt(document.getElementById("btus").value);
-    const tipoInstalacao = document.getElementById("tipoInstalacao").value;
-    valor = calcularValorInstalacao(btus);
-    resumo += `Serviço: Instalação de ar-condicionado\n`;
-    resumo += `BTUs: ${btus}\n`;
-    resumo += `Tipo de instalação: ${tipoInstalacao === "basica" ? "Básica" : "Técnica"}\n`;
-    resumo += `Valor: R$ ${valor.toFixed(2)}\n`;
-  } else if (servico === "manutencao") {
-    const defeito = document.getElementById("descricaoDefeito").value.trim();
-    resumo += `Serviço: Manutenção\n`;
-    resumo += `Defeito informado: ${defeito || "Não descrito"}\n`;
-    resumo += "O valor será informado após análise técnica.";
-  }
-
-  document.getElementById("resumo").textContent = resumo;
-  document.getElementById("resumoContainer").classList.remove("hidden");
-
-  enviarParaWhatsApp(telefone, resumo);
+function atualizarValor() {
+  const btus = parseInt(document.getElementById("btus").value);
+  const valorBase = calcularValorInstalacao(btus);
+  const texto = 
+    `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
+    `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
+    `Obs: O valor pode variar conforme a infraestrutura do local.`;
+  document.getElementById("valor").textContent = texto;
 }
 
 function calcularValorInstalacao(btus) {
-  switch (btus) {
-    case 9000: return 480;
-    case 12000: return 550;
-    case 18000: return 650;
-    case 24000: return 750;
-    default: return 0;
+  // Valores fixos
+  const tabela = {
+    9000: 480,
+    12000: 550,
+    18000: 650,
+    24000: 750,
+    30000: 850,
+  };
+  // Se BTUs maior que 30000, incrementa R$100 para cada 6000 BTUs a mais
+  if (tabela[btus]) return tabela[btus];
+  if (btus > 30000) {
+    let extra = Math.floor((btus - 30000) / 6000);
+    return 850 + extra * 100;
   }
+  return 0; // se não estiver na tabela
 }
 
-function enviarParaWhatsApp(telefoneCliente, mensagem) {
-  const telefoneFormatadoCliente = telefoneCliente.replace(/\D/g, "");
-  const telefoneProfissional = "5581983259341";
+document.getElementById("orcamentoForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-  const urlCliente = `https://wa.me/55${telefoneFormatadoCliente}?text=${encodeURIComponent(mensagem)}`;
-  const urlProfissional = `https://wa.me/${telefoneProfissional}?text=${encodeURIComponent("Novo orçamento:\n" + mensagem)}`;
+  const nome = document.getElementById("nome").value.trim();
+  const endereco = document.getElementById("endereco").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const tipo = document.getElementById("tipo").value;
+  const btus = document.getElementById("btus").value;
+  const defeito = document.getElementById("descricao").value.trim();
+
+  if (!nome || !endereco || !telefone || !tipo) {
+    alert("Por favor, preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  let mensagem = `ORÇAMENTO\n\nCliente: ${nome}\nEndereço: ${endereco}\nWhatsApp: ${telefone}\n\nServiço: `;
+
+  if (tipo === "instalacao") {
+    const valorInst = calcularValorInstalacao(parseInt(btus));
+    mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
+  } else if (tipo === "limpeza") {
+    mensagem += "Limpeza de ar-condicionado\nValor base: R$180,00\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)";
+  } else if (tipo === "manutencao") {
+    mensagem += `Manutenção\nDescrição do defeito: ${defeito || "Não informado"}\nValor depende do tipo de defeito.`;
+  }
+
+  const meuNumero = "5581983259341";
+
+  const telefoneCliente = telefone.replace(/\D/g, "");
+  const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(mensagem)}`;
+  const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("Novo orçamento recebido:\n\n" + mensagem)}`;
 
   window.open(urlCliente, "_blank");
-  window.open(urlProfissional, "_blank");
-}
+  window.open(urlEu, "_blank");
+});
+
+// Máscara simples para telefone (formato (81) 91234-5678)
+document.getElementById("telefone").addEventListener("input", function(e) {
+  let v = e.target.value.replace(/\D/g, "");
+  if (v.length > 11) v = v.slice(0, 11);
+
+  if (v.length > 6) {
+    e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+  } else if (v.length > 2) {
+    e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
+  } else if (v.length > 0) {
+    e.target.value = `(${v}`;
+  }
+});
