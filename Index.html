@@ -2,53 +2,52 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Assistente Virtual - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Escolha o serviço desejado:</h1>
-    
-    <select id="servico" onchange="exibirCampos()">
-      <option value="">Selecione</option>
-      <option value="limpeza">Limpeza</option>
-      <option value="instalacao">Instalação</option>
-      <option value="manutencao">Manutenção</option>
-    </select>
+    <h1>Assistente Virtual - O Esquimó</h1>
 
-    <div id="btusContainer" class="hidden">
-      <label for="btus">BTUs do aparelho:</label>
-      <select id="btus">
-        <option value="9000">9.000</option>
-        <option value="12000">12.000</option>
-        <option value="18000">18.000</option>
-        <option value="24000">24.000</option>
+    <form id="orcamentoForm">
+      <label for="nome">Nome do Cliente:</label>
+      <input type="text" id="nome" required />
+
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" required />
+
+      <label for="telefone">WhatsApp:</label>
+      <input type="tel" id="telefone" placeholder="(81) 91234-5678" required />
+
+      <label for="tipo">Escolha o serviço desejado:</label>
+      <select id="tipo" required>
+        <option value="">--Selecione--</option>
+        <option value="instalacao">Instalação</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="manutencao">Manutenção</option>
       </select>
-    </div>
 
-    <div id="grauInstalacaoContainer" class="hidden">
-      <label for="tipoInstalacao">Tipo de instalação:</label>
-      <select id="tipoInstalacao">
-        <option value="basica">Básica</option>
-        <option value="tecnica">Técnica (manual técnico)</option>
-      </select>
-    </div>
+      <div id="btusDiv" class="hidden">
+        <label for="btus">Capacidade (BTUs):</label>
+        <select id="btus">
+          <option value="9000">9.000 BTUs</option>
+          <option value="12000">12.000 BTUs</option>
+          <option value="18000">18.000 BTUs</option>
+          <option value="24000">24.000 BTUs</option>
+          <option value="30000">30.000 BTUs</option>
+        </select>
+      </div>
 
-    <div id="descricaoDefeitoContainer" class="hidden">
-      <label for="descricaoDefeito">Descreva o defeito:</label>
-      <textarea id="descricaoDefeito" rows="4" placeholder="Ex: ar-condicionado não está gelando..."></textarea>
-    </div>
+      <div id="manutencaoDiv" class="hidden">
+        <label for="descricao">Descreva o defeito:</label>
+        <textarea id="descricao"></textarea>
+      </div>
 
-    <div id="resumoContainer" class="hidden">
-      <h2>Resumo do orçamento:</h2>
-      <pre id="resumo"></pre>
-    </div>
+      <p id="valor"></p>
 
-    <label for="telefone">Seu telefone (WhatsApp):</label>
-    <input type="tel" id="telefone" placeholder="(81) 91234-5678" />
-
-    <button onclick="gerarOrcamento()">Gerar Orçamento</button>
+      <button type="submit">Gerar Orçamento</button>
+    </form>
   </div>
 
   <script src="script.js"></script>
