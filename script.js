@@ -1,4 +1,5 @@
-yconst servicoSelect = document.getElementById("servico");
+
+const servicoSelect = document.getElementById("servico");
 const tipoInstalacaoContainer = document.getElementById("tipo-instalacao-container");
 const tipoInstalacaoSelect = document.getElementById("tipo-instalacao");
 const descricaoManutencaoContainer = document.getElementById("descricao-manutencao-container");
@@ -51,7 +52,8 @@ function gerarOrcamento() {
       return;
     }
     if (tipoInstalacao === "basica") {
-      texto +='
+      texto +=
+        "Serviço: Instalação Básica\n" +
         "Material utilizado:\n" +
         "- 2 metros de tubulação\n" +
         "- Cabo PP\n" +
