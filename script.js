@@ -64,6 +64,7 @@ function gerarOrcamento() {
         "Valor da instalação: R$ 480,00.";
     } else if (tipoInstalacao === "fabricante") {
       texto +=
+        "ORÇAMENTO\n" +
         "Instalação seguindo o manual do fabricante.\n" +
         "Respeitando o tamanho da tubulação e conectores para o cabo PP.\n" +
         "Valor da instalação: R$ 750,00.";
