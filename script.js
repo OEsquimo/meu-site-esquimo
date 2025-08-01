@@ -71,8 +71,8 @@ function gerarOrcamento() {
     }
   } else if (servico === "limpeza") {
     texto +=
-      "Serviço: Limpeza\n" +
-      "Valor da limpeza: R$ 180,00. Pode variar conforme o grau de dificuldade para desinstalar o aparelho.";
+      "ORÇAMENTO\n" +
+      "Valor da limpeza: R$ 180,00. Podendo variar conforme o grau de dificuldade de acesso ao equipamento.";
   } else if (servico === "manutencao") {
     if (manutencaoDescricao.length < 5) {
       resumoOrcamento.textContent = "Por favor, descreva o problema do seu ar-condicionado para gerar o orçamento.";
