@@ -2,33 +2,36 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orçamento O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Orçamento O Esquimó</h1>
+  <div class="container">
+    <h1>Solicite seu orçamento</h1>
 
-  <label for="service">Escolha o serviço desejado:</label>
-  <select id="service" onchange="handleServiceChange()">
-    <option value="">-- Selecione --</option>
-    <option value="instalacao">Instalação</option>
-    <option value="limpeza">Limpeza</option>
-    <option value="manutencao">Manutenção</option>
-  </select>
-
-  <div id="installOptions" class="hidden">
-    <label for="installType">Tipo de instalação:</label>
-    <select id="installType" onchange="handleInstallType()">
+    <label for="servico">Escolha o serviço desejado:</label>
+    <select id="servico">
       <option value="">-- Selecione --</option>
-      <option value="básico">Instalação básica</option>
-      <option value="padrao">Instalação padrão</option>
+      <option value="Instalação">Instalação</option>
+      <option value="Limpeza">Limpeza</option>
+      <option value="Manutenção">Manutenção</option>
     </select>
+
+    <label for="descricao">Descreva o problema (opcional):</label>
+    <textarea id="descricao" rows="4" placeholder="Ex: ar não está gelando..."></textarea>
+
+    <label for="whatsapp">Seu WhatsApp com DDD:</label>
+    <input type="tel" id="whatsapp" placeholder="Ex: 81999999999" />
+
+    <button onclick="gerarOrcamento()">Gerar orçamento</button>
+
+    <pre id="responseArea" class="hidden"></pre>
+
+    <button onclick="enviarParaWhatsApp()" id="btnEnviar" class="hidden">
+      Enviar orçamento pelo WhatsApp
+    </button>
   </div>
-
-  <div id="responseArea" class="response hidden"></div>
-
-  <button id="whatsappButton" class="hidden" onclick="sendToWhatsApp()">Enviar para WhatsApp</button>
 
   <script src="script.js"></script>
 </body>
