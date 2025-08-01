@@ -1,53 +1,88 @@
-document.getElementById('orcamentoForm').addEventListener('submit', function(e) {
+const form = document.getElementById("orcamentoForm");
+const orcamentoResultado = document.getElementById("orcamentoResultado");
+const telefoneInput = document.getElementById("telefone");
+
+function aplicarMascaraTelefone(value) {
+  let v = value.replace(/\D/g, "");
+  if (v.length > 11) v = v.slice(0, 11);
+
+  if (v.length > 6) {
+    return `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+  } else if (v.length > 2) {
+    return `(${v.slice(0, 2)}) ${v.slice(2)}`;
+  } else if (v.length > 0) {
+    return `(${v}`;
+  }
+  return "";
+}
+
+telefoneInput.addEventListener("input", (e) => {
+  e.target.value = aplicarMascaraTelefone(e.target.value);
+});
+
+function validarTelefone(tel) {
+  const regex = /^\(\d{2}\) \d{5}-\d{4}$/;
+  return regex.test(tel);
+}
+
+function calcularPreco(btu) {
+  if (btu <= 9000) return 480;
+  if (btu <= 12000) return 550;
+  if (btu <= 18000) return 750;
+  if (btu <= 24000) return 950;
+  if (btu <= 30000) return 1150;
+  if (btu <= 36000) return 1350;
+  let extra = btu - 36000;
+  let adicional = Math.ceil(extra / 6000) * 200;
+  return 1350 + adicional;
+}
+
+form.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  const nome = document.getElementById('nome').value.trim();
-  const endereco = document.getElementById('endereco').value.trim();
-  const btus = document.getElementById('btus').value.trim();
-  const whatsapp = document.getElementById('whatsapp').value.trim();
-  const servico = document.getElementById('servico').value;
-  const detalhes = document.getElementById('detalhes').value.trim();
+  const nome = document.getElementById("nome").value.trim();
+  const endereco = document.getElementById("endereco").value.trim();
+  const btusStr = document.getElementById("btus").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
 
-  if (!nome || !endereco || !btus || !whatsapp || !servico) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
+  if (!nome || !endereco || !btusStr || !telefone) {
+    alert("Por favor, preencha todos os campos.");
     return;
   }
 
-  let textoOrcamento = `🧊 *O Esquimó - Orçamento Técnico* 🧊\n\n`;
-  textoOrcamento += `👤 *Cliente:* ${nome}\n`;
-  textoOrcamento += `📍 *Endereço:* ${endereco}\n`;
-  textoOrcamento += `❄️ *Capacidade (BTUs):* ${btus}\n`;
-  textoOrcamento += `🔧 *Serviço solicitado:* ${servico}\n`;
-
-  if (servico === 'Instalação') {
-    textoOrcamento += `\n💰 *Orçamento Básico:*\n`;
-    textoOrcamento += `- Instalação padrão: R$ 300,00\n`;
-    textoOrcamento += `- Disjuntor não incluso.\n`;
-    textoOrcamento += `- Instalação de disjuntor (opcional): R$ 80,00 com até 2 metros de cabo.\n`;
-    textoOrcamento += `🔸 *Observação:* O valor pode sofrer alterações conforme a infraestrutura do local.\n`;
-
-    textoOrcamento += `\n📘 *Instalação seguindo o manual técnico:*\n`;
-    textoOrcamento += `- 3 metros de tubulação, esponjoso, cabo PP, fita PVC, suporte, buchas e parafusos.\n`;
-    textoOrcamento += `- Disjuntor incluso.\n`;
-    textoOrcamento += `🔸 *Observação:* O valor pode sofrer alterações conforme a infraestrutura do local.\n`;
+  if (!validarTelefone(telefone)) {
+    alert("Telefone inválido. Use o formato (XX) XXXXX-XXXX");
+    return;
   }
 
-  if (detalhes) {
-    textoOrcamento += `\n📋 *Observações adicionais:* ${detalhes}\n`;
+  let btuNum = parseInt(btusStr.replace(/\D/g, ""));
+  if (isNaN(btuNum)) {
+    alert("Informe um valor numérico válido para BTUs.");
+    return;
   }
 
-  textoOrcamento += `\n📅 *Data:* ${new Date().toLocaleDateString()}`;
+  const preco = calcularPreco(btuNum);
 
-  // Link para o cliente
-  const msgCliente = `https://wa.me/55${whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(textoOrcamento)}`;
+  const orcamentoTexto =
+    `🧊 *O Esquimó - Orçamento Técnico* 🧊\n\n` +
+    `👤 *Cliente:* ${nome}\n` +
+    `📍 *Endereço:* ${endereco}\n` +
+    `❄️ *Capacidade (BTUs):* ${btuNum}\n` +
+    `🔧 *Valor da instalação:* R$ ${preco.toFixed(2).replace(".", ",")}\n\n` +
+    `🔌 *Disjuntor não incluso.*\n` +
+    `💡 *Instalação do disjuntor (opcional): R$ 80,00 (até 2 metros de cabo).* \n` +
+    `⚠️ *Obs: valores podem variar conforme infraestrutura do local.*`;
 
-  // Link para você (Wellington)
-  const seuNumero = '5581983259341';
-  const msgWellington = `https://wa.me/${seuNumero}?text=${encodeURIComponent(textoOrcamento)}`;
+  orcamentoResultado.textContent = orcamentoTexto;
 
-  // Abre duas abas: uma pro cliente, outra pra você
-  window.open(msgCliente, '_blank');
+  const telefoneCliente = telefone.replace(/\D/g, "");
+  const numeroWellington = "5581983259341";
+
+  const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(orcamentoTexto)}`;
+  const urlWellington = `https://wa.me/${numeroWellington}?text=${encodeURIComponent(orcamentoTexto)}`;
+
+  window.open(urlCliente, "_blank");
   setTimeout(() => {
-    window.open(msgWellington, '_blank');
-  }, 1500); // delay para não travar popup em alguns navegadores
+    window.open(urlWellington, "_blank");
+  }, 700);
 });
