@@ -53,7 +53,7 @@ function gerarOrcamento() {
     }
     if (tipoInstalacao === "basica") {
       texto +=
-        "Serviço: Instalação Básica\n" +
+        
         "Material utilizado:\n" +
         "- 2 metros de tubulação\n" +
         "- Cabo PP\n" +
