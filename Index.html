@@ -2,31 +2,53 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Assistente O Esquimó</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assistente Virtual - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Assistente de Orçamento</h1>
+    <h1>Escolha o serviço desejado:</h1>
+    
+    <select id="servico" onchange="exibirCampos()">
+      <option value="">Selecione</option>
+      <option value="limpeza">Limpeza</option>
+      <option value="instalacao">Instalação</option>
+      <option value="manutencao">Manutenção</option>
+    </select>
 
-    <form id="orcamentoForm">
-      <label for="nome">Nome do cliente:</label>
-      <input type="text" id="nome" required />
+    <div id="btusContainer" class="hidden">
+      <label for="btus">BTUs do aparelho:</label>
+      <select id="btus">
+        <option value="9000">9.000</option>
+        <option value="12000">12.000</option>
+        <option value="18000">18.000</option>
+        <option value="24000">24.000</option>
+      </select>
+    </div>
 
-      <label for="endereco">Endereço:</label>
-      <input type="text" id="endereco" required />
+    <div id="grauInstalacaoContainer" class="hidden">
+      <label for="tipoInstalacao">Tipo de instalação:</label>
+      <select id="tipoInstalacao">
+        <option value="basica">Básica</option>
+        <option value="tecnica">Técnica (manual técnico)</option>
+      </select>
+    </div>
 
-      <label for="btus">Capacidade do Ar (BTUs):</label>
-      <input type="text" id="btus" required placeholder="Ex: 9000" />
+    <div id="descricaoDefeitoContainer" class="hidden">
+      <label for="descricaoDefeito">Descreva o defeito:</label>
+      <textarea id="descricaoDefeito" rows="4" placeholder="Ex: ar-condicionado não está gelando..."></textarea>
+    </div>
 
-      <label for="telefone">Telefone WhatsApp do cliente:</label>
-      <input type="text" id="telefone" required placeholder="(81) 91234-5678" />
+    <div id="resumoContainer" class="hidden">
+      <h2>Resumo do orçamento:</h2>
+      <pre id="resumo"></pre>
+    </div>
 
-      <button type="submit">Gerar Orçamento</button>
-    </form>
+    <label for="telefone">Seu telefone (WhatsApp):</label>
+    <input type="tel" id="telefone" placeholder="(81) 91234-5678" />
 
-    <div id="orcamentoResultado" class="resultado"></div>
+    <button onclick="gerarOrcamento()">Gerar Orçamento</button>
   </div>
 
   <script src="script.js"></script>
