@@ -1,88 +1,72 @@
-const form = document.getElementById("orcamentoForm");
-const orcamentoResultado = document.getElementById("orcamentoResultado");
-const telefoneInput = document.getElementById("telefone");
+function exibirCampos() {
+  const servico = document.getElementById("servico").value;
+  document.getElementById("btusContainer").classList.add("hidden");
+  document.getElementById("grauInstalacaoContainer").classList.add("hidden");
+  document.getElementById("descricaoDefeitoContainer").classList.add("hidden");
+  document.getElementById("resumoContainer").classList.add("hidden");
 
-function aplicarMascaraTelefone(value) {
-  let v = value.replace(/\D/g, "");
-  if (v.length > 11) v = v.slice(0, 11);
-
-  if (v.length > 6) {
-    return `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
-  } else if (v.length > 2) {
-    return `(${v.slice(0, 2)}) ${v.slice(2)}`;
-  } else if (v.length > 0) {
-    return `(${v}`;
+  if (servico === "instalacao") {
+    document.getElementById("btusContainer").classList.remove("hidden");
+    document.getElementById("grauInstalacaoContainer").classList.remove("hidden");
+  } else if (servico === "manutencao") {
+    document.getElementById("descricaoDefeitoContainer").classList.remove("hidden");
   }
-  return "";
 }
 
-telefoneInput.addEventListener("input", (e) => {
-  e.target.value = aplicarMascaraTelefone(e.target.value);
-});
-
-function validarTelefone(tel) {
-  const regex = /^\(\d{2}\) \d{5}-\d{4}$/;
-  return regex.test(tel);
-}
-
-function calcularPreco(btu) {
-  if (btu <= 9000) return 480;
-  if (btu <= 12000) return 550;
-  if (btu <= 18000) return 750;
-  if (btu <= 24000) return 950;
-  if (btu <= 30000) return 1150;
-  if (btu <= 36000) return 1350;
-  let extra = btu - 36000;
-  let adicional = Math.ceil(extra / 6000) * 200;
-  return 1350 + adicional;
-}
-
-form.addEventListener("submit", (e) => {
-  e.preventDefault();
-
-  const nome = document.getElementById("nome").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
-  const btusStr = document.getElementById("btus").value.trim();
+function gerarOrcamento() {
+  const servico = document.getElementById("servico").value;
   const telefone = document.getElementById("telefone").value.trim();
+  let resumo = "";
+  let valor = 0;
 
-  if (!nome || !endereco || !btusStr || !telefone) {
-    alert("Por favor, preencha todos os campos.");
+  if (!servico || !telefone) {
+    alert("Preencha todos os campos obrigatórios.");
     return;
   }
 
-  if (!validarTelefone(telefone)) {
-    alert("Telefone inválido. Use o formato (XX) XXXXX-XXXX");
-    return;
+  if (servico === "limpeza") {
+    valor = 180;
+    resumo += `Serviço: Limpeza de ar-condicionado\n`;
+    resumo += `Valor base: R$ ${valor.toFixed(2)}\n`;
+    resumo += "Obs: O valor pode variar de acordo com o grau de dificuldade.";
+  } else if (servico === "instalacao") {
+    const btus = parseInt(document.getElementById("btus").value);
+    const tipoInstalacao = document.getElementById("tipoInstalacao").value;
+    valor = calcularValorInstalacao(btus);
+    resumo += `Serviço: Instalação de ar-condicionado\n`;
+    resumo += `BTUs: ${btus}\n`;
+    resumo += `Tipo de instalação: ${tipoInstalacao === "basica" ? "Básica" : "Técnica"}\n`;
+    resumo += `Valor: R$ ${valor.toFixed(2)}\n`;
+  } else if (servico === "manutencao") {
+    const defeito = document.getElementById("descricaoDefeito").value.trim();
+    resumo += `Serviço: Manutenção\n`;
+    resumo += `Defeito informado: ${defeito || "Não descrito"}\n`;
+    resumo += "O valor será informado após análise técnica.";
   }
 
-  let btuNum = parseInt(btusStr.replace(/\D/g, ""));
-  if (isNaN(btuNum)) {
-    alert("Informe um valor numérico válido para BTUs.");
-    return;
+  document.getElementById("resumo").textContent = resumo;
+  document.getElementById("resumoContainer").classList.remove("hidden");
+
+  enviarParaWhatsApp(telefone, resumo);
+}
+
+function calcularValorInstalacao(btus) {
+  switch (btus) {
+    case 9000: return 480;
+    case 12000: return 550;
+    case 18000: return 650;
+    case 24000: return 750;
+    default: return 0;
   }
+}
 
-  const preco = calcularPreco(btuNum);
+function enviarParaWhatsApp(telefoneCliente, mensagem) {
+  const telefoneFormatadoCliente = telefoneCliente.replace(/\D/g, "");
+  const telefoneProfissional = "5581983259341";
 
-  const orcamentoTexto =
-    `🧊 *O Esquimó - Orçamento Técnico* 🧊\n\n` +
-    `👤 *Cliente:* ${nome}\n` +
-    `📍 *Endereço:* ${endereco}\n` +
-    `❄️ *Capacidade (BTUs):* ${btuNum}\n` +
-    `🔧 *Valor da instalação:* R$ ${preco.toFixed(2).replace(".", ",")}\n\n` +
-    `🔌 *Disjuntor não incluso.*\n` +
-    `💡 *Instalação do disjuntor (opcional): R$ 80,00 (até 2 metros de cabo).* \n` +
-    `⚠️ *Obs: valores podem variar conforme infraestrutura do local.*`;
-
-  orcamentoResultado.textContent = orcamentoTexto;
-
-  const telefoneCliente = telefone.replace(/\D/g, "");
-  const numeroWellington = "5581983259341";
-
-  const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(orcamentoTexto)}`;
-  const urlWellington = `https://wa.me/${numeroWellington}?text=${encodeURIComponent(orcamentoTexto)}`;
+  const urlCliente = `https://wa.me/55${telefoneFormatadoCliente}?text=${encodeURIComponent(mensagem)}`;
+  const urlProfissional = `https://wa.me/${telefoneProfissional}?text=${encodeURIComponent("Novo orçamento:\n" + mensagem)}`;
 
   window.open(urlCliente, "_blank");
-  setTimeout(() => {
-    window.open(urlWellington, "_blank");
-  }, 700);
-});
+  window.open(urlProfissional, "_blank");
+}
