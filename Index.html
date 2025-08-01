@@ -2,38 +2,31 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Assistente Virtual - O Esquimó</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assistente O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Assistente Virtual - O Esquimó</h1>
-    <p>Escolha o serviço desejado:</p>
+    <h1>Assistente de Orçamento</h1>
 
-    <form id="formulario">
-      <label for="nomeCliente">Nome do Cliente:</label>
-      <input type="text" id="nomeCliente" required />
+    <form id="orcamentoForm">
+      <label for="nome">Nome do cliente:</label>
+      <input type="text" id="nome" required />
 
-      <label for="enderecoCliente">Endereço:</label>
-      <input type="text" id="enderecoCliente" required />
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" required />
 
-      <label for="btus">Capacidade Térmica (BTUs):</label>
-      <input type="text" id="btus" required />
+      <label for="btus">Capacidade do Ar (BTUs):</label>
+      <input type="text" id="btus" required placeholder="Ex: 9000" />
 
-      <label for="whatsappCliente">WhatsApp do Cliente:</label>
-      <input type="tel" id="whatsappCliente" placeholder="Ex: 81999999999" required />
+      <label for="telefone">Telefone WhatsApp do cliente:</label>
+      <input type="text" id="telefone" required placeholder="(81) 91234-5678" />
 
-      <label for="servico">Serviço:</label>
-      <select id="servico" required>
-        <option value="" disabled selected>Selecione</option>
-        <option value="instalacao">Instalação</option>
-        <option value="limpeza">Limpeza</option>
-        <option value="manutencao">Manutenção</option>
-      </select>
-
-      <button type="submit">Enviar orçamento</button>
+      <button type="submit">Gerar Orçamento</button>
     </form>
+
+    <div id="orcamentoResultado" class="resultado"></div>
   </div>
 
   <script src="script.js"></script>
