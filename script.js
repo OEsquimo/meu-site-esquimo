@@ -83,7 +83,7 @@ function gerarOrcamento() {
       return;
     }
     texto +=
-      "Serviço: Manutenção\n" +
+      "ORÇAMENTO\n" +
       "Descrição do problema: " + manutencaoDescricao + "\n" +
       "Valor: Sob avaliação após vistoria.";
   }
