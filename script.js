@@ -1,4 +1,3 @@
-Script.js
 
 document.getElementById("tipo").addEventListener("change", function() {
   const tipo = this.value;
