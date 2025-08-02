@@ -1,136 +1,78 @@
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const tipoInput = document.getElementById("tipo");
+  const btusDiv = document.getElementById("btusDiv");
+  const manutencaoDiv = document.getElementById("manutencaoDiv");
+  const valorEl = document.getElementById("valor");
+  const btusInput = document.getElementById("btus");
+  const descricaoInput = document.getElementById("descricao");
+  const nomeInput = document.getElementById("nome");
+  const telefoneInput = document.getElementById("telefone");
+  const agendarBtn = document.getElementById("agendarBtn");
+  const resumoEl = document.getElementById("orcamentoResumo");
 
-document.getElementById("tipo").addEventListener("change", function() {
-  const tipo = this.value;
-  document.getElementById("btusDiv").classList.add("hidden");
-  document.getElementById("manutencaoDiv").classList.add("hidden");
-  document.getElementById("valor").textContent = "";
-  // Reseta a seleção de BTUs ao trocar o serviço
-  document.getElementById("btus").value = ""; 
+  tipoInput.addEventListener("change", function () {
+    const tipo = tipoInput.value;
+    btusDiv.classList.add("hidden");
+    manutencaoDiv.classList.add("hidden");
+    valorEl.textContent = "";
+    resumoEl.classList.add("hidden");
+    agendarBtn.classList.add("hidden");
 
-  if (tipo === "instalacao" || tipo === "limpeza") {
-    document.getElementById("btusDiv").classList.remove("hidden");
-    // O valor só aparecerá quando o cliente selecionar os BTUs
-  } else if (tipo === "manutencao") {
-    document.getElementById("manutencaoDiv").classList.remove("hidden");
-    document.getElementById("valor").textContent = "O valor depende do tipo de defeito informado.";
-  }
-});
+    if (tipo === "instalacao" || tipo === "limpeza") {
+      btusDiv.classList.remove("hidden");
+    } else if (tipo === "manutencao") {
+      manutencaoDiv.classList.remove("hidden");
+    }
+  });
 
-document.getElementById("btus").addEventListener("change", atualizarValor);
+  const calcularValor = () => {
+    const tipo = tipoInput.value;
+    const btus = parseInt(btusInput.value);
+    const nome = nomeInput.value.trim();
+    const telefone = telefoneInput.value.trim();
+    const descricao = descricaoInput.value.trim();
 
-function atualizarValor() {
-  const tipo = document.getElementById("tipo").value;
-  const btus = parseInt(document.getElementById("btus").value);
-  let texto = "";
+    if (!nome || !telefone || !tipo) {
+      return;
+    }
 
-  // Só atualiza se um BTU válido for selecionado
-  if (!btus) {
-    document.getElementById("valor").textContent = "";
-    return;
-  }
+    let valor = 0;
+    let descricaoServico = "";
 
-  if (tipo === "instalacao") {
-    const valorBase = calcularValorInstalacao(btus);
-    texto = 
-      `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
-      `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
-      `Obs: O valor pode variar conforme a infraestrutura do local.`;
-  } else if (tipo === "limpeza") {
-    const valorBase = calcularValorLimpeza(btus);
-    texto = 
-      `Limpeza de ar-condicionado:\nValor base: R$${valorBase.toFixed(2)}\n` +
-      `(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
-  }
-  
-  document.getElementById("valor").textContent = texto;
-}
+    if (tipo === "instalacao" || tipo === "limpeza") {
+      if (!btus) return;
+      valor = btus >= 24000 ? 300 : 200;
+      if (tipo === "limpeza") valor += 50;
+      descricaoServico = `${tipo} de ar-condicionado ${btus} BTUs`;
+    } else if (tipo === "manutencao") {
+      if (!descricao) return;
+      valor = 150;
+      descricaoServico = `Manutenção: ${descricao}`;
+    }
 
-function calcularValorInstalacao(btus) {
-  const tabela = {
-    9000: 480,
-    12000: 550,
-    18000: 650,
-    24000: 750,
-    30000: 850,
+    valorEl.textContent = `Valor estimado: R$ ${valor},00`;
+
+    resumoEl.innerHTML = `
+      <h3>Resumo do Orçamento</h3>
+      <p><strong>Cliente:</strong> ${nome}</p>
+      <p><strong>WhatsApp:</strong> ${telefone}</p>
+      <p><strong>Serviço:</strong> ${descricaoServico}</p>
+      <p><strong>Valor:</strong> R$ ${valor},00</p>
+    `;
+    resumoEl.classList.remove("hidden");
+    agendarBtn.classList.remove("hidden");
   };
-  if (tabela[btus]) return tabela[btus];
-  if (btus > 30000) {
-    let extra = Math.floor((btus - 30000) / 6000);
-    return 850 + extra * 100;
-  }
-  return 0;
-}
 
-// Nova função para calcular o valor da limpeza
-function calcularValorLimpeza(btus) {
-  const tabela = {
-    9000: 180,
-    12000: 230, // 180 + 50
-    18000: 280, // 230 + 50
-    24000: 330, // 280 + 50
-    30000: 380, // 330 + 50
-  };
-  return tabela[btus] || 180; // Retorna 180 se não encontrar
-}
+  // A cada mudança relevante, recalcula o orçamento
+  [nomeInput, telefoneInput, tipoInput, btusInput, descricaoInput].forEach(input => {
+    input.addEventListener("input", calcularValor);
+    input.addEventListener("change", calcularValor);
+  });
 
-document.getElementById("orcamentoForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-
-  const nome = document.getElementById("nome").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
-  const telefone = document.getElementById("telefone").value.trim();
-  const tipo = document.getElementById("tipo").value;
-  const btus = document.getElementById("btus").value;
-  const defeito = document.getElementById("descricao").value.trim();
-
-  if (!nome || !endereco || !telefone || !tipo) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
-    return;
-  }
-  
-  // Validação específica para BTUs
-  if ((tipo === "instalacao" || tipo === "limpeza") && !btus) {
-    alert("Por favor, selecione a capacidade em BTUs.");
-    return;
-  }
-
-  let mensagem = `ORÇAMENTO\n\nCliente: ${nome}\nEndereço: ${endereco}\nWhatsApp: ${telefone}\n\nServiço: `;
-
-  if (tipo === "instalacao") {
-    const valorInst = calcularValorInstalacao(parseInt(btus));
-    mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
-  } else if (tipo === "limpeza") {
-    const valorLimpeza = calcularValorLimpeza(parseInt(btus));
-    mensagem += `Limpeza de ar-condicionado de ${btus} BTUs\nValor base: R$${valorLimpeza.toFixed(2)}\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
-  } else if (tipo === "manutencao") {
-    mensagem += `Manutenção\nDescrição do defeito: ${defeito || "Não informado"}\nValor depende do tipo de defeito.`;
-  }
-
-  const meuNumero = "5581983259341";
-
-  const telefoneCliente = telefone.replace(/\D/g, "");
-  const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(mensagem)}`;
-  const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("Novo orçamento recebido:\n\n" + mensagem)}`;
-
-  window.open(urlCliente, "_blank");
-  window.open(urlEu, "_blank");
-
-  // Limpa o formulário e o campo de valor
-  document.getElementById("orcamentoForm").reset();
-  document.getElementById("valor").textContent = "";
-  document.getElementById("agendarBtn").classList.remove("hidden");
+  agendarBtn.addEventListener("click", function () {
+    alert("Agendamento iniciado. Você pode completar a data e hora agora.");
+    // Aqui você pode abrir outro modal ou formulário com data e hora
+  });
 });
-
-// Máscara simples para telefone (formato (81) 91234-5678)
-document.getElementById("telefone").addEventListener("input", function(e) {
-  let v = e.target.value.replace(/\D/g, "");
-  if (v.length > 11) v = v.slice(0, 11);
-
-  if (v.length > 6) {
-    e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-  } else if (v.length > 2) {
-    e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
-  } else if (v.length > 0) {
-    e.target.value = `(${v}`;
-  }
-});
+</script>
