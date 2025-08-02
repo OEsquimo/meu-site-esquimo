@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,7 +10,7 @@
 </head>
 <body>
   <div class="container">
-    <h2>Escolha o serviço e gere seu orçamento</h2>
+    <h1>Assistente Virtual - O Esquimó</h1>
 
     <form id="orcamentoForm">
       <label for="nome">Nome do Cliente:</label>
@@ -18,15 +20,8 @@
       <input type="text" id="endereco" required />
 
       <label for="telefone">WhatsApp:</label>
-<input 
-  type="text" 
-  id="telefone" 
-  <small id="erro-telefone" style="color: red; display: none;"></small>
+      <input type="tel" id="telefone" placeholder="(81) 91234-5678" required />
 
-<div id="erro-telefone" style="color: red; font-size: 0.9em; display: none;">
-  Por favor, preencha um número válido no formato (xx) xxxxx-xxxx.
-</div>
-      
       <label for="tipo">Escolha o serviço desejado:</label>
       <select id="tipo" required>
         <option value="">--Selecione--</option>
