@@ -33,12 +33,12 @@ function atualizarValor() {
     const valorBase = calcularValorInstalacao(btus);
     texto = 
       `Instalação:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
-      `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
+      `Valor para instalação do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
       `Obs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
     const valorBase = calcularValorLimpeza(btus);
     texto = 
-      `Limpeza de ar-condicionado:\nValor base: R$${valorBase.toFixed(2)}\n` +
+      `Limpeza de ar-condicionado:\nValor: R$${valorBase.toFixed(2)}\n` +
       `(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
   }
   
