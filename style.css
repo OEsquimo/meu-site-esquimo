@@ -17,12 +17,15 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 1.5em;
 }
 
 label {
   display: block;
   margin-top: 15px;
   font-weight: bold;
+  font-size: 1.1em;
 }
 
 input, select, textarea {
@@ -65,4 +68,83 @@ button:hover {
   font-weight: 600;
   color: #005f73;
   white-space: pre-line;
+  font-size: 1.1em;
+}
+
+/* Estilos para os cards de serviço */
+.service-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.service-card {
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.service-card:hover {
+  background: #e3f2fd;
+  border-color: #0096c7;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 150, 199, 0.2);
+}
+
+.service-card.selected {
+  background: #0096c7;
+  border-color: #0077a8;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 150, 199, 0.3);
+}
+
+.service-icon {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.service-card h3 {
+  margin: 10px 0 5px 0;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.service-card p {
+  margin: 0;
+  font-size: 0.85em;
+  opacity: 0.8;
+}
+
+.service-card.selected p {
+  opacity: 0.9;
+}
+
+/* Destaque para campos importantes */
+#nome, #tipo {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 480px) {
+  .service-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .service-card {
+    padding: 15px;
+  }
+  
+  .container {
+    padding: 20px;
+    margin: 10px;
+  }
 }
