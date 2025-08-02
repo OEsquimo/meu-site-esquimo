@@ -1,3 +1,28 @@
+/ Adiciona funcionalidade para os cards de serviço
+document.addEventListener('DOMContentLoaded', function() {
+  const serviceCards = document.querySelectorAll('.service-card');
+  const tipoInput = document.getElementById('tipo');
+  
+  serviceCards.forEach(card => {
+    card.addEventListener('click', function() {
+      // Remove seleção anterior
+      serviceCards.forEach(c => c.classList.remove('selected'));
+      
+      // Adiciona seleção ao card clicado
+      this.classList.add('selected');
+      
+      // Atualiza o campo hidden para manter compatibilidade
+      const serviceType = this.getAttribute('data-service');
+      tipoInput.value = serviceType;
+      
+      // Dispara o evento change para manter a lógica existente
+      const changeEvent = new Event('change');
+      tipoInput.dispatchEvent(changeEvent);
+    });
+  });
+});
+
+// Mantém a lógica original do select, mas agora funciona com o campo hidden
 document.getElementById("tipo").addEventListener("change", function() {
   const tipo = this.value;
   document.getElementById("btusDiv").classList.add("hidden");
@@ -31,14 +56,14 @@ function atualizarValor() {
   if (tipo === "instalacao") {
     const valorBase = calcularValorInstalacao(btus);
     texto = 
-      `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
-      `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
-      `Obs: O valor pode variar conforme a infraestrutura do local.`;
+      `💰 Instalação básica:\nR$${valorBase.toFixed(2)}\n\n⚠️ Disjuntor não incluso.\n` +
+      `💰 Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
+      `⚠️ Obs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
     const valorBase = calcularValorLimpeza(btus);
     texto = 
-      `Limpeza de ar-condicionado:\nValor base: R$${valorBase.toFixed(2)}\n` +
-      `(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
+      `🧽 Limpeza de ar-condicionado:\n💰 Valor base: R$${valorBase.toFixed(2)}\n` +
+      `⚠️ (obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
   }
   
   document.getElementById("valor").textContent = texto;
@@ -83,36 +108,55 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
   const defeito = document.getElementById("descricao").value.trim();
 
   if (!nome || !endereco || !telefone || !tipo) {
-    alert("Por favor, preencha todos os campos obrigatórios.");
+    alert("⚠️ Por favor, preencha todos os campos obrigatórios.");
     return;
   }
   
   // Validação específica para BTUs
   if ((tipo === "instalacao" || tipo === "limpeza") && !btus) {
-    alert("Por favor, selecione a capacidade em BTUs.");
+    alert("⚠️ Por favor, selecione a capacidade em BTUs.");
     return;
   }
 
-  let mensagem = `ORÇAMENTO\n\nCliente: ${nome}\nEndereço: ${endereco}\nWhatsApp: ${telefone}\n\nServiço: `;
+  // Formatação melhorada da mensagem com ícones
+  let mensagem = `🔧 *ORÇAMENTO - O ESQUIMÓ*\n\n👤 *Cliente:* ${nome}\n📍 *Endereço:* ${endereco}\n📱 *WhatsApp:* ${telefone}\n\n🛠️ *Serviço:* `;
 
   if (tipo === "instalacao") {
     const valorInst = calcularValorInstalacao(parseInt(btus));
-    mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
+    mensagem += `*Instalação básica*\n❄️ *Capacidade:* ${btus} BTUs\n💰 *Valor:* R$${valorInst.toFixed(2)}\n💰 *Disjuntor:* R$80,00 (2 metros de cabo)\n⚠️ *Obs:* O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
     const valorLimpeza = calcularValorLimpeza(parseInt(btus));
-    mensagem += `Limpeza de ar-condicionado de ${btus} BTUs\nValor base: R$${valorLimpeza.toFixed(2)}\n(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
+    mensagem += `*Limpeza de ar-condicionado*\n❄️ *Capacidade:* ${btus} BTUs\n💰 *Valor base:* R$${valorLimpeza.toFixed(2)}\n⚠️ *Obs:* pode variar conforme a dificuldade do acesso ao equipamento`;
   } else if (tipo === "manutencao") {
-    mensagem += `Manutenção\nDescrição do defeito: ${defeito || "Não informado"}\nValor depende do tipo de defeito.`;
+    mensagem += `*Manutenção*\n🔍 *Descrição do defeito:* ${defeito || "Não informado"}\n💰 *Valor:* depende do tipo de defeito.`;
   }
 
   const meuNumero = "5581983259341";
 
   const telefoneCliente = telefone.replace(/\D/g, "");
   const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(mensagem)}`;
-  const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("Novo orçamento recebido:\n\n" + mensagem)}`;
+  const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("🆕 *Novo orçamento recebido:*\n\n" + mensagem)}`;
 
   window.open(urlCliente, "_blank");
   window.open(urlEu, "_blank");
+
+  // Limpa os campos após o envio
+  document.getElementById("nome").value = "";
+  document.getElementById("endereco").value = "";
+  document.getElementById("telefone").value = "";
+  document.getElementById("tipo").value = "";
+  document.getElementById("btus").value = "";
+  document.getElementById("descricao").value = "";
+  document.getElementById("valor").textContent = "";
+  
+  // Remove seleção dos cards
+  document.querySelectorAll('.service-card').forEach(card => {
+    card.classList.remove('selected');
+  });
+  
+  // Esconde divs condicionais
+  document.getElementById("btusDiv").classList.add("hidden");
+  document.getElementById("manutencaoDiv").classList.add("hidden");
 });
 
 // Máscara simples para telefone (formato (81) 91234-5678)
