@@ -101,6 +101,7 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
     const telefoneNumeros = telefone.replace(/\D/g, "");
 if (telefoneNumeros.length !== 11) {
   alert("Por favor, insira um número de telefone válido com DDD.");
+  document.getElementById("telefone").focus();
   return;
 }
     mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
