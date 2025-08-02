@@ -99,11 +99,22 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
   if (tipo === "instalacao") {
     const valorInst = calcularValorInstalacao(parseInt(btus));
     const telefoneNumeros = telefone.replace(/\D/g, "");
+// atualização 
+
+    const campoErroTelefone = document.getElementById("erro-telefone");
+
 if (telefoneNumeros.length !== 11) {
-  alert("Por favor, insira um número de telefone válido com DDD.");
+  campoErroTelefone.textContent = "Número de telefone incompleto. Preencha com DDD e 9 dígitos.";
+  campoErroTelefone.style.display = "block";
   document.getElementById("telefone").focus();
   return;
+} else {
+  campoErroTelefone.textContent = "";
+  campoErroTelefone.style.display = "none";
 }
+
+
+// fim da atualização 
     mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
     const valorLimpeza = calcularValorLimpeza(parseInt(btus));
