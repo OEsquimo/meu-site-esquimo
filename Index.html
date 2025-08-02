@@ -1,61 +1,40 @@
+<form id="orcamentoForm">
+  <label for="nome">Nome:</label>
+  <input type="text" id="nome" />
 
+  <label for="telefone">WhatsApp:</label>
+  <input type="text" id="telefone" />
 
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Assistente Virtual - O Esquimó</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="container">
-    <h2>Selecione um serviço para gerar seu orçamento</h2>
+  <label for="tipo">Tipo de serviço:</label>
+  <select id="tipo">
+    <option value="">Selecione</option>
+    <option value="instalacao">Instalação</option>
+    <option value="limpeza">Limpeza</option>
+    <option value="manutencao">Manutenção</option>
+  </select>
 
-    <form id="orcamentoForm">
-      <label for="nome">Nome do Cliente:</label>
-      <input type="text" id="nome" required />
-
-      <label for="endereco">Endereço:</label>
-      <input type="text" id="endereco" required />
-
-      <label for="telefone">WhatsApp:</label>
-      <input type="tel" id="telefone" placeholder="(xx) xxxxx-xxxx" required />
-
-      <label for="tipo">Escolha o serviço desejado:</label>
-      <select id="tipo" required>
-        <option value="">--Selecione--</option>
-        <option value="instalacao">Instalação</option>
-        <option value="limpeza">Limpeza</option>
-        <option value="manutencao">Manutenção</option>
-      </select>
-
-      <div id="btusDiv" class="hidden">
-        <label for="btus">Capacidade (BTUs):</label>
-        <select id="btus">
-          <option value="">--Selecione a capacidade--</option>
-          <option value="9000">9.000 BTUs</option>
-          <option value="12000">12.000 BTUs</option>
-          <option value="18000">18.000 BTUs</option>
-          <option value="24000">24.000 BTUs</option>
-          <option value="30000">30.000 BTUs</option>
-        </select>
-      </div>
-
-      <div id="manutencaoDiv" class="hidden">
-        <label for="descricao">Descreva o defeito:</label>
-        <textarea id="descricao"></textarea>
-      </div>
-
-      <p id="valor"></p>
-
-      <!-- <button type="submit">Gerar Orçamento</button> -->
-
-<button type="button" id="agendarBtn" class="hidden">Fazer Agendamento</button>
-      
-    </form>
+  <div id="btusDiv" class="hidden">
+    <label for="btus">Capacidade (BTUs):</label>
+    <select id="btus">
+      <option value="">Selecione</option>
+      <option value="9000">9.000 BTUs</option>
+      <option value="12000">12.000 BTUs</option>
+      <option value="18000">18.000 BTUs</option>
+      <option value="24000">24.000 BTUs</option>
+      <option value="30000">30.000 BTUs</option>
+    </select>
   </div>
 
-  <script src="script.js"></script>
-</body>
-</html>
+  <div id="manutencaoDiv" class="hidden">
+    <label for="descricao">Descreva o defeito:</label>
+    <textarea id="descricao"></textarea>
+  </div>
+
+  <p id="valor"></p>
+
+  <!-- Botão de agendamento -->
+  <button type="button" id="agendarBtn" class="hidden">Fazer Agendamento</button>
+</form>
+
+<!-- Resultado do orçamento -->
+<div id="orcamentoResumo" class="hidden"></div>
