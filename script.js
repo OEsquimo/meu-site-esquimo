@@ -114,6 +114,10 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
 
   window.open(urlCliente, "_blank");
   window.open(urlEu, "_blank");
+
+  // Limpa o formulário e o campo de valor
+  document.getElementById("orcamentoForm").reset();
+  document.getElementById("valor").textContent = "";
 });
 
 // Máscara simples para telefone (formato (81) 91234-5678)
