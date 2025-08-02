@@ -1,4 +1,4 @@
-Style.css
+
 
 body {
   font-family: Arial, sans-serif;
@@ -34,8 +34,8 @@ input, select, textarea {
   border: 1px solid #ccc;
   border-radius: 5px;
   box-sizing: border-box;
-  font-size: 18px;
 }
+
 textarea {
   resize: vertical;
   min-height: 80px;
