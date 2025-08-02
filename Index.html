@@ -1,169 +1,56 @@
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  // Seletores principais
-  const serviceCards = document.querySelectorAll('.service-card');
-  const tipoInput = document.getElementById('tipo');
-  const btusSelect = document.getElementById('btus');
-  const valorDiv = document.getElementById('valor');
-  const btusDiv = document.getElementById('btusDiv');
-  const manutencaoDiv = document.getElementById('manutencaoDiv');
-  const form = document.getElementById('orcamentoForm');
-  const telefoneInput = document.getElementById('telefone');
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Assistente Virtual - O Esquimó</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Assistente Virtual - O Esquimó</h1>
 
-  // Funcionalidade de seleção de serviço via card
-  if (serviceCards && tipoInput) {
-    serviceCards.forEach(card => {
-      card.addEventListener('click', function () {
-        serviceCards.forEach(c => c.classList.remove('selected'));
-        this.classList.add('selected');
-        tipoInput.value = this.getAttribute('data-service');
+    <form id="orcamentoForm">
+      <label for="nome">Nome do Cliente:</label>
+      <input type="text" id="nome" required />
 
-        const changeEvent = new Event('change');
-        tipoInput.dispatchEvent(changeEvent);
-      });
-    });
-  }
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" required />
 
-  // Reação à mudança de tipo de serviço
-  if (tipoInput) {
-    tipoInput.addEventListener('change', function () {
-      const tipo = this.value;
-      if (btusDiv) btusDiv.classList.add('hidden');
-      if (manutencaoDiv) manutencaoDiv.classList.add('hidden');
-      if (valorDiv) valorDiv.textContent = "";
-      if (btusSelect) btusSelect.value = "";
+      <label for="telefone">WhatsApp:</label>
+      <input type="tel" id="telefone" placeholder="(81) 91234-5678" required />
 
-      if (tipo === "instalacao" || tipo === "limpeza") {
-        if (btusDiv) btusDiv.classList.remove('hidden');
-      } else if (tipo === "manutencao") {
-        if (manutencaoDiv) manutencaoDiv.classList.remove('hidden');
-        if (valorDiv) valorDiv.textContent = "O valor depende do tipo de defeito informado.";
-      }
-    });
-  }
+      <label for="tipo">Escolha o serviço desejado:</label>
+      <select id="tipo" required>
+        <option value="">--Selecione--</option>
+        <option value="instalacao">Instalação</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="manutencao">Manutenção</option>
+      </select>
 
-  // Atualiza valor com base no BTU
-  if (btusSelect) {
-    btusSelect.addEventListener('change', atualizarValor);
-  }
+      <div id="btusDiv" class="hidden">
+        <label for="btus">Capacidade (BTUs):</label>
+        <select id="btus">
+          <option value="">--Selecione a capacidade--</option>
+          <option value="9000">9.000 BTUs</option>
+          <option value="12000">12.000 BTUs</option>
+          <option value="18000">18.000 BTUs</option>
+          <option value="24000">24.000 BTUs</option>
+          <option value="30000">30.000 BTUs</option>
+        </select>
+      </div>
 
-  function atualizarValor() {
-    const tipo = tipoInput?.value;
-    const btus = parseInt(btusSelect?.value);
-    if (!btus || !valorDiv) {
-      valorDiv.textContent = "";
-      return;
-    }
+      <div id="manutencaoDiv" class="hidden">
+        <label for="descricao">Descreva o defeito:</label>
+        <textarea id="descricao"></textarea>
+      </div>
 
-    let texto = "";
+      <p id="valor"></p>
 
-    if (tipo === "instalacao") {
-      const valorBase = calcularValorInstalacao(btus);
-      texto =
-        `💰 Instalação básica:\nR$${valorBase.toFixed(2)}\n\n⚠️ Disjuntor não incluso.\n` +
-        `💰 Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
-        `⚠️ Obs: O valor pode variar conforme a infraestrutura do local.`;
-    } else if (tipo === "limpeza") {
-      const valorBase = calcularValorLimpeza(btus);
-      texto =
-        `🧽 Limpeza de ar-condicionado:\n💰 Valor base: R$${valorBase.toFixed(2)}\n` +
-        `⚠️ (obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
-    }
+      <button type="submit">Gerar Orçamento</button>
+    </form>
+  </div>
 
-    valorDiv.textContent = texto;
-  }
-
-  function calcularValorInstalacao(btus) {
-    const tabela = {
-      9000: 480,
-      12000: 550,
-      18000: 650,
-      24000: 750,
-      30000: 850,
-    };
-    if (tabela[btus]) return tabela[btus];
-    if (btus > 30000) {
-      const extra = Math.floor((btus - 30000) / 6000);
-      return 850 + extra * 100;
-    }
-    return 0;
-  }
-
-  function calcularValorLimpeza(btus) {
-    const tabela = {
-      9000: 180,
-      12000: 230,
-      18000: 280,
-      24000: 330,
-      30000: 380,
-    };
-    return tabela[btus] || 180;
-  }
-
-  // Envio do formulário
-  if (form) {
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const nome = document.getElementById("nome")?.value.trim();
-      const endereco = document.getElementById("endereco")?.value.trim();
-      const telefone = telefoneInput?.value.trim();
-      const tipo = tipoInput?.value;
-      const btus = btusSelect?.value;
-      const defeito = document.getElementById("descricao")?.value.trim();
-
-      if (!nome || !endereco || !telefone || !tipo) {
-        alert("⚠️ Por favor, preencha todos os campos obrigatórios.");
-        return;
-      }
-
-      if ((tipo === "instalacao" || tipo === "limpeza") && !btus) {
-        alert("⚠️ Por favor, selecione a capacidade em BTUs.");
-        return;
-      }
-
-      let mensagem = `🔧 *ORÇAMENTO - O ESQUIMÓ*\n\n👤 *Cliente:* ${nome}\n📍 *Endereço:* ${endereco}\n📱 *WhatsApp:* ${telefone}\n\n🛠️ *Serviço:* `;
-
-      if (tipo === "instalacao") {
-        const valorInst = calcularValorInstalacao(parseInt(btus));
-        mensagem += `*Instalação básica*\n❄️ *Capacidade:* ${btus} BTUs\n💰 *Valor:* R$${valorInst.toFixed(2)}\n💰 *Disjuntor:* R$80,00 (2 metros de cabo)\n⚠️ *Obs:* O valor pode variar conforme a infraestrutura do local.`;
-      } else if (tipo === "limpeza") {
-        const valorLimpeza = calcularValorLimpeza(parseInt(btus));
-        mensagem += `*Limpeza de ar-condicionado*\n❄️ *Capacidade:* ${btus} BTUs\n💰 *Valor base:* R$${valorLimpeza.toFixed(2)}\n⚠️ *Obs:* pode variar conforme a dificuldade do acesso ao equipamento`;
-      } else if (tipo === "manutencao") {
-        mensagem += `*Manutenção*\n🔍 *Descrição do defeito:* ${defeito || "Não informado"}\n💰 *Valor:* depende do tipo de defeito.`;
-      }
-
-      const meuNumero = "5581983259341";
-      const telefoneCliente = telefone.replace(/\D/g, "");
-      const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(mensagem)}`;
-      const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("🆕 *Novo orçamento recebido:*\n\n" + mensagem)}`;
-
-      window.open(urlCliente, "_blank");
-      window.open(urlEu, "_blank");
-
-      form.reset();
-      if (valorDiv) valorDiv.textContent = "";
-      serviceCards.forEach(card => card.classList.remove('selected'));
-      if (btusDiv) btusDiv.classList.add("hidden");
-      if (manutencaoDiv) manutencaoDiv.classList.add("hidden");
-    });
-  }
-
-  // Máscara para telefone
-  if (telefoneInput) {
-    telefoneInput.addEventListener("input", function (e) {
-      let v = e.target.value.replace(/\D/g, "");
-      if (v.length > 11) v = v.slice(0, 11);
-
-      if (v.length > 6) {
-        e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
-      } else if (v.length > 2) {
-        e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-      } else if (v.length > 0) {
-        e.target.value = `(${v}`;
-      }
-    });
-  }
-});
-</script>
+  <script src="script.js"></script>
+</body>
+</html>
