@@ -1,15 +1,12 @@
-
 document.getElementById("tipo").addEventListener("change", function() {
   const tipo = this.value;
   document.getElementById("btusDiv").classList.add("hidden");
   document.getElementById("manutencaoDiv").classList.add("hidden");
   document.getElementById("valor").textContent = "";
-  // Reseta a seleção de BTUs ao trocar o serviço
   document.getElementById("btus").value = ""; 
 
   if (tipo === "instalacao" || tipo === "limpeza") {
     document.getElementById("btusDiv").classList.remove("hidden");
-    // O valor só aparecerá quando o cliente selecionar os BTUs
   } else if (tipo === "manutencao") {
     document.getElementById("manutencaoDiv").classList.remove("hidden");
     document.getElementById("valor").textContent = "O valor depende do tipo de defeito informado.";
@@ -23,7 +20,6 @@ function atualizarValor() {
   const btus = parseInt(document.getElementById("btus").value);
   let texto = "";
 
-  // Só atualiza se um BTU válido for selecionado
   if (!btus) {
     document.getElementById("valor").textContent = "";
     return;
@@ -61,16 +57,15 @@ function calcularValorInstalacao(btus) {
   return 0;
 }
 
-// Nova função para calcular o valor da limpeza
 function calcularValorLimpeza(btus) {
   const tabela = {
     9000: 180,
-    12000: 230, // 180 + 50
-    18000: 280, // 230 + 50
-    24000: 330, // 280 + 50
-    30000: 380, // 330 + 50
+    12000: 230,
+    18000: 280,
+    24000: 330,
+    30000: 380,
   };
-  return tabela[btus] || 180; // Retorna 180 se não encontrar
+  return tabela[btus] || 180;
 }
 
 document.getElementById("orcamentoForm").addEventListener("submit", function(e) {
@@ -87,34 +82,29 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
     alert("Por favor, preencha todos os campos obrigatórios.");
     return;
   }
-  
-  // Validação específica para BTUs
+
   if ((tipo === "instalacao" || tipo === "limpeza") && !btus) {
     alert("Por favor, selecione a capacidade em BTUs.");
     return;
+  }
+
+  const telefoneNumeros = telefone.replace(/\D/g, "");
+  const campoErroTelefone = document.getElementById("erro-telefone");
+
+  if (telefoneNumeros.length !== 11) {
+    campoErroTelefone.textContent = "Número de telefone incompleto. Preencha com DDD e 9 dígitos.";
+    campoErroTelefone.style.display = "block";
+    document.getElementById("telefone").focus();
+    return;
+  } else {
+    campoErroTelefone.textContent = "";
+    campoErroTelefone.style.display = "none";
   }
 
   let mensagem = `ORÇAMENTO\n\nCliente: ${nome}\nEndereço: ${endereco}\nWhatsApp: ${telefone}\n\nServiço: `;
 
   if (tipo === "instalacao") {
     const valorInst = calcularValorInstalacao(parseInt(btus));
-    const telefoneNumeros = telefone.replace(/\D/g, "");
-// atualização 
-
-    const campoErroTelefone = document.getElementById("erro-telefone");
-
-if (telefoneNumeros.length !== 11) {
-  campoErroTelefone.textContent = "Número de telefone incompleto. Preencha com DDD e 9 dígitos.";
-  campoErroTelefone.style.display = "block";
-  document.getElementById("telefone").focus();
-  return;
-} else {
-  campoErroTelefone.textContent = "";
-  campoErroTelefone.style.display = "none";
-}
-
-
-// fim da atualização 
     mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
     const valorLimpeza = calcularValorLimpeza(parseInt(btus));
@@ -125,19 +115,16 @@ if (telefoneNumeros.length !== 11) {
 
   const meuNumero = "5581983259341";
 
-  const telefoneCliente = telefone.replace(/\D/g, "");
-  const urlCliente = `https://wa.me/55${telefoneCliente}?text=${encodeURIComponent(mensagem)}`;
+  const urlCliente = `https://wa.me/55${telefoneNumeros}?text=${encodeURIComponent(mensagem)}`;
   const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("Novo orçamento recebido:\n\n" + mensagem)}`;
 
   window.open(urlCliente, "_blank");
-window.open(urlEu, "_blank");
+  window.open(urlEu, "_blank");
 
-// ✅ Limpa os campos preenchidos pelo cliente
-document.getElementById("orcamentoForm").reset();
-document.getElementById("valor").textContent = "";
+  document.getElementById("orcamentoForm").reset();
+  document.getElementById("valor").textContent = "";
 });
 
-// Máscara simples para telefone (formato (81) 91234-5678)
 document.getElementById("telefone").addEventListener("input", function(e) {
   let v = e.target.value.replace(/\D/g, "");
   if (v.length > 11) v = v.slice(0, 11);
