@@ -18,9 +18,18 @@
       <input type="text" id="endereco" required />
 
       <label for="telefone">WhatsApp:</label>
-      
-<input type="text" id="telefone" name="telefone" placeholder="(xx) xxxxx-xxxx" maxlength="15">
-<div id="erro-telefone" style="color: red; font-size: 0.9em; display: none;"></div>
+<input 
+  type="text" 
+  id="telefone" 
+  name="telefone" 
+  placeholder="(xx) xxxxx-xxxx" 
+  maxlength="15" 
+  required 
+  oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');"
+/>
+<div id="erro-telefone" style="color: red; font-size: 0.9em; display: none;">
+  Por favor, preencha um número válido no formato (xx) xxxxx-xxxx.
+</div>
       
       <label for="tipo">Escolha o serviço desejado:</label>
       <select id="tipo" required>
