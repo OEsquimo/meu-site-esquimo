@@ -51,6 +51,49 @@
 
       <!-- Botão Agendar aparece somente após preencher os dados -->
       <button type="button" id="agendarBtn" class="hidden">Fazer Agendamento</button>
+
+      <!-- Formulário de agendamento (só aparece após clicar em "Agendar") -->
+<div id="formularioAgendamento" class="hidden">
+  <h2>Agendamento</h2>
+
+  <label>Nome:</label>
+  <input type="text" id="agNome" readonly>
+
+  <label>Telefone:</label>
+  <input type="text" id="agTelefone" readonly>
+
+  <label>Serviço:</label>
+  <input type="text" id="agServico" readonly>
+
+  <label>BTUs:</label>
+  <input type="text" id="agBtus" readonly>
+
+  <label>Endereço:</label>
+  <input type="text" id="agEndereco" readonly>
+
+  <label>Observações:</label>
+  <textarea id="agObs" readonly></textarea>
+
+  <label>Valor:</label>
+  <input type="text" id="agValor" readonly>
+
+  <label>Data:</label>
+  <input type="date" id="agData" required>
+
+  <label>Hora:</label>
+  <input type="time" id="agHora" required>
+
+  <label>Forma de pagamento:</label>
+  <select id="agPagamento" required>
+    <option value="">Selecione</option>
+    <option value="Dinheiro">Dinheiro</option>
+    <option value="PIX">PIX</option>
+    <option value="Cartão de débito">Cartão de débito</option>
+    <option value="Cartão de crédito">Cartão de crédito</option>
+  </select>
+
+  <button onclick="confirmarAgendamento()">Confirmar agendamento</button>
+</div>
       
     </form>
   </div>
