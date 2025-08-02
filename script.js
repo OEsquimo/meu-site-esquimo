@@ -1,122 +1,99 @@
-document.getElementById("tipo").addEventListener("change", function() {
-  const tipo = this.value;
-  document.getElementById("btusDiv").classList.add("hidden");
-  document.getElementById("manutencaoDiv").classList.add("hidden");
-  document.getElementById("valor").textContent = "";
-  // Reseta a seleção de BTUs ao trocar o serviço
-  document.getElementById("btus").value = ""; 
+document.addEventListener('DOMContentLoaded', function () {
+  const tipoSelect = document.getElementById('tipo');
+  const btusDiv = document.getElementById('btusDiv');
+  const manutencaoDiv = document.getElementById('manutencaoDiv');
+  const btusSelect = document.getElementById('btus');
+  const descricao = document.getElementById('descricao');
+  const valorSpan = document.getElementById('valor');
+  const agendarBtn = document.getElementById('agendarBtn');
+  const formularioAgendamento = document.getElementById('formularioAgendamento');
 
-  document.getElementById("agendarBtn").classList.add("hidden"); // Esconde o botão ao mudar tipo
+  // Mostrar campos específicos dependendo do tipo de serviço
+  tipoSelect.addEventListener('change', function () {
+    const tipo = this.value;
+    btusDiv.classList.add('hidden');
+    manutencaoDiv.classList.add('hidden');
+    valorSpan.textContent = "";
+    agendarBtn.classList.add('hidden');
+    formularioAgendamento.classList.add('hidden');
 
-  if (tipo === "instalacao" || tipo === "limpeza") {
-    document.getElementById("btusDiv").classList.remove("hidden");
-    // O valor só aparecerá quando o cliente selecionar os BTUs
-  } else if (tipo === "manutencao") {
-    document.getElementById("manutencaoDiv").classList.remove("hidden");
-    document.getElementById("valor").textContent = "O valor depende do tipo de defeito informado.";
+    if (tipo === 'instalacao' || tipo === 'limpeza') {
+      btusDiv.classList.remove('hidden');
+    } else if (tipo === 'manutencao') {
+      manutencaoDiv.classList.remove('hidden');
+    }
+  });
+
+  // Calcular valor automaticamente
+  document.getElementById('btus').addEventListener('change', calcularValor);
+  document.getElementById('tipo').addEventListener('change', calcularValor);
+
+  function calcularValor() {
+    const tipo = tipoSelect.value;
+    const btus = btusSelect.value;
+
+    let valor = 0;
+
+    if (tipo === 'instalacao') {
+      if (btus === '9000' || btus === '12000') valor = 250;
+      else if (btus === '18000') valor = 300;
+      else if (btus === '24000') valor = 350;
+      else if (btus === '30000') valor = 400;
+    }
+
+    if (tipo === 'limpeza') {
+      if (btus === '9000' || btus === '12000') valor = 100;
+      else if (btus === '18000') valor = 150;
+      else if (btus === '24000') valor = 200;
+      else if (btus === '30000') valor = 250;
+    }
+
+    if (tipo === 'manutencao') {
+      valor = 120;
+    }
+
+    if (valor > 0) {
+      valorSpan.textContent = `Valor estimado: R$ ${valor},00`;
+      agendarBtn.classList.remove('hidden');
+    } else {
+      valorSpan.textContent = "";
+      agendarBtn.classList.add('hidden');
+    }
   }
+
+  // Preencher e mostrar formulário de agendamento
+  agendarBtn.addEventListener('click', function () {
+    const nome = document.getElementById('nome').value;
+    const telefone = document.getElementById('telefone').value;
+    const endereco = document.getElementById('endereco').value;
+    const tipo = tipoSelect.value;
+    const btus = btusSelect.value;
+    const obs = descricao.value;
+    const valorTexto = valorSpan.textContent.replace("Valor estimado: ", "");
+
+    document.getElementById('agNome').value = nome;
+    document.getElementById('agTelefone').value = telefone;
+    document.getElementById('agEndereco').value = endereco;
+    document.getElementById('agServico').value = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+    document.getElementById('agBtus').value = btus ? `${btus} BTUs` : '';
+    document.getElementById('agObs').value = obs;
+    document.getElementById('agValor').value = valorTexto;
+
+    formularioAgendamento.classList.remove('hidden');
+    agendarBtn.classList.add('hidden');
+  });
 });
 
-document.getElementById("btus").addEventListener("change", atualizarValor);
+// Simula confirmação do agendamento
+function confirmarAgendamento() {
+  const data = document.getElementById('agData').value;
+  const hora = document.getElementById('agHora').value;
+  const pagamento = document.getElementById('agPagamento').value;
 
-// Atualiza o valor do orçamento e mostra o botão agendar
-function atualizarValor() {
-  const tipo = document.getElementById("tipo").value;
-  const btus = parseInt(document.getElementById("btus").value);
-  let texto = "";
-
-  document.getElementById("agendarBtn").classList.add("hidden"); // Esconde o botão antes de atualizar
-
-  // Só atualiza se um BTU válido for selecionado
-  if (!btus) {
-    document.getElementById("valor").textContent = "";
+  if (!data || !hora || !pagamento) {
+    alert('Preencha data, hora e forma de pagamento!');
     return;
   }
 
-  if (tipo === "instalacao") {
-    const valorBase = calcularValorInstalacao(btus);
-    texto = 
-      `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
-      `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
-      `Obs: O valor pode variar conforme a infraestrutura do local.`;
-  } else if (tipo === "limpeza") {
-    const valorBase = calcularValorLimpeza(btus);
-    texto = 
-      `Limpeza de ar-condicionado:\nValor base: R$${valorBase.toFixed(2)}\n` +
-      `(obs: pode variar conforme a dificuldade do acesso ao equipamento)`;
-  }
-
-  document.getElementById("valor").textContent = texto;
-  document.getElementById("agendarBtn").classList.remove("hidden"); // Mostra o botão agendar após atualizar valor
+  alert('Agendamento confirmado!');
 }
-
-function calcularValorInstalacao(btus) {
-  const tabela = {
-    9000: 480,
-    12000: 550,
-    18000: 650,
-    24000: 750,
-    30000: 850,
-  };
-  if (tabela[btus]) return tabela[btus];
-  if (btus > 30000) {
-    let extra = Math.floor((btus - 30000) / 6000);
-    return 850 + extra * 100;
-  }
-  return 0;
-}
-
-// Nova função para calcular o valor da limpeza
-function calcularValorLimpeza(btus) {
-  const tabela = {
-    9000: 180,
-    12000: 230,
-    18000: 280,
-    24000: 330,
-    30000: 380,
-  };
-  return tabela[btus] || 180;
-}
-
-// Manutenção exibe orçamento ao preencher o defeito e tipo
-document.getElementById("descricao").addEventListener("input", function() {
-  const defeito = this.value.trim();
-  const tipo = document.getElementById("tipo").value;
-
-  if (tipo === "manutencao") {
-    if (defeito.length > 2) {
-      document.getElementById("valor").textContent = 
-        `Manutenção\nDescrição do defeito: ${defeito}\nValor depende do tipo de defeito.`;
-      document.getElementById("agendarBtn").classList.remove("hidden");
-    } else {
-      document.getElementById("valor").textContent = "O valor depende do tipo de defeito informado.";
-      document.getElementById("agendarBtn").classList.add("hidden");
-    }
-  }
-});
-
-// Esconde o botão agendar se mudar o formulário (resetar)
-document.getElementById("orcamentoForm").addEventListener("reset", function() {
-  document.getElementById("agendarBtn").classList.add("hidden");
-  document.getElementById("valor").textContent = "";
-});
-
-// Máscara simples para telefone (formato (81) 91234-5678)
-document.getElementById("telefone").addEventListener("input", function(e) {
-  let v = e.target.value.replace(/\D/g, "");
-  if (v.length > 11) v = v.slice(0, 11);
-
-  if (v.length > 6) {
-    e.target.value = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
-  } else if (v.length > 2) {
-    e.target.value = `(${v.slice(0,2)}) ${v.slice(2)}`;
-  } else if (v.length > 0) {
-    e.target.value = `(${v}`;
-  }
-});
-
-// Aqui você pode adicionar o evento para o botão "Agendar"
-document.getElementById("agendarBtn").addEventListener("click", function() {
-  alert("Aqui você pode abrir o formulário de agendamento com os dados já preenchidos.");
-  // Ou qualquer ação que desejar para o agendamento
-});
