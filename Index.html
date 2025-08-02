@@ -22,12 +22,7 @@
   type="text" 
   id="telefone" 
   <small id="erro-telefone" style="color: red; display: none;"></small>
-  name="telefone" 
-  placeholder="(xx) xxxxx-xxxx" 
-  maxlength="15" 
-  required 
-  oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3');"
-/>
+
 <div id="erro-telefone" style="color: red; font-size: 0.9em; display: none;">
   Por favor, preencha um número válido no formato (xx) xxxxx-xxxx.
 </div>
