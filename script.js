@@ -32,7 +32,7 @@ function atualizarValor() {
   if (tipo === "instalacao") {
     const valorBase = calcularValorInstalacao(btus);
     texto = 
-      `Instalação básica:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
+      `Instalação:\nR$${valorBase.toFixed(2)}\n\nDisjuntor não incluso.\n` +
       `Valor do disjuntor: R$80,00 (com 2 metros de cabo até a fonte de energia mais próxima).\n` +
       `Obs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
