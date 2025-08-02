@@ -113,7 +113,11 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
   const urlEu = `https://wa.me/${meuNumero}?text=${encodeURIComponent("Novo orçamento recebido:\n\n" + mensagem)}`;
 
   window.open(urlCliente, "_blank");
-  window.open(urlEu, "_blank");
+window.open(urlEu, "_blank");
+
+// ✅ Limpa os campos preenchidos pelo cliente
+document.getElementById("orcamentoForm").reset();
+document.getElementById("valor").textContent = "";
 });
 
 // Máscara simples para telefone (formato (81) 91234-5678)
