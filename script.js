@@ -98,6 +98,11 @@ document.getElementById("orcamentoForm").addEventListener("submit", function(e) 
 
   if (tipo === "instalacao") {
     const valorInst = calcularValorInstalacao(parseInt(btus));
+    const telefoneNumeros = telefone.replace(/\D/g, "");
+if (telefoneNumeros.length !== 11) {
+  alert("Por favor, insira um número de telefone válido com DDD.");
+  return;
+}
     mensagem += `Instalação básica de ${btus} BTUs\nValor: R$${valorInst.toFixed(2)}\nDisjuntor: R$80,00 (2 metros de cabo)\nObs: O valor pode variar conforme a infraestrutura do local.`;
   } else if (tipo === "limpeza") {
     const valorLimpeza = calcularValorLimpeza(parseInt(btus));
