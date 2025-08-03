@@ -3,66 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Agendamento - O Esquimó</title>
+  <title>Orçamento Ar-Condicionado - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Agende seu Serviço</h1>
-    
-    <form id="agendamentoForm">
-      <label for="nome">Nome:</label>
-      <input type="text" id="nome" placeholder="Digite seu nome" required />
+  <main class="container">
+    <h1>Orçamento de Ar-Condicionado</h1>
 
-      <label for="telefone">WhatsApp:</label>
-      <input type="tel" id="telefone" placeholder="(xx) xxxxx-xxxx" required />
+    <form id="formOrcamento" novalidate>
+      <fieldset>
+        <legend>Dados do Cliente</legend>
 
-      <label for="endereco">Endereço:</label>
-      <textarea id="endereco" placeholder="Rua, número, bairro..." required></textarea>
+        <label for="nome">Nome Completo *</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required />
 
-      <label for="tipo">Tipo de Serviço:</label>
-      <select id="tipo" required>
-        <option value="">Selecione</option>
-        <option value="instalacao">Instalação</option>
-        <option value="manutencao">Manutenção</option>
-      </select>
+        <label for="endereco">Endereço *</label>
+        <input type="text" id="endereco" name="endereco" placeholder="Seu endereço" required />
 
-      <div id="btusDiv" class="hidden">
-        <label for="btus">Capacidade do Ar (BTUs):</label>
-        <select id="btus">
-          <option value="">Escolha</option>
-          <option value="9000">9.000 BTUs</option>
-          <option value="12000">12.000 BTUs</option>
-          <option value="18000">18.000 BTUs</option>
-          <option value="24000">24.000 BTUs</option>
+        <label for="whatsapp">WhatsApp *</label>
+        <input type="tel" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" maxlength="15" required />
+      </fieldset>
+
+      <fieldset>
+        <legend>Serviço</legend>
+
+        <label for="tipoServico">Tipo de Serviço *</label>
+        <select id="tipoServico" name="tipoServico" required>
+          <option value="">-- Selecione --</option>
+          <option value="instalacao">Instalação</option>
+          <option value="limpeza">Limpeza</option>
+          <option value="manutencao">Manutenção</option>
         </select>
-      </div>
 
-      <div id="manutencaoDiv" class="hidden">
-        <label for="tipoManutencao">Tipo de Manutenção:</label>
-        <select id="tipoManutencao">
-          <option value="">Escolha</option>
-          <option value="simples">Simples</option>
-          <option value="completa">Completa</option>
-        </select>
-      </div>
+        <div id="limpezaTipoContainer" style="display:none;">
+          <label for="limpezaTipo">Tipo de Limpeza *</label>
+          <select id="limpezaTipo" name="limpezaTipo">
+            <option value="">-- Selecione --</option>
+            <option value="split">Split</option>
+            <option value="janela">Janela</option>
+          </select>
+        </div>
 
-      <label for="pagamento">Forma de Pagamento:</label>
-      <select id="pagamento" required>
-        <option value="">Selecione</option>
-        <option value="Dinheiro">Dinheiro</option>
-        <option value="PIX">PIX</option>
-        <option value="Cartão de débito">Cartão de débito</option>
-        <option value="Cartão de crédito">Cartão de crédito</option>
-      </select>
+        <div id="btuContainer" style="display:none;">
+          <label for="btu">Capacidade em BTUs *</label>
+          <select id="btu" name="btu">
+            <option value="">-- Selecione --</option>
+            <option value="9000">9.000 BTU</option>
+            <option value="12000">12.000 BTU</option>
+            <option value="18000">18.000 BTU</option>
+            <option value="24000">24.000 BTU</option>
+            <option value="30000">30.000 BTU</option>
+          </select>
+        </div>
 
-      <div id="valor"></div>
+        <div id="defeitoContainer" style="display:none;">
+          <label for="defeito">Descrição do defeito *</label>
+          <textarea id="defeito" name="defeito" placeholder="Descreva o defeito" rows="3"></textarea>
+        </div>
+      </fieldset>
 
-      <button type="submit">Confirmar Agendamento</button>
+      <section id="relatorio" class="relatorio" style="display:none;">
+        <h2>Resumo do Orçamento</h2>
+        <p id="relatorioConteudo"></p>
+      </section>
+
+      <p id="mensagemManutencao" class="mensagem-manutencao" style="display:none; color: #005f99; font-weight: bold;">
+        Obrigado pelo seu contato! Vou analisar o defeito informado e entrarei em contato para apresentar o orçamento final.
+      </p>
+
+      <p id="msgEnvio" class="mensagem-envio" style="display:none; color: #004466; font-weight: bold; margin-top: 1em;">
+        Seus dados serão enviados para análise. Entrarei em contato pelo WhatsApp em breve.
+      </p>
+
+      <button type="button" id="btnEnviar" disabled>Enviando orçamento</button>
     </form>
-
-    <div id="mensagem" class="mensagem"></div>
-  </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
