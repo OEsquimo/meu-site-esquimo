@@ -2,37 +2,47 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Orçamento - O Esquimó</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Solicitar Orçamento</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Solicite seu Orçamento</h1>
-    
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" placeholder="Seu nome completo" required />
+    <h2>Solicitar Orçamento</h2>
+    <form id="formulario">
+      <label>Nome:</label>
+      <input type="text" id="nome" required />
 
-    <label for="endereco">Endereço:</label>
-    <input type="text" id="endereco" placeholder="Rua, número, bairro..." required />
+      <label>Endereço:</label>
+      <input type="text" id="endereco" required />
 
-    <label for="whatsapp">WhatsApp:</label>
-    <input type="tel" id="whatsapp" placeholder="(99) 99999-9999" required />
+      <label>WhatsApp:</label>
+      <input type="tel" id="whatsapp" placeholder="(99) 99999-9999" required />
 
-    <label for="btus">Escolha o BTU:</label>
-    <select id="btus" required>
-      <option value="">Selecione</option>
-      <option value="9000">9000 BTUs</option>
-      <option value="12000">12000 BTUs</option>
-      <option value="18000">18000 BTUs</option>
-      <option value="24000">24000 BTUs</option>
-    </select>
+      <label>Tipo de serviço:</label>
+      <select id="servico" required>
+        <option value="">Selecione...</option>
+        <option value="Instalação">Instalação</option>
+        <option value="Limpeza">Limpeza</option>
+        <option value="Manutenção">Manutenção</option>
+      </select>
 
-    <div id="resumo" class="hidden"></div>
+      <label>BTUs:</label>
+      <select id="btus" required>
+        <option value="">Selecione...</option>
+        <option value="9000">9.000 BTUs</option>
+        <option value="12000">12.000 BTUs</option>
+        <option value="18000">18.000 BTUs</option>
+        <option value="24000">24.000 BTUs</option>
+      </select>
 
-    <button id="enviar" disabled>Enviando orçamento...</button>
+      <div id="orcamento" style="display: none;"></div>
+
+      <p id="mensagemConfirmacao" style="display: none; color: green;">Seus dados foram enviados. Entraremos em contato!</p>
+
+      <button type="submit" id="enviarBtn" disabled>Enviando orçamento</button>
+    </form>
   </div>
-
   <script src="script.js"></script>
 </body>
 </html>
