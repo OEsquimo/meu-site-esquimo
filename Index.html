@@ -2,79 +2,50 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento de Ar-Condicionado</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Orçamento - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main>
-    <h1>Orçamento de Ar-Condicionado</h1>
-    <form id="formOrcamento" novalidate>
-      <label for="nome">Nome completo *</label>
-      <input type="text" id="nome" name="nome" required />
+  <div class="container">
+    <h1>Solicite seu Orçamento</h1>
+    
+    <form id="formulario">
+      <label for="nome">Seu nome:</label>
+      <input type="text" id="nome" required />
 
-      <label for="endereco">Endereço *</label>
-      <input type="text" id="endereco" name="endereco" required />
+      <label for="telefone">WhatsApp:</label>
+      <input type="tel" id="telefone" required />
 
-      <label for="whatsapp">WhatsApp *</label>
-      <input type="text" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" maxlength="15" required />
-
-      <label for="tipoServico">Tipo de serviço *</label>
-      <select id="tipoServico" name="tipoServico" required>
-        <option value="">Selecione</option>
-        <option value="instalacao">Instalação</option>
-        <option value="limpeza">Limpeza</option>
-        <option value="manutencao">Manutenção</option>
+      <label for="servico">Tipo de serviço:</label>
+      <select id="servico" required>
+        <option value="">Selecione...</option>
+        <option value="Instalação">Instalação</option>
+        <option value="Limpeza">Limpeza</option>
+        <option value="Manutenção">Manutenção</option>
       </select>
 
-      <!-- Campo limpeza tipo -->
-      <div id="limpezaTipoContainer" class="oculto">
-        <label for="limpezaTipo">Tipo de limpeza *</label>
-        <select id="limpezaTipo" name="limpezaTipo">
-          <option value="">Selecione</option>
-          <option value="split">Split</option>
-          <option value="janela">Janela</option>
+      <div id="btuContainer" style="display: none;">
+        <label for="btu">Capacidade do ar (BTU):</label>
+        <select id="btu">
+          <option value="">Selecione...</option>
+          <option value="9000">9.000 BTUs</option>
+          <option value="12000">12.000 BTUs</option>
+          <option value="18000">18.000 BTUs</option>
+          <option value="24000">24.000 BTUs</option>
         </select>
       </div>
 
-      <!-- Campo BTU -->
-      <div id="btuContainer" class="oculto">
-        <label for="btu">Capacidade (BTU) *</label>
-        <select id="btu" name="btu">
-          <option value="">Selecione</option>
-          <option value="9000">9.000 BTU</option>
-          <option value="12000">12.000 BTU</option>
-          <option value="18000">18.000 BTU</option>
-          <option value="24000">24.000 BTU</option>
-          <option value="30000">30.000 BTU</option>
-        </select>
-      </div>
-
-      <!-- Campo defeito -->
-      <div id="defeitoContainer" class="oculto">
-        <label for="defeito">Descrição do defeito *</label>
-        <textarea id="defeito" name="defeito" rows="3" placeholder="Descreva o defeito"></textarea>
-      </div>
-
-      <!-- Mensagem para manutenção -->
-      <p id="mensagemManutencao" class="mensagem manutencao oculto">
-        Obrigado pelo seu contato! Vou analisar o defeito informado e entrarei em contato para apresentar o orçamento final.
-      </p>
-
-      <!-- Relatório -->
-      <section id="relatorio" class="relatorio oculto">
-        <h2>Resumo do Orçamento</h2>
-        <div id="relatorioConteudo"></div>
-      </section>
-
-      <!-- Mensagem de envio -->
-      <p id="msgEnvio" class="mensagem envio oculto">
-        Seus dados serão enviados para análise. Entrarei em contato pelo WhatsApp em breve.
-      </p>
-
-      <button type="button" id="btnEnviar" disabled>Enviando orçamento</button>
+      <button type="submit">Ver Orçamento</button>
     </form>
-  </main>
+
+    <div id="resultado" style="display: none;">
+      <h2>Orçamento:</h2>
+      <p id="textoOrcamento"></p>
+      <p class="mensagem">Seus dados foram enviados. Entraremos em contato via WhatsApp.</p>
+      <a id="linkWhatsapp" class="botao" target="_blank">Enviando orçamento</a>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
