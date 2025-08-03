@@ -3,99 +3,65 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Assistente Virtual - O Esquimó</title>
+  <title>Agendamento - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h2>Selecione um serviço para gerar seu orçamento</h2>
-
-    <form id="orcamentoForm">
-      <label for="nome">Nome do Cliente:</label>
-      <input type="text" id="nome" required />
-
-      <label for="endereco">Endereço:</label>
-      <input type="text" id="endereco" required />
+    <h1>Agende seu Serviço</h1>
+    
+    <form id="agendamentoForm">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" placeholder="Digite seu nome" required />
 
       <label for="telefone">WhatsApp:</label>
       <input type="tel" id="telefone" placeholder="(xx) xxxxx-xxxx" required />
 
-      <label for="tipo">Escolha o serviço desejado:</label>
+      <label for="endereco">Endereço:</label>
+      <textarea id="endereco" placeholder="Rua, número, bairro..." required></textarea>
+
+      <label for="tipo">Tipo de Serviço:</label>
       <select id="tipo" required>
-        <option value="">--Selecione--</option>
+        <option value="">Selecione</option>
         <option value="instalacao">Instalação</option>
-        <option value="limpeza">Limpeza</option>
         <option value="manutencao">Manutenção</option>
       </select>
 
       <div id="btusDiv" class="hidden">
-        <label for="btus">Capacidade (BTUs):</label>
+        <label for="btus">Capacidade do Ar (BTUs):</label>
         <select id="btus">
-          <option value="">--Selecione a capacidade--</option>
+          <option value="">Escolha</option>
           <option value="9000">9.000 BTUs</option>
           <option value="12000">12.000 BTUs</option>
           <option value="18000">18.000 BTUs</option>
           <option value="24000">24.000 BTUs</option>
-          <option value="30000">30.000 BTUs</option>
         </select>
       </div>
 
       <div id="manutencaoDiv" class="hidden">
-        <label for="descricao">Descreva o defeito:</label>
-        <textarea id="descricao"></textarea>
+        <label for="tipoManutencao">Tipo de Manutenção:</label>
+        <select id="tipoManutencao">
+          <option value="">Escolha</option>
+          <option value="simples">Simples</option>
+          <option value="completa">Completa</option>
+        </select>
       </div>
 
-      <p id="valor"></p>
+      <label for="pagamento">Forma de Pagamento:</label>
+      <select id="pagamento" required>
+        <option value="">Selecione</option>
+        <option value="Dinheiro">Dinheiro</option>
+        <option value="PIX">PIX</option>
+        <option value="Cartão de débito">Cartão de débito</option>
+        <option value="Cartão de crédito">Cartão de crédito</option>
+      </select>
 
-      <!-- Botão Gerar Orçamento removido -->
+      <div id="valor"></div>
 
-      <!-- Botão Agendar aparece somente após preencher os dados -->
-      <button type="button" id="agendarBtn" class="hidden">Fazer Agendamento</button>
-
-      <!-- Formulário de agendamento (só aparece após clicar em "Agendar") -->
-<div id="formularioAgendamento" class="hidden">
-  <h2>Agendamento</h2>
-
-  <label>Nome:</label>
-  <input type="text" id="agNome" readonly>
-
-  <label>Telefone:</label>
-  <input type="text" id="agTelefone" readonly>
-
-  <label>Serviço:</label>
-  <input type="text" id="agServico" readonly>
-
-  <label>BTUs:</label>
-  <input type="text" id="agBtus" readonly>
-
-  <label>Endereço:</label>
-  <input type="text" id="agEndereco" readonly>
-
-  <label>Observações:</label>
-  <textarea id="agObs" readonly></textarea>
-
-  <label>Valor:</label>
-  <input type="text" id="agValor" readonly>
-
-  <label>Data:</label>
-  <input type="date" id="agData" required>
-
-  <label>Hora:</label>
-  <input type="time" id="agHora" required>
-
-  <label>Forma de pagamento:</label>
-  <select id="agPagamento" required>
-    <option value="">Selecione</option>
-    <option value="Dinheiro">Dinheiro</option>
-    <option value="PIX">PIX</option>
-    <option value="Cartão de débito">Cartão de débito</option>
-    <option value="Cartão de crédito">Cartão de crédito</option>
-  </select>
-
-  <button onclick="confirmarAgendamento()">Confirmar agendamento</button>
-</div>
-      
+      <button type="submit">Confirmar Agendamento</button>
     </form>
+
+    <div id="mensagem" class="mensagem"></div>
   </div>
 
   <script src="script.js"></script>
