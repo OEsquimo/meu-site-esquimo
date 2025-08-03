@@ -32,6 +32,7 @@ input, select, button {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
+  fonte-size: 18px;
 }
 
 button {
@@ -42,6 +43,8 @@ button {
   cursor: not-allowed;
   opacity: 0.6;
   transition: opacity 0.3s ease;
+  fonte-size: 18px;
+  padding: 14px 24px;
 }
 
 button:enabled {
