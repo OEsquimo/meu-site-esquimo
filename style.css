@@ -44,7 +44,7 @@ button {
   opacity: 0.6;
   transition: opacity 0.3s ease;
   fonte-size: 18px;
-  padding: 14px 24px;
+  
 }
 
 button:enabled {
