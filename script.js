@@ -2,10 +2,16 @@ document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("formulario");
   const enviarBtn = document.getElementById("enviarBtn");
   const relatorioDiv = document.getElementById("relatorio");
-  
-  const seuWhatsApp = "5581983259341"; // << Seu WhatsApp FIXO (mantenha com 55 + DDD)
 
-  // Função para gerar relatório
+  const seuWhatsApp = "5581983259341"; // Seu WhatsApp fixo com DDI + DDD
+
+  // Função para validar o WhatsApp (formato básico)
+  function validarWhatsApp(tel) {
+    const regex = /^\(\d{2}\) \d{4,5}-\d{4}$/;
+    return regex.test(tel);
+  }
+
+  // Função para gerar relatório e validar todos os campos
   function gerarRelatorio() {
     const nome = document.getElementById("nome").value.trim();
     const endereco = document.getElementById("endereco").value.trim();
@@ -14,24 +20,26 @@ document.addEventListener("DOMContentLoaded", function () {
     const btus = document.getElementById("btus").value.trim();
     const valor = document.getElementById("valor").value.trim();
 
-    if (nome && endereco && whatsappCliente && servico && btus && valor) {
-      const relatorioTexto = `
-        *ORÇAMENTO DETALHADO*
-        \n👤 *Nome:* ${nome}
-        \n📍 *Endereço:* ${endereco}
-        \n📱 *WhatsApp do Cliente:* ${whatsappCliente}
-        \n🛠️ *Serviço:* ${servico}
-        \n❄️ *BTUs:* ${btus}
-        \n💰 *Valor do Orçamento:* R$ ${valor}
-      `;
+    // Validação simples dos campos
+    if (
+      nome.length > 0 &&
+      endereco.length > 0 &&
+      validarWhatsApp(whatsappCliente) &&
+      servico.length > 0 &&
+      btus.length > 0 &&
+      valor.length > 0
+    ) {
+      const relatorioTexto = 
+`*ORÇAMENTO DETALHADO*
+👤 Nome: ${nome}
+📍 Endereço: ${endereco}
+📱 WhatsApp do Cliente: ${whatsappCliente}
+🛠️ Serviço: ${servico}
+❄️ BTUs: ${btus}
+💰 Valor do Orçamento: R$ ${valor}`;
 
-      // Mostra o relatório na tela
       relatorioDiv.innerText = relatorioTexto;
-      relatorioDiv.style.whiteSpace = "pre-line";
-
-      // Habilita o botão
       enviarBtn.disabled = false;
-
       return relatorioTexto;
     } else {
       relatorioDiv.innerText = "";
@@ -40,14 +48,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Escuta mudanças nos campos
+  // Atualiza relatório e botão a cada alteração
   form.addEventListener("input", gerarRelatorio);
 
-  // Envia o relatório para o WhatsApp
+  // Ao clicar no botão enviar, abre o WhatsApp com a mensagem pronta
   enviarBtn.addEventListener("click", function () {
-    const texto = gerarRelatorio();
-    if (texto) {
-      const url = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(texto)}`;
+    const mensagem = gerarRelatorio();
+    if (mensagem) {
+      const url = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
       window.open(url, "_blank");
     }
   });
