@@ -1,38 +1,51 @@
-document.getElementById('servico').addEventListener('change', function () {
-  const servico = this.value;
-  const btuContainer = document.getElementById('btuContainer');
-  if (servico) {
-    btuContainer.style.display = 'block';
-  } else {
-    btuContainer.style.display = 'none';
-  }
+document.getElementById("tipo").addEventListener("change", function () {
+  const tipo = this.value;
+  const btuSection = document.getElementById("btuSection");
+  btuSection.style.display = tipo ? "block" : "none";
 });
 
-document.getElementById('formulario').addEventListener('submit', function (e) {
-  e.preventDefault();
+document.getElementById("whatsapp").addEventListener("input", function () {
+  let valor = this.value.replace(/\D/g, "");
+  if (valor.length > 11) valor = valor.slice(0, 11);
+  if (valor.length > 0) valor = "(" + valor;
+  if (valor.length > 3) valor = valor.slice(0, 3) + ") " + valor.slice(3);
+  if (valor.length > 10) valor = valor.slice(0, 10) + "-" + valor.slice(10);
+  this.value = valor;
+});
 
-  const nome = document.getElementById('nome').value;
-  const telefone = document.getElementById('telefone').value;
-  const servico = document.getElementById('servico').value;
-  const btu = document.getElementById('btu').value;
+document.getElementById("botaoOrcamento").addEventListener("click", function () {
+  const tipo = document.getElementById("tipo").value;
+  const btu = document.getElementById("btu").value;
+  const nome = document.getElementById("nome").value.trim();
+  const endereco = document.getElementById("endereco").value.trim();
+  const whatsapp = document.getElementById("whatsapp").value.trim();
 
-  let valor = 0;
-  if (servico === 'Instalação') {
-    if (btu === '9000') valor = 200;
-    else if (btu === '12000') valor = 220;
-    else if (btu === '18000') valor = 250;
-    else if (btu === '24000') valor = 280;
-  } else if (servico === 'Limpeza') {
-    valor = 100;
-  } else if (servico === 'Manutenção') {
-    valor = 150;
+  if (!tipo || !btu || !nome || !endereco || !whatsapp) {
+    alert("Preencha todos os campos antes de continuar.");
+    return;
   }
 
-  const texto = `Olá ${nome}, o valor estimado para o serviço de ${servico}${btu ? ` (${btu} BTUs)` : ''} é R$ ${valor},00.`;
-  document.getElementById('textoOrcamento').innerText = texto;
-  document.getElementById('resultado').style.display = 'block';
+  const preco = calcularPreco(tipo, btu);
 
-  const mensagemWhats = `Nome: ${nome}%0ATelefone: ${telefone}%0AServiço: ${servico}%0ABTU: ${btu}%0AValor estimado: R$ ${valor},00`;
-  const link = `https://wa.me/5583983259341?text=${mensagemWhats}`;
-  document.getElementById('linkWhatsapp').href = link;
+  const mensagem = `Olá, me chamo ${nome}. Gostaria de um orçamento para ${tipo} de ar-condicionado de ${btu} BTUs.
+Endereço: ${endereco}
+WhatsApp: ${whatsapp}
+Valor estimado: R$ ${preco.toFixed(2).replace('.', ',')}`;
+
+  const numero = "5583983259341"; // Substitua pelo seu número com DDD
+  const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
+  window.open(link, "_blank");
+
+  document.getElementById("orcamentoResultado").style.display = "block";
+  document.getElementById("orcamentoResultado").innerText = `Valor estimado: R$ ${preco.toFixed(2).replace('.', ',')}`;
+  document.getElementById("mensagemFinal").innerText = "Seus dados foram enviados. Em breve entraremos em contato pelo WhatsApp.";
 });
+
+function calcularPreco(tipo, btu) {
+  const tabela = {
+    instalacao: { "9000": 250, "12000": 280, "18000": 320, "24000": 350 },
+    limpeza: { "9000": 100, "12000": 120, "18000": 140, "24000": 160 },
+    manutencao: { "9000": 150, "12000": 180, "18000": 200, "24000": 220 }
+  };
+  return tabela[tipo][btu];
+}
