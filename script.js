@@ -1,51 +1,72 @@
-document.getElementById("tipo").addEventListener("change", function () {
-  const tipo = this.value;
-  const btuSection = document.getElementById("btuSection");
-  btuSection.style.display = tipo ? "block" : "none";
-});
+function formatarWhatsapp(numero) {
+  return numero.replace(/\D/g, "").replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+}
 
-document.getElementById("whatsapp").addEventListener("input", function () {
-  let valor = this.value.replace(/\D/g, "");
-  if (valor.length > 11) valor = valor.slice(0, 11);
-  if (valor.length > 0) valor = "(" + valor;
-  if (valor.length > 3) valor = valor.slice(0, 3) + ") " + valor.slice(3);
-  if (valor.length > 10) valor = valor.slice(0, 10) + "-" + valor.slice(10);
-  this.value = valor;
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const nome = document.getElementById("nome");
+  const endereco = document.getElementById("endereco");
+  const whatsapp = document.getElementById("whatsapp");
+  const btus = document.getElementById("btus");
+  const resumo = document.getElementById("resumo");
+  const enviar = document.getElementById("enviar");
 
-document.getElementById("botaoOrcamento").addEventListener("click", function () {
-  const tipo = document.getElementById("tipo").value;
-  const btu = document.getElementById("btu").value;
-  const nome = document.getElementById("nome").value.trim();
-  const endereco = document.getElementById("endereco").value.trim();
-  const whatsapp = document.getElementById("whatsapp").value.trim();
-
-  if (!tipo || !btu || !nome || !endereco || !whatsapp) {
-    alert("Preencha todos os campos antes de continuar.");
-    return;
+  function validarCampos() {
+    if (
+      nome.value.trim() &&
+      endereco.value.trim() &&
+      whatsapp.value.trim().length >= 14 &&
+      btus.value !== ""
+    ) {
+      enviar.disabled = false;
+    } else {
+      enviar.disabled = true;
+    }
   }
 
-  const preco = calcularPreco(tipo, btu);
+  function calcularPreco(btus) {
+    const precos = {
+      "9000": 150,
+      "12000": 180,
+      "18000": 220,
+      "24000": 260
+    };
+    return precos[btus] || 0;
+  }
 
-  const mensagem = `Olá, me chamo ${nome}. Gostaria de um orçamento para ${tipo} de ar-condicionado de ${btu} BTUs.
-Endereço: ${endereco}
-WhatsApp: ${whatsapp}
-Valor estimado: R$ ${preco.toFixed(2).replace('.', ',')}`;
+  btus.addEventListener("change", () => {
+    const valor = calcularPreco(btus.value);
+    if (valor > 0) {
+      resumo.classList.remove("hidden");
+      resumo.innerHTML = `
+        <strong>Resumo do orçamento:</strong><br>
+        Nome: ${nome.value}<br>
+        Endereço: ${endereco.value}<br>
+        WhatsApp: ${formatarWhatsapp(whatsapp.value)}<br>
+        Serviço: Instalação de ar-condicionado ${btus.value} BTUs<br>
+        Valor estimado: R$ ${valor.toFixed(2)}
+      `;
+    } else {
+      resumo.classList.add("hidden");
+    }
+    validarCampos();
+  });
 
-  const numero = "5583983259341"; // Substitua pelo seu número com DDD
-  const link = `https://wa.me/${numero}?text=${encodeURIComponent(mensagem)}`;
-  window.open(link, "_blank");
+  [nome, endereco, whatsapp].forEach(el => {
+    el.addEventListener("input", validarCampos);
+  });
 
-  document.getElementById("orcamentoResultado").style.display = "block";
-  document.getElementById("orcamentoResultado").innerText = `Valor estimado: R$ ${preco.toFixed(2).replace('.', ',')}`;
-  document.getElementById("mensagemFinal").innerText = "Seus dados foram enviados. Em breve entraremos em contato pelo WhatsApp.";
+  whatsapp.addEventListener("input", () => {
+    whatsapp.value = formatarWhatsapp(whatsapp.value);
+    validarCampos();
+  });
+
+  enviar.addEventListener("click", () => {
+    const valor = calcularPreco(btus.value);
+    const mensagem = `Olá! Meu nome é ${nome.value}, endereço: ${endereco.value}, WhatsApp: ${whatsapp.value}. Gostaria de agendar uma instalação de ar-condicionado de ${btus.value} BTUs. Valor estimado: R$ ${valor.toFixed(2)}.`;
+
+    const telefoneEsquimo = "5581983259341"; // Número com DDI Brasil
+    const url = `https://wa.me/${telefoneEsquimo}?text=${encodeURIComponent(mensagem)}`;
+
+    window.open(url, "_blank");
+  });
 });
-
-function calcularPreco(tipo, btu) {
-  const tabela = {
-    instalacao: { "9000": 250, "12000": 280, "18000": 320, "24000": 350 },
-    limpeza: { "9000": 100, "12000": 120, "18000": 140, "24000": 160 },
-    manutencao: { "9000": 150, "12000": 180, "18000": 200, "24000": 220 }
-  };
-  return tabela[tipo][btu];
-}
