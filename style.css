@@ -67,3 +67,10 @@ button:hover {
   color: #005f73;
   white-space: pre-line;
 }
+
+.mensagem {
+  margin-top: 15px;
+  font-weight: 600;
+  color: green;
+  text-align: center;
+}
