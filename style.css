@@ -1,66 +1,50 @@
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
+  font-family: sans-serif;
+  background: #f5f5f5;
   margin: 0;
   padding: 0;
 }
 
 .container {
   max-width: 400px;
-  margin: 20px auto;
+  background: white;
   padding: 20px;
-  background-color: #ffffff;
+  margin: 20px auto;
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px #ccc;
 }
 
-h1 {
+h2 {
   text-align: center;
-  font-size: 22px;
   margin-bottom: 20px;
 }
 
 label {
-  margin-top: 10px;
   display: block;
+  margin-top: 10px;
   font-weight: bold;
 }
 
-input, select {
+input, select, button {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
-  margin-bottom: 10px;
-  border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 16px;
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
 button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  background-color: #0077cc;
+  background-color: #2196F3;
   color: white;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background-color: #aaa;
+  margin-top: 20px;
   cursor: not-allowed;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
 }
 
-.hidden {
-  display: none;
-}
-
-#resumo {
-  background: #e0f7fa;
-  padding: 10px;
-  margin-top: 10px;
-  border-left: 4px solid #0077cc;
-  font-size: 14px;
-  line-height: 1.5;
+button:enabled {
+  cursor: pointer;
+  opacity: 1;
 }
