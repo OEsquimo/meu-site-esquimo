@@ -1,98 +1,54 @@
-:root {
-  --azul-escuro: #003366;
-  --azul-claro: #3399ff;
-  --branco: #fff;
-}
-
 body {
   font-family: Arial, sans-serif;
-  background: var(--branco);
-  color: var(--azul-escuro);
+  background-color: #f2f2f2;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 500px;
+  margin: 40px auto;
   padding: 20px;
-  max-width: 480px;
-  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #ccc;
 }
 
 h1, h2 {
-  color: var(--azul-escuro);
   text-align: center;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
 }
 
 label {
-  font-weight: bold;
+  display: block;
+  margin-top: 15px;
 }
 
-input[type="text"],
-select,
-textarea {
-  padding: 8px;
-  font-size: 1rem;
-  border: 2px solid var(--azul-claro);
-  border-radius: 4px;
+input, select, button {
   width: 100%;
+  padding: 10px;
+  margin-top: 5px;
   box-sizing: border-box;
-  transition: border-color 0.3s;
 }
 
-input[type="text"]:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--azul-escuro);
-  outline: none;
-}
-
-button {
-  background-color: var(--azul-claro);
-  color: var(--branco);
+button, .botao {
+  margin-top: 20px;
+  background-color: #007bff;
+  color: white;
   border: none;
-  padding: 12px;
-  font-size: 1.1rem;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s;
+  text-align: center;
+  text-decoration: none;
+  display: block;
 }
 
-button:disabled {
-  background-color: #a0c4ff;
-  cursor: not-allowed;
-}
-
-button:hover:not(:disabled) {
-  background-color: var(--azul-escuro);
-}
-
-.oculto {
-  display: none;
-}
-
-.relatorio {
-  background: #e6f0ff;
-  border: 2px solid var(--azul-claro);
-  padding: 15px;
-  border-radius: 6px;
-  margin-top: 10px;
+button:hover, .botao:hover {
+  background-color: #0056b3;
 }
 
 .mensagem {
+  margin-top: 20px;
+  color: green;
+  font-weight: bold;
   text-align: center;
-  font-style: italic;
-  color: var(--azul-escuro);
-  margin-top: 10px;
-}
-
-.manutencao {
-  font-weight: bold;
-  color: #cc3300;
-}
-
-.envio {
-  font-weight: bold;
-  color: #006600;
 }
