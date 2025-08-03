@@ -2,46 +2,35 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Orçamento - O Esquimó</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
-    <h1>Orçamento - O Esquimó</h1>
-
-    <label for="tipo">Tipo de Serviço:</label>
-    <select id="tipo">
-      <option value="">Selecione</option>
-      <option value="instalacao">Instalação</option>
-      <option value="limpeza">Limpeza</option>
-      <option value="manutencao">Manutenção</option>
-    </select>
-
-    <div id="btuSection" style="display:none;">
-      <label for="btu">BTUs:</label>
-      <select id="btu">
-        <option value="9000">9.000 BTUs</option>
-        <option value="12000">12.000 BTUs</option>
-        <option value="18000">18.000 BTUs</option>
-        <option value="24000">24.000 BTUs</option>
-      </select>
-    </div>
-
+    <h1>Solicite seu Orçamento</h1>
+    
     <label for="nome">Nome:</label>
-    <input type="text" id="nome" placeholder="Seu nome completo" />
+    <input type="text" id="nome" placeholder="Seu nome completo" required />
 
     <label for="endereco">Endereço:</label>
-    <input type="text" id="endereco" placeholder="Seu endereço" />
+    <input type="text" id="endereco" placeholder="Rua, número, bairro..." required />
 
     <label for="whatsapp">WhatsApp:</label>
-    <input type="text" id="whatsapp" placeholder="(81) 91234-5678" maxlength="15" />
+    <input type="tel" id="whatsapp" placeholder="(99) 99999-9999" required />
 
-    <div id="orcamentoResultado" style="display:none;"></div>
+    <label for="btus">Escolha o BTU:</label>
+    <select id="btus" required>
+      <option value="">Selecione</option>
+      <option value="9000">9000 BTUs</option>
+      <option value="12000">12000 BTUs</option>
+      <option value="18000">18000 BTUs</option>
+      <option value="24000">24000 BTUs</option>
+    </select>
 
-    <p id="mensagemFinal" class="mensagemFinal"></p>
+    <div id="resumo" class="hidden"></div>
 
-    <button id="botaoOrcamento">Enviando orçamento</button>
+    <button id="enviar" disabled>Enviando orçamento...</button>
   </div>
 
   <script src="script.js"></script>
