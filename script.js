@@ -1,72 +1,75 @@
-function formatarWhatsapp(numero) {
-  return numero.replace(/\D/g, "").replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+function formatarWhatsApp(input) {
+  input.addEventListener('input', function () {
+    let valor = input.value.replace(/\D/g, '');
+    if (valor.length > 11) valor = valor.slice(0, 11);
+
+    if (valor.length >= 2 && valor.length <= 6)
+      input.value = `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
+    else if (valor.length > 6)
+      input.value = `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7)}`;
+  });
+}
+
+function validarCampos() {
+  const nome = document.getElementById("nome").value.trim();
+  const endereco = document.getElementById("endereco").value.trim();
+  const whatsapp = document.getElementById("whatsapp").value.trim();
+  const servico = document.getElementById("servico").value;
+  const btus = document.getElementById("btus").value;
+  const enviarBtn = document.getElementById("enviarBtn");
+
+  enviarBtn.disabled = !(nome && endereco && whatsapp && servico && btus);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const nome = document.getElementById("nome");
-  const endereco = document.getElementById("endereco");
-  const whatsapp = document.getElementById("whatsapp");
+  const form = document.getElementById("formulario");
   const btus = document.getElementById("btus");
-  const resumo = document.getElementById("resumo");
-  const enviar = document.getElementById("enviar");
+  const orcamentoDiv = document.getElementById("orcamento");
+  const mensagem = document.getElementById("mensagemConfirmacao");
 
-  function validarCampos() {
-    if (
-      nome.value.trim() &&
-      endereco.value.trim() &&
-      whatsapp.value.trim().length >= 14 &&
-      btus.value !== ""
-    ) {
-      enviar.disabled = false;
-    } else {
-      enviar.disabled = true;
-    }
-  }
+  formatarWhatsApp(document.getElementById("whatsapp"));
 
-  function calcularPreco(btus) {
-    const precos = {
-      "9000": 150,
-      "12000": 180,
-      "18000": 220,
-      "24000": 260
-    };
-    return precos[btus] || 0;
-  }
+  document.querySelectorAll("input, select").forEach(el => {
+    el.addEventListener("input", validarCampos);
+    el.addEventListener("change", validarCampos);
+  });
 
   btus.addEventListener("change", () => {
-    const valor = calcularPreco(btus.value);
-    if (valor > 0) {
-      resumo.classList.remove("hidden");
-      resumo.innerHTML = `
-        <strong>Resumo do orçamento:</strong><br>
-        Nome: ${nome.value}<br>
-        Endereço: ${endereco.value}<br>
-        WhatsApp: ${formatarWhatsapp(whatsapp.value)}<br>
-        Serviço: Instalação de ar-condicionado ${btus.value} BTUs<br>
-        Valor estimado: R$ ${valor.toFixed(2)}
-      `;
+    const tipo = document.getElementById("servico").value;
+    const valor = btus.value;
+
+    if (tipo && valor) {
+      const precos = {
+        Instalação: { "9000": 250, "12000": 280, "18000": 330, "24000": 380 },
+        Limpeza: { "9000": 90, "12000": 100, "18000": 120, "24000": 150 },
+        Manutenção: { "9000": 130, "12000": 150, "18000": 170, "24000": 200 }
+      };
+
+      const preco = precos[tipo][valor];
+      orcamentoDiv.innerHTML = `<strong>Orçamento:</strong> R$ ${preco},00`;
+      orcamentoDiv.style.display = "block";
     } else {
-      resumo.classList.add("hidden");
+      orcamentoDiv.style.display = "none";
     }
-    validarCampos();
   });
 
-  [nome, endereco, whatsapp].forEach(el => {
-    el.addEventListener("input", validarCampos);
-  });
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  whatsapp.addEventListener("input", () => {
-    whatsapp.value = formatarWhatsapp(whatsapp.value);
-    validarCampos();
-  });
+    const nome = document.getElementById("nome").value.trim();
+    const endereco = document.getElementById("endereco").value.trim();
+    const whatsapp = document.getElementById("whatsapp").value.trim();
+    const servico = document.getElementById("servico").value;
+    const btus = document.getElementById("btus").value;
+    const valor = orcamentoDiv.textContent;
 
-  enviar.addEventListener("click", () => {
-    const valor = calcularPreco(btus.value);
-    const mensagem = `Olá! Meu nome é ${nome.value}, endereço: ${endereco.value}, WhatsApp: ${whatsapp.value}. Gostaria de agendar uma instalação de ar-condicionado de ${btus.value} BTUs. Valor estimado: R$ ${valor.toFixed(2)}.`;
+    mensagem.style.display = "block";
 
-    const telefoneEsquimo = "5581983259341"; // Número com DDI Brasil
-    const url = `https://wa.me/${telefoneEsquimo}?text=${encodeURIComponent(mensagem)}`;
+    const texto = `Olá, sou ${nome}.\nEndereço: ${endereco}\nWhatsApp: ${whatsapp}\nSolicito: ${servico} de ar-condicionado de ${btus} BTUs.\n${valor}`;
+    const url = `https://wa.me/5583983259341?text=${encodeURIComponent(texto)}`;
 
-    window.open(url, "_blank");
+    setTimeout(() => {
+      window.open(url, "_blank");
+    }, 1000);
   });
 });
