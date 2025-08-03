@@ -3,75 +3,72 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento Ar-Condicionado - O Esquimó</title>
+  <title>Orçamento de Ar-Condicionado</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main class="container">
+  <main>
     <h1>Orçamento de Ar-Condicionado</h1>
-
     <form id="formOrcamento" novalidate>
-      <fieldset>
-        <legend>Dados do Cliente</legend>
+      <label for="nome">Nome completo *</label>
+      <input type="text" id="nome" name="nome" required />
 
-        <label for="nome">Nome Completo *</label>
-        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required />
+      <label for="endereco">Endereço *</label>
+      <input type="text" id="endereco" name="endereco" required />
 
-        <label for="endereco">Endereço *</label>
-        <input type="text" id="endereco" name="endereco" placeholder="Seu endereço" required />
+      <label for="whatsapp">WhatsApp *</label>
+      <input type="text" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" maxlength="15" required />
 
-        <label for="whatsapp">WhatsApp *</label>
-        <input type="tel" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" maxlength="15" required />
-      </fieldset>
+      <label for="tipoServico">Tipo de serviço *</label>
+      <select id="tipoServico" name="tipoServico" required>
+        <option value="">Selecione</option>
+        <option value="instalacao">Instalação</option>
+        <option value="limpeza">Limpeza</option>
+        <option value="manutencao">Manutenção</option>
+      </select>
 
-      <fieldset>
-        <legend>Serviço</legend>
-
-        <label for="tipoServico">Tipo de Serviço *</label>
-        <select id="tipoServico" name="tipoServico" required>
-          <option value="">-- Selecione --</option>
-          <option value="instalacao">Instalação</option>
-          <option value="limpeza">Limpeza</option>
-          <option value="manutencao">Manutenção</option>
+      <!-- Campo limpeza tipo -->
+      <div id="limpezaTipoContainer" class="oculto">
+        <label for="limpezaTipo">Tipo de limpeza *</label>
+        <select id="limpezaTipo" name="limpezaTipo">
+          <option value="">Selecione</option>
+          <option value="split">Split</option>
+          <option value="janela">Janela</option>
         </select>
+      </div>
 
-        <div id="limpezaTipoContainer" style="display:none;">
-          <label for="limpezaTipo">Tipo de Limpeza *</label>
-          <select id="limpezaTipo" name="limpezaTipo">
-            <option value="">-- Selecione --</option>
-            <option value="split">Split</option>
-            <option value="janela">Janela</option>
-          </select>
-        </div>
+      <!-- Campo BTU -->
+      <div id="btuContainer" class="oculto">
+        <label for="btu">Capacidade (BTU) *</label>
+        <select id="btu" name="btu">
+          <option value="">Selecione</option>
+          <option value="9000">9.000 BTU</option>
+          <option value="12000">12.000 BTU</option>
+          <option value="18000">18.000 BTU</option>
+          <option value="24000">24.000 BTU</option>
+          <option value="30000">30.000 BTU</option>
+        </select>
+      </div>
 
-        <div id="btuContainer" style="display:none;">
-          <label for="btu">Capacidade em BTUs *</label>
-          <select id="btu" name="btu">
-            <option value="">-- Selecione --</option>
-            <option value="9000">9.000 BTU</option>
-            <option value="12000">12.000 BTU</option>
-            <option value="18000">18.000 BTU</option>
-            <option value="24000">24.000 BTU</option>
-            <option value="30000">30.000 BTU</option>
-          </select>
-        </div>
+      <!-- Campo defeito -->
+      <div id="defeitoContainer" class="oculto">
+        <label for="defeito">Descrição do defeito *</label>
+        <textarea id="defeito" name="defeito" rows="3" placeholder="Descreva o defeito"></textarea>
+      </div>
 
-        <div id="defeitoContainer" style="display:none;">
-          <label for="defeito">Descrição do defeito *</label>
-          <textarea id="defeito" name="defeito" placeholder="Descreva o defeito" rows="3"></textarea>
-        </div>
-      </fieldset>
-
-      <section id="relatorio" class="relatorio" style="display:none;">
-        <h2>Resumo do Orçamento</h2>
-        <p id="relatorioConteudo"></p>
-      </section>
-
-      <p id="mensagemManutencao" class="mensagem-manutencao" style="display:none; color: #005f99; font-weight: bold;">
+      <!-- Mensagem para manutenção -->
+      <p id="mensagemManutencao" class="mensagem manutencao oculto">
         Obrigado pelo seu contato! Vou analisar o defeito informado e entrarei em contato para apresentar o orçamento final.
       </p>
 
-      <p id="msgEnvio" class="mensagem-envio" style="display:none; color: #004466; font-weight: bold; margin-top: 1em;">
+      <!-- Relatório -->
+      <section id="relatorio" class="relatorio oculto">
+        <h2>Resumo do Orçamento</h2>
+        <div id="relatorioConteudo"></div>
+      </section>
+
+      <!-- Mensagem de envio -->
+      <p id="msgEnvio" class="mensagem envio oculto">
         Seus dados serão enviados para análise. Entrarei em contato pelo WhatsApp em breve.
       </p>
 
