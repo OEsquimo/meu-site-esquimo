@@ -69,7 +69,7 @@ document.querySelectorAll("input, select").forEach(el => {
 });
 
 enviarBtn.addEventListener("click", () => {
-  const numero = "5583983259341"; // número do O Esquimó
+  const numero = "5581983259341"; // número do O Esquimó
   const mensagem = encodeURIComponent(relatorioDiv.innerText);
   const url = `https://api.whatsapp.com/send?phone=${numero}&text=${mensagem}`;
   window.open(url, "_blank");
