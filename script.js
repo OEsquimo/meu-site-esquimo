@@ -3,23 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const enviarBtn = document.getElementById("enviarBtn");
   const relatorioDiv = document.getElementById("relatorio");
 
-  const seuWhatsApp = "5581983259341"; // Seu WhatsApp fixo
+  const seuWhatsApp = "5581983259341";
 
-  // Função para aplicar máscara simples no campo WhatsApp do cliente
-  const whatsappInput = document.getElementById("whatsapp");
-  whatsappInput.addEventListener("input", function (e) {
-    let v = e.target.value.replace(/\D/g, "");
-    if (v.length > 11) v = v.slice(0, 11);
-    if (v.length > 6) {
-      e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
-    } else if (v.length > 2) {
-      e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
-    } else if (v.length > 0) {
-      e.target.value = `(${v}`;
-    }
-  });
-
-  // Preço base para cada serviço e BTU
   const precoInstalacao = {
     "9000": 500,
     "12000": 600,
@@ -38,47 +23,51 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const precoLimpezaJanela = 150;
 
-  // Validação do formato WhatsApp
+  const nomeInput = document.getElementById("nome");
+  const enderecoInput = document.getElementById("endereco");
+  const whatsappInput = document.getElementById("whatsapp");
+  const servicoSelect = document.getElementById("servico");
+  const btusSelect = document.getElementById("btus");
+  const valorInput = document.getElementById("valor");
+
+  // Aplica máscara ao WhatsApp
+  whatsappInput.addEventListener("input", function (e) {
+    let v = e.target.value.replace(/\D/g, "");
+    if (v.length > 11) v = v.slice(0, 11);
+    if (v.length > 6) {
+      e.target.value = `(${v.slice(0, 2)}) ${v.slice(2, 7)}-${v.slice(7)}`;
+    } else if (v.length > 2) {
+      e.target.value = `(${v.slice(0, 2)}) ${v.slice(2)}`;
+    } else if (v.length > 0) {
+      e.target.value = `(${v}`;
+    }
+  });
+
   function validarWhatsApp(tel) {
     const regex = /^\(\d{2}\) \d{5}-\d{4}$/;
     return regex.test(tel);
   }
 
-  // Calcula o valor do orçamento baseado no serviço e BTU
   function calcularValor(servico, btus) {
-    if (servico === "Instalação") {
-      return precoInstalacao[btus] ?? "";
-    }
-    if (servico === "Limpeza Split") {
-      return precoLimpezaSplit[btus] ?? "";
-    }
-    if (servico === "Limpeza Janela") {
-      return precoLimpezaJanela;
-    }
-    // Para manutenção não tem valor fixo
+    if (servico === "Instalação") return precoInstalacao[btus] ?? "";
+    if (servico === "Limpeza Split") return precoLimpezaSplit[btus] ?? "";
+    if (servico === "Limpeza Janela") return precoLimpezaJanela;
     return "";
   }
 
-  // Função para gerar relatório e validar campos
   function gerarRelatorio() {
-    const nome = document.getElementById("nome").value.trim();
-    const endereco = document.getElementById("endereco").value.trim();
-    const whatsappCliente = document.getElementById("whatsapp").value.trim();
-    const servico = document.getElementById("servico").value;
-    const btus = document.getElementById("btus").value.trim();
+    const nome = nomeInput.value.trim();
+    const endereco = enderecoInput.value.trim();
+    const whatsappCliente = whatsappInput.value.trim();
+    const servico = servicoSelect.value;
+    const btus = btusSelect.value;
 
-    // Atualiza o valor do orçamento automaticamente
-    const valorCampo = document.getElementById("valor");
+    limparErros();
 
     let valorOrcamento = calcularValor(servico, btus);
+    if (servico === "Manutenção") valorOrcamento = "Orçamento sob análise";
+    valorInput.value = valorOrcamento;
 
-    if (servico === "Manutenção") {
-      valorOrcamento = "Orçamento sob análise";
-    }
-
-    valorCampo.value = valorOrcamento;
-
-    // Verifica se todos os dados são válidos
     const camposValidos =
       nome.length > 0 &&
       endereco.length > 0 &&
@@ -88,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
       (valorOrcamento !== "" && valorOrcamento !== null);
 
     if (camposValidos) {
-      const relatorioTexto = 
+      const texto =
 `*ORÇAMENTO DETALHADO*
 👤 Nome: ${nome}
 📍 Endereço: ${endereco}
@@ -96,10 +85,9 @@ document.addEventListener("DOMContentLoaded", function () {
 🛠️ Serviço: ${servico}
 ❄️ BTUs: ${btus || "N/A"}
 💰 Valor do Orçamento: R$ ${valorOrcamento}`;
-
-      relatorioDiv.innerText = relatorioTexto;
+      relatorioDiv.innerText = texto;
       enviarBtn.disabled = false;
-      return relatorioTexto;
+      return texto;
     } else {
       relatorioDiv.innerText = "";
       enviarBtn.disabled = true;
@@ -107,9 +95,62 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  function limparErros() {
+    [nomeInput, enderecoInput, whatsappInput].forEach(input => {
+      input.classList.remove("erro");
+      input.placeholder = input.getAttribute("data-placeholder") || "";
+    });
+  }
+
+  function validarCamposAntesDoEnvio() {
+    const nome = nomeInput.value.trim();
+    const endereco = enderecoInput.value.trim();
+    const whatsapp = whatsappInput.value.trim();
+    const servico = servicoSelect.value;
+    const btus = btusSelect.value;
+
+    limparErros();
+
+    if (nome === "") {
+      nomeInput.placeholder = "Informe seu nome aqui.";
+      nomeInput.classList.add("erro");
+      nomeInput.focus();
+      return false;
+    }
+
+    if (endereco === "") {
+      enderecoInput.placeholder = "Preencha seu endereço.";
+      enderecoInput.classList.add("erro");
+      enderecoInput.focus();
+      return false;
+    }
+
+    if (!validarWhatsApp(whatsapp)) {
+      whatsappInput.value = "";
+      whatsappInput.placeholder = "DDD e número do WhatsApp.";
+      whatsappInput.classList.add("erro");
+      whatsappInput.focus();
+      return false;
+    }
+
+    if (servico === "") {
+      servicoSelect.focus();
+      return false;
+    }
+
+    if (servico !== "Limpeza Janela" && btus === "") {
+      btusSelect.focus();
+      return false;
+    }
+
+    return true;
+  }
+
   form.addEventListener("input", gerarRelatorio);
 
   enviarBtn.addEventListener("click", function () {
+    if (!validarCamposAntesDoEnvio()) return;
+
     const mensagem = gerarRelatorio();
     if (mensagem) {
       const url = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
