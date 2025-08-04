@@ -14,7 +14,7 @@ body {
   box-shadow: 0 0 10px #ccc;
 }
 
-h1 {
+h2 {
   text-align: center;
   margin-bottom: 20px;
 }
@@ -25,9 +25,7 @@ label {
   font-weight: bold;
 }
 
-input,
-select,
-button {
+input, select, button {
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -53,14 +51,11 @@ button:enabled {
   opacity: 1;
 }
 
-/* Estilo de erro visual */
-input.erro,
-select.erro {
-  border-color: red !important;
-  color: #b00000;
-}
-
-/* Placeholder em vermelho nos campos com erro */
-input.erro::placeholder {
-  color: #b00000;
+/* Estilo para mensagens de erro */
+.erro-msg {
+  color: red;
+  font-size: 0.85em;
+  margin-top: 3px;
+  font-weight: bold;
+  font-family: sans-serif;
 }
