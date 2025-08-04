@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const whatsappInput = document.getElementById("whatsapp");
   const servicoSelect = document.getElementById("servico");
   const btusSelect = document.getElementById("btus");
-  const valorInput = document.getElementById("valor");
 
   // Elementos para mensagens de erro
   const erroNome = document.getElementById("erro-nome");
@@ -126,11 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
       limparErro(erroBtus);
     }
 
-    // Validação do campo Valor do Orçamento
-    if (valorInput.value === "" || isNaN(valorInput.value) || parseFloat(valorInput.value) < 0) {
-      isValid = false;
-    }
-
     return isValid;
   }
 
@@ -149,10 +143,8 @@ document.addEventListener("DOMContentLoaded", function () {
       valorOrcamento = "Orçamento sob análise";
     }
 
-    valorInput.value = valorOrcamento;
-
-    // Verifica se todos os dados são válidos para habilitar o botão
-    const camposValidosParaBotao =
+    // Verifica se todos os dados são válidos para habilitar o botão e exibir o relatório
+    const camposValidosParaRelatorio =
       nome.length > 0 &&
       endereco.length > 0 &&
       validarWhatsApp(whatsappCliente) &&
@@ -160,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
       (servico === "Limpeza Janela" || btus.length > 0) &&
       (valorOrcamento !== "" && valorOrcamento !== null);
 
-    if (camposValidosParaBotao) {
+    if (camposValidosParaRelatorio) {
       const relatorioTexto = 
 `*ORÇAMENTO DETALHADO*
 👤 Nome: ${nome}
@@ -174,7 +166,7 @@ document.addEventListener("DOMContentLoaded", function () {
       enviarBtn.disabled = false;
       return relatorioTexto;
     } else {
-      relatorioDiv.innerText = "";
+      relatorioDiv.innerText = ""; // Limpa o relatório se os campos não forem válidos
       enviarBtn.disabled = true;
       return null;
     }
