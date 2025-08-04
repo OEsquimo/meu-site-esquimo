@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return "";
   }
 
-  // Função para gerar relatório e validar campos (usada para habilitar botão e mostrar relatório)
+  // Função para gerar relatório e validar campos
   function gerarRelatorio() {
     const nome = document.getElementById("nome").value.trim();
     const endereco = document.getElementById("endereco").value.trim();
@@ -107,88 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Função para validar os campos no clique do botão e mostrar mensagens de erro dentro dos campos
-  function validarCamposComMensagem() {
-    // Remove mensagens antigas para não acumular
-    const campos = [
-      { id: "nome", mensagem: "Informe seu nome aqui." },
-      { id: "endereco", mensagem: "Preencha seu endereço." },
-      { id: "whatsapp", mensagem: "DDD e número do WhatsApp." },
-      { id: "servico", mensagem: "Selecione o serviço." },
-      { id: "btus", mensagem: "Selecione a capacidade em BTUs." }
-    ];
-
-    let primeiroInvalido = null;
-
-    campos.forEach(({ id }) => {
-      const campo = document.getElementById(id);
-      // Remove o estilo e title antigos (se houver)
-      campo.style.borderColor = "";
-      campo.title = "";
-      // Remove elemento de erro (se existir)
-      const erroExistente = campo.parentNode.querySelector(".erro-msg");
-      if (erroExistente) erroExistente.remove();
-    });
-
-    // Valida cada campo e exibe erro se inválido
-    for (const { id, mensagem } of campos) {
-      const campo = document.getElementById(id);
-      let valor = campo.value.trim();
-
-      // btus só obrigatório se serviço não for Limpeza Janela
-      if (id === "btus") {
-        const servicoVal = document.getElementById("servico").value;
-        if (servicoVal === "Limpeza Janela") {
-          valor = "ok"; // ignora btus
-        }
-      }
-
-      let valido = true;
-
-      if (id === "whatsapp") {
-        valido = validarWhatsApp(valor);
-      } else {
-        valido = valor.length > 0;
-      }
-
-      if (!valido) {
-        // Cria mensagem de erro abaixo do campo
-        const msgErro = document.createElement("div");
-        msgErro.className = "erro-msg";
-        msgErro.style.color = "red";
-        msgErro.style.fontSize = "0.85em";
-        msgErro.style.marginTop = "3px";
-        msgErro.innerText = mensagem;
-        campo.style.borderColor = "red";
-        campo.parentNode.appendChild(msgErro);
-
-        if (!primeiroInvalido) {
-          primeiroInvalido = campo;
-        }
-      }
-    }
-
-    if (primeiroInvalido) {
-      primeiroInvalido.focus();
-      return false;
-    }
-    return true;
-  }
-
-  // Evento para atualizar relatório e botão habilitado quando usuário digita ou muda campos
   form.addEventListener("input", gerarRelatorio);
 
-  // Evento clique no botão enviar relatório
   enviarBtn.addEventListener("click", function () {
-    // Valida campos com mensagens e foco no primeiro erro
-    const tudoValido = validarCamposComMensagem();
-
-    if (!tudoValido) {
-      // Não envia se inválido
-      return;
-    }
-
-    // Se válido, gera relatório e abre o WhatsApp com mensagem
     const mensagem = gerarRelatorio();
     if (mensagem) {
       const url = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
