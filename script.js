@@ -160,7 +160,10 @@ document.addEventListener("DOMContentLoaded", function () {
 📱 WhatsApp do Cliente: ${whatsappCliente}
 🛠️ Serviço: ${servico}
 ❄️ BTUs: ${btus || "N/A"}
-💰 Valor do Orçamento: R$ ${valorOrcamento}`;
+💰 Valor do Orçamento: R$ ${valorOrcamento}
+   Obs: Mande esse orçamento 
+        para nossa conversa 
+        no whatsapp`;
 
       relatorioDiv.innerText = relatorioTexto;
       enviarBtn.disabled = false;
