@@ -51,7 +51,7 @@ function atualizarRelatorio() {
   const valor = calcularValor(servico, btus);
 
   const mensagem =
-    `📋 *Orçamento de Serviço - O Esquimó*\n\n` +
+    `📋 *Orçamento*\n\n` +
     `👤 Nome: ${nome}\n` +
     `🏠 Endereço: ${endereco}\n` +
     `📱 WhatsApp: ${whatsapp}\n` +
