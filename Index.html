@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -12,21 +12,25 @@
     <form id="formulario">
       <label for="nome">Nome:</label>
       <input type="text" id="nome" required />
+      <div class="error-message" id="erro-nome"></div>
 
       <label for="endereco">Endereço:</label>
       <input type="text" id="endereco" required />
+      <div class="error-message" id="erro-endereco"></div>
 
       <label for="whatsapp">WhatsApp:</label>
       <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" required />
+      <div class="error-message" id="erro-whatsapp"></div>
 
       <label for="servico">Tipo de Serviço:</label>
       <select id="servico" required>
         <option value="">Selecione</option>
         <option value="Instalação">Instalação</option>
         <option value="Limpeza Split">Limpeza Split</option>
-        <option value="Limpeza Janela">Limpeza Janela</option>
+        <option value="Limpeza Janela">Limpeza Janela</n>
         <option value="Manutenção">Manutenção</option>
       </select>
+      <div class="error-message" id="erro-servico"></div>
 
       <label for="btus">Capacidade em BTUs:</label>
       <select id="btus" required>
@@ -37,6 +41,7 @@
         <option value="24000">24.000</option>
         <option value="30000">30.000</option>
       </select>
+      <div class="error-message" id="erro-btus"></div>
 
       <label for="valor">Valor do Orçamento (R$):</label>
       <input type="number" id="valor" step="0.01" min="0" required />
