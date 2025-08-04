@@ -6,42 +6,38 @@ const btusSelect = document.getElementById("btus");
 const enviarBtn = document.getElementById("enviarBtn");
 const relatorioDiv = document.getElementById("relatorio");
 
-// Função para calcular valor com base no serviço e BTUs
 function calcularValor(servico, btus) {
-  const base = {
-    "Instalação": 150,
-    "Limpeza Split": 100,
-    "Limpeza Janela": 80,
-    "Manutenção": 120
-  };
+  let valor = 0;
 
-  const multiplicador = {
-    "9000": 1,
-    "12000": 1.2,
-    "18000": 1.4,
-    "24000": 1.6,
-    "30000": 2
-  };
+  if (servico === "Instalação") {
+    if (btus === "9000") valor = 250;
+    else if (btus === "12000") valor = 270;
+    else if (btus === "18000") valor = 300;
+    else if (btus === "24000") valor = 330;
+    else if (btus === "30000") valor = 400;
+  } else if (servico === "Limpeza Split") {
+    if (btus === "9000") valor = 120;
+    else if (btus === "12000") valor = 130;
+    else if (btus === "18000") valor = 150;
+    else if (btus === "24000") valor = 180;
+    else if (btus === "30000") valor = 220;
+  } else if (servico === "Limpeza Janela") {
+    valor = 100;
+  } else if (servico === "Manutenção") {
+    valor = 150;
+  }
 
-  const valorBase = base[servico] || 0;
-  const fator = multiplicador[btus] || 1;
-  return valorBase * fator;
+  return valor;
 }
 
-// Verifica se todos os campos estão preenchidos
-function validarCampos() {
-  return (
-    nomeInput.value.trim() !== "" &&
-    enderecoInput.value.trim() !== "" &&
-    whatsappInput.value.trim() !== "" &&
-    servicoSelect.value !== "" &&
-    btusSelect.value !== ""
-  );
-}
-
-// Atualiza relatório assim que todos os campos forem preenchidos
 function atualizarRelatorio() {
-  if (!validarCampos()) {
+  if (
+    nomeInput.value.trim() === "" ||
+    enderecoInput.value.trim() === "" ||
+    whatsappInput.value.trim() === "" ||
+    servicoSelect.value === "" ||
+    btusSelect.value === ""
+  ) {
     relatorioDiv.innerText = "";
     enviarBtn.disabled = true;
     return;
@@ -67,16 +63,14 @@ function atualizarRelatorio() {
   enviarBtn.disabled = false;
 }
 
-// Adiciona ouvintes para atualizar relatório automaticamente
 document.querySelectorAll("input, select").forEach(el => {
   el.addEventListener("input", atualizarRelatorio);
   el.addEventListener("change", atualizarRelatorio);
 });
 
-// Enviar orçamento via WhatsApp (ajuste conforme necessidade)
 enviarBtn.addEventListener("click", () => {
-  const numero = "5583983259341"; // Número do O Esquimó
-  const texto = encodeURIComponent(relatorioDiv.innerText);
-  const url = `https://wa.me/${numero}?text=${texto}`;
+  const numero = "5583983259341"; // número do O Esquimó
+  const mensagem = encodeURIComponent(relatorioDiv.innerText);
+  const url = `https://api.whatsapp.com/send?phone=${numero}&text=${mensagem}`;
   window.open(url, "_blank");
 });
