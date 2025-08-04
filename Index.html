@@ -11,13 +11,13 @@
     <h1>Orçamento de Serviço - O Esquimó</h1>
     <form id="formulario">
       <label for="nome">Nome:</label>
-      <input type="text" id="nome" required data-placeholder="Informe seu nome aqui." />
+      <input type="text" id="nome" required />
 
       <label for="endereco">Endereço:</label>
-      <input type="text" id="endereco" required data-placeholder="Preencha seu endereço." />
+      <input type="text" id="endereco" required />
 
       <label for="whatsapp">WhatsApp:</label>
-      <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" required data-placeholder="DDD e número do WhatsApp." />
+      <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" required />
 
       <label for="servico">Tipo de Serviço:</label>
       <select id="servico" required>
@@ -38,7 +38,9 @@
         <option value="30000">30.000</option>
       </select>
 
-    
+      <label for="valor">Valor do Orçamento (R$):</label>
+      <input type="number" id="valor" step="0.01" min="0" required />
+
       <div id="relatorio" style="margin-top: 20px; white-space: pre-line; background: #e6f2ff; padding: 10px; border-left: 5px solid #0055aa;"></div>
 
       <button type="button" id="enviarBtn" disabled>Enviar Relatório</button>
