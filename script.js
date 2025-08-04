@@ -16,11 +16,11 @@ function calcularValor(servico, btus) {
     else if (btus === "24000") valor = 800,00;
     else if (btus === "30000") valor = 950,00;
   } else if (servico === "Limpeza Split") {
-    if (btus === "9000") valor = 120;
-    else if (btus === "12000") valor = 130;
-    else if (btus === "18000") valor = 150;
-    else if (btus === "24000") valor = 180;
-    else if (btus === "30000") valor = 220;
+    if (btus === "9000") valor = 180,00;
+    else if (btus === "12000") valor = 200,00;
+    else if (btus === "18000") valor = 250,00;
+    else if (btus === "24000") valor = 350,00;
+    else if (btus === "30000") valor = 400,00;
   } else if (servico === "Limpeza Janela") {
     valor = 150,00;
   } else if (servico === "Manutenção") {
