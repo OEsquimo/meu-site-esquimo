@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (camposValidos) {
       const relatorioTexto = 
-`*ORÇAMENTO*
+`*ORÇAMENTO DETALHADO*
 👤 Nome: ${nome}
 📍 Endereço: ${endereco}
 📱 WhatsApp do Cliente: ${whatsappCliente}
