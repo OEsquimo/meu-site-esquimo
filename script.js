@@ -154,14 +154,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (camposValidosParaRelatorio) {
       const relatorioTexto = 
-`*ORÇAMENTO DETALHADO*
+`*ORÇAMENTO*
 👤 Nome: ${nome}
 📍 Endereço: ${endereco}
-📱 WhatsApp do Cliente: ${whatsappCliente}
+📱 WhatsApp: ${whatsappCliente}
 🛠️ Serviço: ${servico}
 ❄️ BTUs: ${btus || "N/A"}
-💰 Valor do Orçamento: R$ ${valorOrcamento}
-   Obs: Mande esse orçamento 
+💰      Valor do Orçamento: R$ ${valorOrcamento}
+        Obs: Mande esse orçamento 
         para nossa conversa 
         no whatsapp`;
 
