@@ -207,3 +207,47 @@ Obs: Mande esse orçamento para nossa conversa no WhatsApp`;
     }
   });
 });
+
+
+// ==== FUNÇÕES DE AGENDAMENTO =============
+function configurarAgendamento() {
+  // Mostra a seção
+  document.getElementById('agendamento').style.display = 'block';
+  
+  // Calendário
+  flatpickr("#data_agendamento", {
+    minDate: "today",
+    dateFormat: "d/m/Y",
+    onChange: function(selectedDate) {
+      const horarios = ["08:00", "10:00", "13:00", "15:00", "17:00"];
+      const select = document.getElementById('horario_agendamento');
+      select.innerHTML = horarios.map(h => `<option value="${h}">${h}</option>`).join('');
+    }
+  });
+
+  // Botão de confirmação
+  document.getElementById('btn_confirmar_agendamento').addEventListener('click', async function() {
+    const agendamento = {
+      nome: document.getElementById('nome').value,
+      servico: document.getElementById('servico').value,
+      valor: document.querySelector('#resultado-orcamento').innerText,
+      telefone: document.getElementById('whatsapp').value,
+      data: document.getElementById('data_agendamento').value,
+      horario: document.getElementById('horario_agendamento').value,
+      pagamento: document.getElementById('forma_pagamento').value,
+      observacoes: document.getElementById('obs_cliente').value
+    };
+
+    // Simulação de salvamento (substitua pelo Firebase real)
+    console.log("Dados para salvar:", agendamento);
+    alert("Agendamento simulado! No código real, isso salvará no Firebase.");
+    
+    // WhatsApp (substitua SEUNUMERO)
+    const mensagem = `✅ Novo Agendamento:\nServiço: ${agendamento.servico}\nData: ${agendamento.data} às ${agendamento.horario}`;
+    window.open(`https://wa.me/55SEUNUMERO?text=${encodeURIComponent(mensagem)}`, '_blank');
+  });
+}
+
+// ============= INTEGRAÇÃO =============
+// Chame esta função APÓS calcular o orçamento:
+// configurarAgendamento();
