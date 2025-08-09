@@ -183,6 +183,8 @@ Obs: Mande esse orçamento para nossa conversa no WhatsApp`;
 
     relatorioDiv.innerText = textoRelatorio;
 
+    configurarAgendamento(); // Após mostrar o resultado
+
     return textoRelatorio;
   }
 
