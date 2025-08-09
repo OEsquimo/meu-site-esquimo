@@ -14,8 +14,8 @@ firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
 // ================= VARIÁVEIS GLOBAIS =================
-const seuWhatsApp = "5581983259341"; // Seu número para redirecionamento
-let dadosOrcamento = {}; // Armazena temporariamente os dados do orçamento
+const seuWhatsApp = "5581983259341";
+let dadosOrcamento = {};
 
 // ================= FUNÇÕES PRINCIPAIS =================
 document.addEventListener("DOMContentLoaded", function() {
@@ -32,9 +32,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const defeitoTextarea = document.getElementById("defeito");
   const campoBtusWrapper = document.getElementById("campo-btus-wrapper");
   const campoDefeitoWrapper = document.getElementById("campo-defeito-wrapper");
-
-  // Atualiza data da última modificação
-  atualizarDataModificacao();
 
   // Máscara para o campo WhatsApp
   whatsappInput.addEventListener("input", function() {
@@ -220,7 +217,7 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-// ================= FUNÇÕES DE AGENDAMENTO =================
+// ================= FUNÇÕES DE AGENDAMENTO CORRIGIDAS =================
 function configurarAgendamento() {
   const agendamentoSection = document.getElementById('agendamento');
   agendamentoSection.style.display = 'block';
@@ -255,68 +252,61 @@ function configurarAgendamento() {
     }
   });
 
-  // Botão de confirmação de agendamento
-  document.getElementById('btn_confirmar_agendamento').addEventListener('click', async function() {
+  // Botão de confirmação - VERSÃO CORRIGIDA
+  const btnAgendamento = document.getElementById('btn_confirmar_agendamento');
+  btnAgendamento.addEventListener('click', async function() {
     if (!validarAgendamento()) return;
     
     const btn = this;
+    const btnOriginalHTML = btn.innerHTML;
     btn.disabled = true;
     btn.innerHTML = '<span class="loader"></span> Agendando...';
 
-    const dadosAgendamento = {
-      ...dadosOrcamento,
-      data: document.getElementById('data_agendamento').value,
-      horario: document.getElementById('horario_agendamento').value,
-      formaPagamento: document.getElementById('forma_pagamento').value,
-      observacoes: document.getElementById('obs_cliente').value,
-      timestamp: new Date().toISOString()
-    };
-
     try {
-      // Verifica disponibilidade
-      const disponivel = await verificarDisponibilidade(
-        dadosAgendamento.data, 
-        dadosAgendamento.horario
-      );
-      
+      const dadosAgendamento = {
+        ...dadosOrcamento,
+        data: document.getElementById('data_agendamento').value,
+        horario: document.getElementById('horario_agendamento').value,
+        formaPagamento: document.getElementById('forma_pagamento').value,
+        observacoes: document.getElementById('obs_cliente').value,
+        timestamp: new Date().toISOString()
+      };
+
+      // 1. Verifica disponibilidade
+      const disponivel = await verificarDisponibilidade(dadosAgendamento.data, dadosAgendamento.horario);
       if (!disponivel) {
-        alert("Este horário já está reservado. Por favor, escolha outro.");
-        btn.disabled = false;
-        btn.innerHTML = '<img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon"> Confirmar Agendamento';
-        return;
+        throw new Error("Este horário já está reservado. Por favor, escolha outro.");
       }
 
-      // Salva no Firebase
+      // 2. Salva no Firebase
       await database.ref('agendamentos').push().set(dadosAgendamento);
+      
+      // 3. Envia para WhatsApp
       enviarWhatsApp(dadosAgendamento);
       
+      // 4. Feedback e reset
+      alert("Agendamento confirmado com sucesso!");
+      resetarFormularioAgendamento();
+
     } catch (error) {
-      console.error("Erro ao agendar:", error);
-      alert("Ocorreu um erro ao agendar. Por favor, tente novamente.");
+      console.error("Erro no agendamento:", error);
+      alert(error.message || "Erro ao confirmar agendamento. Tente novamente.");
     } finally {
+      // Restaura o botão independente do resultado
       btn.disabled = false;
-      btn.innerHTML = '<img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon"> Confirmar Agendamento';
+      btn.innerHTML = btnOriginalHTML;
     }
   });
 }
 
-// Validação do formulário de agendamento
-function validarAgendamento() {
-  const campos = [
-    {id: 'data_agendamento', msg: 'Selecione uma data'},
-    {id: 'horario_agendamento', msg: 'Selecione um horário'},
-    {id: 'forma_pagamento', msg: 'Selecione a forma de pagamento'}
-  ];
-
-  for (const campo of campos) {
-    const elemento = document.getElementById(campo.id);
-    if (!elemento.value || elemento.value === "") {
-      alert(campo.msg);
-      elemento.focus();
-      return false;
-    }
-  }
-  return true;
+// Função para resetar o formulário de agendamento
+function resetarFormularioAgendamento() {
+  document.getElementById('data_agendamento').value = '';
+  document.getElementById('horario_agendamento').innerHTML = '<option value="">Selecione primeiro a data</option>';
+  document.getElementById('horario_agendamento').disabled = true;
+  document.getElementById('forma_pagamento').value = '';
+  document.getElementById('obs_cliente').value = '';
+  document.getElementById('agendamento').style.display = 'none';
 }
 
 // Verifica disponibilidade no Firebase
@@ -332,14 +322,14 @@ async function verificarDisponibilidade(data, horario) {
     const agendamentos = snapshot.val();
     for (const key in agendamentos) {
       if (agendamentos[key].horario === horario) {
-        return false; // Horário já agendado
+        return false;
       }
     }
     return true;
     
   } catch (error) {
     console.error("Erro ao verificar disponibilidade:", error);
-    return false;
+    throw new Error("Erro ao verificar horários disponíveis");
   }
 }
 
@@ -348,7 +338,7 @@ function gerarHorariosDisponiveis(date) {
   const todosHorarios = ["08:00", "10:00", "13:00", "15:00", "17:00"];
   
   // Limita horários no sábado
-  if (date.getDay() === 6) { // 6 = sábado
+  if (date.getDay() === 6) {
     return todosHorarios.slice(0, 3); // Até 13:00 no sábado
   }
   
@@ -375,10 +365,21 @@ _Agendamento realizado em ${new Date().toLocaleDateString('pt-BR')}_`;
   window.open(url, '_blank');
 }
 
-// Atualiza data da última modificação
-function atualizarDataModificacao() {
-  const dataUltimaAtualizacao = new Date(document.lastModified);
-  const elemento = document.getElementById("ultima-atualizacao");
-  const opcoes = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-  elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
+// Validação do formulário de agendamento
+function validarAgendamento() {
+  const campos = [
+    {id: 'data_agendamento', msg: 'Selecione uma data'},
+    {id: 'horario_agendamento', msg: 'Selecione um horário'},
+    {id: 'forma_pagamento', msg: 'Selecione a forma de pagamento'}
+  ];
+
+  for (const campo of campos) {
+    const elemento = document.getElementById(campo.id);
+    if (!elemento.value || elemento.value === "") {
+      alert(campo.msg);
+      elemento.focus();
+      return false;
+    }
+  }
+  return true;
 }
