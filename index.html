@@ -1,17 +1,101 @@
+
 <!DOCTYPE html>
-<html lang="es">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holamundo</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Orçamento O Esquimó</title>
+  <link rel="stylesheet" href="assets/style.css?v=9" />
 </head>
 <body>
-    <!-- Título principal -->
-    <h1>Holamundo</h1>
 
-    <!-- Script JavaScript -->
-    <script>
-        console.log("Holamundo");
-    </script>
+  <!-- Imagem topo -->
+  <header class="topo">
+    <img src="assets/imagens/tecnico-trabalhando.jpg" alt="Técnico mexendo na evaporadora" />
+  </header>
+
+  <!-- Serviços com título dentro da área branca -->
+  <section class="servicos container">
+    <h2>Escolha um dos serviços clicando na imagem e faça seu orçamento</h2>
+
+    <div class="servicos-imagens">
+      <div class="servico" data-servico="Instalação">
+        <img src="assets/imagens/instalacao-ar.jpg" alt="Instalação" />
+        <p>Instalação</p>
+      </div>
+      <div class="servico" data-servico="Limpeza Split">
+        <img src="assets/imagens/limpeza-split.jpg" alt="Limpeza Split" />
+        <p>Limpeza Split</p>
+      </div>
+      <div class="servico" data-servico="Manutenção">
+        <img src="assets/imagens/manutencao-ar.jpg" alt="Manutenção" />
+        <p>Manutenção</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulário -->
+  <section class="formulario container">
+    <form id="formulario" novalidate>
+      <input type="hidden" id="servicoSelecionado" name="servicoSelecionado" value="" />
+
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" placeholder="Digite seu nome" />
+      
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" placeholder="Digite seu endereço" />
+
+      <label for="whatsapp">WhatsApp:</label>
+      <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" />
+
+      <div id="campo-btus-wrapper">
+        <label for="btus">Capacidade em BTUs:</label>
+        <select id="btus" name="btus">
+          <option value="">Selecione</option>
+          <option value="9000">9.000</option>
+          <option value="12000">12.000</option>
+          <option value="18000">18.000</option>
+          <option value="24000">24.000</option>
+          <option value="30000">30.000</option>
+        </select>
+      </div>
+
+      <div id="campo-defeito-wrapper" style="display:none;">
+        <label for="defeito">Descreva o defeito do ar-condicionado:</label>
+        <textarea id="defeito" placeholder="Descreva o defeito aqui..."></textarea>
+      </div>
+
+      <div id="relatorio" style="margin-top: 20px; white-space: pre-line; background: #e6f2ff; padding: 10px; border-left: 5px solid #0055aa;"></div>
+
+     <!-- <button type="button" id="enviarBtn" disabled>ENVIAR ORÇAMENTO</button> -->
+
+      <button id="enviarBtn" class="whatsapp-button">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
+  Enviar orçamento
+</button>
+    </form>
+  </section>
+ <script src="assets/script.js?v=9"></script>
+
+  
+<!-- CÓDIGO RESPONSÁVEL MOSTRAR DATA DE ATUALIZAÇÃO -->
+<p id="ultima-atualizacao" style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;"></p>
+
+<script>
+  const dataUltimaAtualizacao = new Date(document.lastModified);
+  const elemento = document.getElementById("ultima-atualizacao");
+  
+  const opcoes = {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+  
+  elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
+</script>
+  
+  
 </body>
 </html>
