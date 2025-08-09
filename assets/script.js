@@ -246,7 +246,7 @@ function configurarAgendamento() {
     
     // WhatsApp (substitua SEUNUMERO)
     const mensagem = `✅ Novo Agendamento:\nServiço: ${agendamento.servico}\nData: ${agendamento.data} às ${agendamento.horario}`;
-    window.open(`https://wa.me/55SEUNUMERO?text=${encodeURIComponent(mensagem)}`, '_blank');
+    window.open(`https://wa.me/5581983259341?text=${encodeURIComponent(mensagem)}`, '_blank');
   });
 }
 
