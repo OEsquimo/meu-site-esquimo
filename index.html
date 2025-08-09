@@ -1,20 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Orçamento O Esquimó</title>
-  <link rel="stylesheet" href="assets/style.css?v=9" />
+  <link rel="stylesheet" href="assets/style.css?v=10" />
+  <!-- Biblioteca do calendário -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
 
-  <!-- Imagem topo -->
+  <!-- Topo com imagem -->
   <header class="topo">
-    <img src="assets/imagens/tecnico-trabalhando.jpg" alt="Técnico mexendo na evaporadora" />
+    <img src="assets/imagens/tecnico-trabalhando.jpg" alt="Técnico trabalhando" />
   </header>
 
-  <!-- Serviços com título dentro da área branca -->
+  <!-- Seção de serviços -->
   <section class="servicos container">
     <h2>Escolha um dos serviços clicando na imagem e faça seu orçamento</h2>
 
@@ -34,20 +35,22 @@
     </div>
   </section>
 
-  <!-- Formulário -->
+  <!-- Formulário principal -->
   <section class="formulario container">
     <form id="formulario" novalidate>
       <input type="hidden" id="servicoSelecionado" name="servicoSelecionado" value="" />
 
+      <!-- Dados do cliente -->
       <label for="nome">Nome:</label>
-      <input type="text" id="nome" placeholder="Digite seu nome" />
+      <input type="text" id="nome" placeholder="Digite seu nome completo" required />
       
       <label for="endereco">Endereço:</label>
-      <input type="text" id="endereco" placeholder="Digite seu endereço" />
+      <input type="text" id="endereco" placeholder="Rua, número, bairro" required />
 
       <label for="whatsapp">WhatsApp:</label>
-      <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" />
+      <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" required />
 
+      <!-- Campos condicionais -->
       <div id="campo-btus-wrapper">
         <label for="btus">Capacidade em BTUs:</label>
         <select id="btus" name="btus">
@@ -61,64 +64,63 @@
       </div>
 
       <div id="campo-defeito-wrapper" style="display:none;">
-        <label for="defeito">Descreva o defeito do ar-condicionado:</label>
-        <textarea id="defeito" placeholder="Descreva o defeito aqui..."></textarea>
+        <label for="defeito">Descreva o problema:</label>
+        <textarea id="defeito" placeholder="Ex: Ar não está gelando..."></textarea>
       </div>
 
+      <!-- Resultado do orçamento -->
       <div id="relatorio" style="margin-top: 20px; white-space: pre-line; background: #e6f2ff; padding: 10px; border-left: 5px solid #0055aa;"></div>
 
-     <!-- <button type="button" id="enviarBtn" disabled>ENVIAR ORÇAMENTO</button> -->
+      <!-- Seção de Agendamento (NOVO) -->
+      <div id="agendamento" style="display: none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd;">
+        <h3 style="margin-bottom: 15px;">⏰ Agendar Serviço</h3>
+        
+        <label for="data_agendamento">Data:</label>
+        <input type="text" id="data_agendamento" class="agendamento-campo" placeholder="Selecione a data" readonly required />
+        
+        <label for="horario_agendamento">Horário:</label>
+        <select id="horario_agendamento" class="agendamento-campo" required>
+          <option value="">Selecione primeiro a data</option>
+        </select>
+        
+        <label for="forma_pagamento">Forma de pagamento:</label>
+        <select id="forma_pagamento" class="agendamento-campo" required>
+          <option value="">Selecione...</option>
+          <option value="Pix">Pix</option>
+          <option value="Dinheiro">Dinheiro</option>
+          <option value="Cartão de Crédito">Cartão de Crédito</option>
+          <option value="Cartão de Débito">Cartão de Débito</option>
+        </select>
+        
+        <label for="obs_cliente">Observações:</label>
+        <textarea id="obs_cliente" class="agendamento-campo" rows="3" placeholder="Detalhes adicionais (opcional)"></textarea>
+        
+        <button type="button" id="btn_confirmar_agendamento" class="whatsapp-button" style="margin-top: 15px;">
+          <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" style="width: 20px;">
+          Confirmar Agendamento
+        </button>
+      </div>
 
-      <button id="enviarBtn" class="whatsapp-button">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="whatsapp-icon">
-  Enviar orçamento
-</button>
+      <!-- Botão original (agora só mostra o agendamento) -->
+      <button type="button" id="enviarBtn" class="whatsapp-button">
+        <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" style="width: 20px;">
+        Gerar Orçamento
+      </button>
     </form>
   </section>
- <script src="assets/script.js?v=9"></script>
 
-  
-<!-- CÓDIGO RESPONSÁVEL MOSTRAR DATA DE ATUALIZAÇÃO -->
-<p id="ultima-atualizacao" style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;"></p>
+  <!-- Rodapé com data -->
+  <p id="ultima-atualizacao" style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;"></p>
 
-<script>
-  const dataUltimaAtualizacao = new Date(document.lastModified);
-  const elemento = document.getElementById("ultima-atualizacao");
-  
-  const opcoes = {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  };
-  
-  elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
-</script>
-
-  <!-- ============= NOVA SEÇÃO DE AGENDAMENTO ============= -->
-<section id="agendamento" style="display: none;">
-  <h3>📅 Agendamento</h3>
-  <input type="text" id="data_agendamento" placeholder="Selecione a data" readonly>
-  <select id="horario_agendamento" required>
-    <option value="">Selecione um horário</option>
-  </select>
-  <select id="forma_pagamento" required>
-    <option value="">Forma de pagamento</option>
-    <option value="Pix">Pix</option>
-    <option value="Dinheiro">Dinheiro</option>
-    <option value="Cartão">Cartão</option>
-  </select>
-  <textarea id="obs_cliente" placeholder="Observações (opcional)"></textarea>
-  <button id="btn_confirmar_agendamento">
-    <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp"> Confirmar
-  </button>
-</section>
-
-<!-- Adicione isto no <head> -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  
-  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="assets/script.js?v=10"></script>
+  <script>
+    // Atualização de data (mantido seu código original)
+    const dataUltimaAtualizacao = new Date(document.lastModified);
+    const elemento = document.getElementById("ultima-atualizacao");
+    const opcoes = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+    elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
+  </script>
 </body>
 </html>
