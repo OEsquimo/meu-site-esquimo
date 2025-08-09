@@ -2,11 +2,13 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Orçamento O Esquimó</title>
-  <link rel="stylesheet" href="assets/style.css?v=10" />
-  <!-- Biblioteca do calendário -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendamento - O Esquimó</title>
+  <link rel="stylesheet" href="assets/style.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 </head>
 <body>
 
@@ -69,17 +71,17 @@
       </div>
 
       <!-- Resultado do orçamento -->
-      <div id="relatorio" style="margin-top: 20px; white-space: pre-line; background: #e6f2ff; padding: 10px; border-left: 5px solid #0055aa;"></div>
+      <div id="relatorio"></div>
 
-      <!-- Seção de Agendamento (NOVO) -->
-      <div id="agendamento" style="display: none; margin-top: 25px; padding-top: 20px; border-top: 1px dashed #ddd;">
-        <h3 style="margin-bottom: 15px;">⏰ Agendar Serviço</h3>
+      <!-- Seção de Agendamento -->
+      <div id="agendamento">
+        <h3><span class="icon">⏰</span> Agendar Serviço</h3>
         
         <label for="data_agendamento">Data:</label>
         <input type="text" id="data_agendamento" class="agendamento-campo" placeholder="Selecione a data" readonly required />
         
         <label for="horario_agendamento">Horário:</label>
-        <select id="horario_agendamento" class="agendamento-campo" required>
+        <select id="horario_agendamento" class="agendamento-campo" required disabled>
           <option value="">Selecione primeiro a data</option>
         </select>
         
@@ -95,32 +97,26 @@
         <label for="obs_cliente">Observações:</label>
         <textarea id="obs_cliente" class="agendamento-campo" rows="3" placeholder="Detalhes adicionais (opcional)"></textarea>
         
-        <button type="button" id="btn_confirmar_agendamento" class="whatsapp-button" style="margin-top: 15px;">
-          <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" style="width: 20px;">
+        <button type="button" id="btn_confirmar_agendamento" class="whatsapp-button">
+          <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon">
           Confirmar Agendamento
         </button>
       </div>
 
-      <!-- Botão original (agora só mostra o agendamento) -->
+      <!-- Botão para gerar orçamento -->
       <button type="button" id="enviarBtn" class="whatsapp-button">
-        <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" style="width: 20px;">
+        <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon">
         Gerar Orçamento
       </button>
     </form>
   </section>
 
   <!-- Rodapé com data -->
-  <p id="ultima-atualizacao" style="font-size: 12px; color: #999; text-align: center; margin-top: 30px;"></p>
+  <footer id="ultima-atualizacao"></footer>
 
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <script src="assets/script.js?v=10"></script>
-  <script>
-    // Atualização de data (mantido seu código original)
-    const dataUltimaAtualizacao = new Date(document.lastModified);
-    const elemento = document.getElementById("ultima-atualizacao");
-    const opcoes = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
-    elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
+  <script src="assets/script.js"></script>
 </body>
 </html>
