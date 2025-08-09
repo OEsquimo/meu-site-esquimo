@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agendamento - O Esquimó</title>
   <link rel="stylesheet" href="assets/style.css">
-  <!-- CSS do Flatpickr -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -17,7 +16,7 @@
   </header>
 
   <section class="servicos container">
-    <h2>Escolha um dos serviços</h2>
+    <h2>Escolha um serviço</h2>
     <div class="servicos-imagens">
       <div class="servico" data-servico="Instalação">
         <img src="assets/imagens/instalacao-ar.jpg" alt="Instalação">
@@ -40,17 +39,17 @@
       
       <!-- Dados do Cliente -->
       <label for="nome">Nome:</label>
-      <input type="text" id="nome" required>
+      <input type="text" id="nome" placeholder="Digite seu nome completo" required>
       
       <label for="endereco">Endereço:</label>
-      <input type="text" id="endereco" required>
+      <input type="text" id="endereco" placeholder="Rua, número, bairro" required>
 
       <label for="whatsapp">WhatsApp:</label>
-      <input type="text" id="whatsapp" required>
+      <input type="text" id="whatsapp" placeholder="(xx) xxxxx-xxxx" required>
 
       <!-- Campos Condicionais -->
       <div id="campo-btus-wrapper">
-        <label for="btus">BTUs:</label>
+        <label for="btus">Capacidade em BTUs:</label>
         <select id="btus">
           <option value="">Selecione</option>
           <option value="9000">9.000 BTUs</option>
@@ -62,43 +61,47 @@
       </div>
 
       <div id="campo-defeito-wrapper" style="display:none;">
-        <label for="defeito">Defeito:</label>
-        <textarea id="defeito"></textarea>
+        <label for="defeito">Descreva o problema:</label>
+        <textarea id="defeito" placeholder="Ex: Ar não está gelando..."></textarea>
       </div>
 
-      <!-- Resultado -->
+      <!-- Resultado do Orçamento -->
       <div id="relatorio"></div>
 
-      <!-- Agendamento -->
+      <!-- Seção de Agendamento -->
       <div id="agendamento" style="display:none;">
         <h3>⏰ Agendar Serviço</h3>
         
         <label for="data_agendamento">Data:</label>
-        <input type="text" id="data_agendamento" readonly>
+        <input type="text" id="data_agendamento" placeholder="Selecione a data" readonly>
         
         <label for="horario_agendamento">Horário:</label>
-        <select id="horario_agendamento" disabled>
-          <option value="">Selecione a data primeiro</option>
+        <select id="horario_agendamento">
+          <option value="08:00">08:00</option>
+          <option value="10:00">10:00</option>
+          <option value="13:00">13:00</option>
+          <option value="15:00">15:00</option>
+          <option value="17:00">17:00</option>
         </select>
         
-        <label for="forma_pagamento">Pagamento:</label>
+        <label for="forma_pagamento">Forma de pagamento:</label>
         <select id="forma_pagamento">
-          <option value="">Selecione...</option>
           <option value="Pix">Pix</option>
           <option value="Dinheiro">Dinheiro</option>
-          <option value="Cartão">Cartão</option>
+          <option value="Cartão de Crédito">Cartão de Crédito</option>
+          <option value="Cartão de Débito">Cartão de Débito</option>
         </select>
         
         <label for="obs_cliente">Observações:</label>
-        <textarea id="obs_cliente" rows="3"></textarea>
+        <textarea id="obs_cliente" rows="3" placeholder="Detalhes adicionais (opcional)"></textarea>
         
-        <button type="button" id="btn_confirmar_agendamento">
+        <button type="button" id="btn_confirmar_agendamento" class="whatsapp-button">
           <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp">
           Confirmar Agendamento
         </button>
       </div>
 
-      <button type="button" id="enviarBtn">
+      <button type="button" id="enviarBtn" class="whatsapp-button">
         <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp">
         Gerar Orçamento
       </button>
