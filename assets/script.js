@@ -33,6 +33,9 @@ document.addEventListener("DOMContentLoaded", function() {
   const campoBtusWrapper = document.getElementById("campo-btus-wrapper");
   const campoDefeitoWrapper = document.getElementById("campo-defeito-wrapper");
 
+  // Atualiza data da última modificação
+  atualizarDataModificacao();
+
   // Máscara para o campo WhatsApp
   whatsappInput.addEventListener("input", function() {
     let numeros = this.value.replace(/\D/g, "").slice(0, 11);
@@ -129,20 +132,12 @@ document.addEventListener("DOMContentLoaded", function() {
   // Mostra/oculta erros nos inputs
   function mostrarErroInput(input, mensagem) {
     input.classList.add("input-error");
-    if (!validarWhatsApp(input.value.trim())) {
-      input.placeholder = mensagem;
-    }
+    input.placeholder = mensagem;
   }
 
   function limparErroInput(input, placeholder) {
     input.classList.remove("input-error");
     input.placeholder = placeholder;
-  }
-
-  // Validação do WhatsApp
-  function validarWhatsApp(tel) {
-    const somenteNumeros = tel.replace(/\D/g, "");
-    return somenteNumeros.length === 11;
   }
 
   // Preços dos serviços
@@ -247,12 +242,15 @@ function configurarAgendamento() {
       const select = document.getElementById('horario_agendamento');
       
       select.innerHTML = '';
+      select.disabled = false;
+      
       if (horariosDisponiveis.length > 0) {
         horariosDisponiveis.forEach(h => {
           select.innerHTML += `<option value="${h}">${h}</option>`;
         });
       } else {
         select.innerHTML = '<option value="">Nenhum horário disponível nesta data</option>';
+        select.disabled = true;
       }
     }
   });
@@ -284,7 +282,7 @@ function configurarAgendamento() {
       if (!disponivel) {
         alert("Este horário já está reservado. Por favor, escolha outro.");
         btn.disabled = false;
-        btn.textContent = 'Confirmar Agendamento';
+        btn.innerHTML = '<img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon"> Confirmar Agendamento';
         return;
       }
 
@@ -297,7 +295,7 @@ function configurarAgendamento() {
       alert("Ocorreu um erro ao agendar. Por favor, tente novamente.");
     } finally {
       btn.disabled = false;
-      btn.innerHTML = '<img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" style="width: 20px;"> Confirmar Agendamento';
+      btn.innerHTML = '<img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" class="whatsapp-icon"> Confirmar Agendamento';
     }
   });
 }
@@ -373,6 +371,14 @@ function enviarWhatsApp(dados) {
 
 _Agendamento realizado em ${new Date().toLocaleDateString('pt-BR')}_`;
 
-  const url = `https://wa.me/${dados.whatsapp}?text=${encodeURIComponent(mensagem)}`;
+  const url = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagem)}`;
   window.open(url, '_blank');
+}
+
+// Atualiza data da última modificação
+function atualizarDataModificacao() {
+  const dataUltimaAtualizacao = new Date(document.lastModified);
+  const elemento = document.getElementById("ultima-atualizacao");
+  const opcoes = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+  elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
 }
