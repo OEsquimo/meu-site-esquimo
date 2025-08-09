@@ -253,3 +253,29 @@ function configurarAgendamento() {
 // ============= INTEGRAÇÃO =============
 // Chame esta função APÓS calcular o orçamento:
 // configurarAgendamento();
+
+// No final do seu arquivo script.js
+document.addEventListener("DOMContentLoaded", function() {
+  // Configuração do Flatpickr
+  flatpickr("#data_agendamento", {
+    minDate: "today",
+    dateFormat: "d/m/Y",
+    locale: "pt", // Português
+    onChange: function(selectedDate) {
+      // Ativa o próximo campo quando a data é selecionada
+      document.getElementById("horario_agendamento").disabled = false;
+    }
+  });
+
+  // Validação do formulário de agendamento
+  document.getElementById("btn_confirmar_agendamento").addEventListener("click", function() {
+    if (!document.getElementById("data_agendamento").value) {
+      alert("Selecione uma data para continuar");
+      document.getElementById("data_agendamento").focus();
+      return;
+    }
+    // Restante da lógica...
+  });
+});
+
+
