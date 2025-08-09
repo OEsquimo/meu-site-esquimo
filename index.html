@@ -95,6 +95,29 @@
   
   elemento.textContent = "Última atualização: " + dataUltimaAtualizacao.toLocaleString('pt-BR', opcoes);
 </script>
+
+  <!-- ============= NOVA SEÇÃO DE AGENDAMENTO ============= -->
+<section id="agendamento" style="display: none;">
+  <h3>📅 Agendamento</h3>
+  <input type="text" id="data_agendamento" placeholder="Selecione a data" readonly>
+  <select id="horario_agendamento" required>
+    <option value="">Selecione um horário</option>
+  </select>
+  <select id="forma_pagamento" required>
+    <option value="">Forma de pagamento</option>
+    <option value="Pix">Pix</option>
+    <option value="Dinheiro">Dinheiro</option>
+    <option value="Cartão">Cartão</option>
+  </select>
+  <textarea id="obs_cliente" placeholder="Observações (opcional)"></textarea>
+  <button id="btn_confirmar_agendamento">
+    <img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp"> Confirmar
+  </button>
+</section>
+
+<!-- Adicione isto no <head> -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   
   
 </body>
