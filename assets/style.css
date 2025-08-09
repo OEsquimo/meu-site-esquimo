@@ -197,3 +197,39 @@ select.input-error {
     height: 70px;
   }
 }
+
+/* ==== ESTILOS DO AGENDAMENTO ==== */
+#agendamento {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+#data_agendamento,
+#horario_agendamento,
+#forma_pagamento {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#btn_confirmar_agendamento {
+  background: #25D366;
+  color: white;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
