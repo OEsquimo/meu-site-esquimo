@@ -273,3 +273,18 @@ body {
     padding: 15px;
   }
 }
+
+/* Dias bloqueados no calendário */
+.flatpickr-day.disabled {
+  color: #ff6b6b !important;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Horários indisponíveis */
+#horario_agendamento:disabled {
+  background: #fff5f5;
+  color: #ff6b6b;
+}
+
+
