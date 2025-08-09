@@ -1,27 +1,41 @@
+// ================= CONFIGURAÇÃO DO FIREBASE =================
+const firebaseConfig = {
+  apiKey: "AIzaSyCFf5gckKE6rg7MFuBYAO84aV-sNrdY2JQ",
+  authDomain: "agendamento-esquimo.firebaseapp.com",
+  databaseURL: "https://agendamento-esquimo-default-rtdb.firebaseio.com",
+  projectId: "agendamento-esquimo",
+  storageBucket: "agendamento-esquimo.appspot.com",
+  messagingSenderId: "348946727206",
+  appId: "1:348946727206:web:f5989788f13c259be0c1e7"
+};
 
-document.addEventListener("DOMContentLoaded", function () {
+// Inicializa o Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// ================= VARIÁVEIS GLOBAIS =================
+const seuWhatsApp = "5581983259341"; // Seu número para redirecionamento
+let dadosOrcamento = {}; // Armazena temporariamente os dados do orçamento
+
+// ================= FUNÇÕES PRINCIPAIS =================
+document.addEventListener("DOMContentLoaded", function() {
+  // Elementos do DOM
   const servicos = document.querySelectorAll(".servico");
   const servicoSelecionadoInput = document.getElementById("servicoSelecionado");
-
   const form = document.getElementById("formulario");
   const enviarBtn = document.getElementById("enviarBtn");
   const relatorioDiv = document.getElementById("relatorio");
-
   const nomeInput = document.getElementById("nome");
   const enderecoInput = document.getElementById("endereco");
   const whatsappInput = document.getElementById("whatsapp");
   const btusSelect = document.getElementById("btus");
   const defeitoTextarea = document.getElementById("defeito");
-
   const campoBtusWrapper = document.getElementById("campo-btus-wrapper");
   const campoDefeitoWrapper = document.getElementById("campo-defeito-wrapper");
 
-  const seuWhatsApp = "5581983259341";
-
-  // Máscara e bloqueio de letras no campo WhatsApp
-  whatsappInput.addEventListener("input", function () {
+  // Máscara para o campo WhatsApp
+  whatsappInput.addEventListener("input", function() {
     let numeros = this.value.replace(/\D/g, "").slice(0, 11);
-
     if (numeros.length === 0) {
       this.value = "";
     } else if (numeros.length <= 2) {
@@ -33,23 +47,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Seleção do serviço clicando na imagem
+  // Seleção do serviço
   servicos.forEach(servico => {
-    servico.addEventListener("click", function () {
+    servico.addEventListener("click", function() {
       servicos.forEach(s => s.classList.remove("selecionado"));
       this.classList.add("selecionado");
 
       const servicoEscolhido = this.getAttribute("data-servico");
       servicoSelecionadoInput.value = servicoEscolhido;
-
       atualizarCamposPorServico(servicoEscolhido);
-      nomeInput.scrollIntoView({ behavior: "smooth", block: "center" });
       nomeInput.focus();
-
       validarFormulario();
     });
   });
 
+  // Atualiza campos com base no serviço selecionado
   function atualizarCamposPorServico(servico) {
     if (servico === "Instalação" || servico === "Limpeza Split") {
       campoBtusWrapper.style.display = "block";
@@ -63,34 +75,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function validarWhatsApp(tel) {
-    const somenteNumeros = tel.replace(/\D/g, "");
-    return somenteNumeros.length === 11;
-  }
-
-  function mostrarErroInput(input, mensagem) {
-    input.classList.add("input-error");
-    if (!validarWhatsApp(input.value.trim())) {
-      input.placeholder = mensagem;
-    }
-  }
-
-  function limparErroInput(input, placeholder) {
-    input.classList.remove("input-error");
-    input.placeholder = placeholder;
-  }
-
-  const precoInstalacao = { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 };
-  const precoLimpezaSplit = { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 };
-  const precoLimpezaJanela = 150;
-
-  function calcularValor(servico, btus) {
-    if (servico === "Instalação") return precoInstalacao[btus] ?? "";
-    if (servico === "Limpeza Split") return precoLimpezaSplit[btus] ?? "";
-    if (servico === "Limpeza Janela") return precoLimpezaJanela;
-    return "";
-  }
-
+  // Validação do formulário
   function validarFormulario() {
     let isValid = true;
 
@@ -128,7 +113,6 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         limparErroInput(btusSelect, "");
       }
-      limparErroInput(defeitoTextarea, "Descreva o defeito aqui...");
     } else if (servicoSelecionadoInput.value === "Manutenção") {
       if (defeitoTextarea.value.trim() === "") {
         mostrarErroInput(defeitoTextarea, "Descreva o defeito");
@@ -136,16 +120,44 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         limparErroInput(defeitoTextarea, "Descreva o defeito aqui...");
       }
-      limparErroInput(btusSelect, "");
-    } else {
-      limparErroInput(btusSelect, "");
-      limparErroInput(defeitoTextarea, "Descreva o defeito aqui...");
     }
 
     enviarBtn.disabled = !isValid;
     return isValid;
   }
 
+  // Mostra/oculta erros nos inputs
+  function mostrarErroInput(input, mensagem) {
+    input.classList.add("input-error");
+    if (!validarWhatsApp(input.value.trim())) {
+      input.placeholder = mensagem;
+    }
+  }
+
+  function limparErroInput(input, placeholder) {
+    input.classList.remove("input-error");
+    input.placeholder = placeholder;
+  }
+
+  // Validação do WhatsApp
+  function validarWhatsApp(tel) {
+    const somenteNumeros = tel.replace(/\D/g, "");
+    return somenteNumeros.length === 11;
+  }
+
+  // Preços dos serviços
+  const precoInstalacao = { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 };
+  const precoLimpezaSplit = { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 };
+
+  // Cálculo do valor do serviço
+  function calcularValor(servico, btus) {
+    if (servico === "Instalação") return precoInstalacao[btus] ?? "";
+    if (servico === "Limpeza Split") return precoLimpezaSplit[btus] ?? "";
+    if (servico === "Manutenção") return "Orçamento sob análise";
+    return "";
+  }
+
+  // Geração do relatório/orçamento
   function gerarRelatorio() {
     if (!validarFormulario()) {
       relatorioDiv.innerText = "";
@@ -158,12 +170,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const servico = servicoSelecionadoInput.value;
     const btus = btusSelect.value.trim();
     const defeito = defeitoTextarea.value.trim();
+    const valorOrcamento = calcularValor(servico, btus);
 
-    let valorOrcamento = calcularValor(servico, btus);
-
-    if (servico === "Manutenção") {
-      valorOrcamento = "Orçamento sob análise";
-    }
+    // Armazena os dados para o agendamento
+    dadosOrcamento = {
+      nome,
+      endereco,
+      whatsapp: whatsappCliente,
+      servico,
+      valor: valorOrcamento,
+      defeito: defeito || null
+    };
 
     let textoRelatorio = `*ORÇAMENTO*
 👤 Nome: ${nome}
@@ -178,20 +195,18 @@ document.addEventListener("DOMContentLoaded", function () {
 🔧 Defeito: ${defeito}`;
     }
 
-    textoRelatorio += `
-Obs: Mande esse orçamento para nossa conversa no WhatsApp`;
-
     relatorioDiv.innerText = textoRelatorio;
-
-    configurarAgendamento(); // Após mostrar o resultado
+    configurarAgendamento(); // Mostra a seção de agendamento
 
     return textoRelatorio;
   }
 
+  // Evento de input para atualização em tempo real
   form.addEventListener("input", () => {
     gerarRelatorio();
   });
 
+  // Botão de enviar orçamento
   enviarBtn.addEventListener("click", () => {
     if (!validarFormulario()) {
       if (nomeInput.classList.contains("input-error")) nomeInput.focus();
@@ -210,72 +225,154 @@ Obs: Mande esse orçamento para nossa conversa no WhatsApp`;
   });
 });
 
-
-// ==== FUNÇÕES DE AGENDAMENTO =============
+// ================= FUNÇÕES DE AGENDAMENTO =================
 function configurarAgendamento() {
-  // Mostra a seção
-  document.getElementById('agendamento').style.display = 'block';
+  const agendamentoSection = document.getElementById('agendamento');
+  agendamentoSection.style.display = 'block';
   
-  // Calendário
+  // Configuração do calendário
   flatpickr("#data_agendamento", {
     minDate: "today",
     dateFormat: "d/m/Y",
-    onChange: function(selectedDate) {
-      const horarios = ["08:00", "10:00", "13:00", "15:00", "17:00"];
+    locale: "pt",
+    disable: [
+      function(date) {
+        // Desabilita domingos (0 = domingo, 6 = sábado)
+        return (date.getDay() === 0);
+      }
+    ],
+    onChange: function(selectedDates) {
+      const date = selectedDates[0];
+      const horariosDisponiveis = gerarHorariosDisponiveis(date);
       const select = document.getElementById('horario_agendamento');
-      select.innerHTML = horarios.map(h => `<option value="${h}">${h}</option>`).join('');
+      
+      select.innerHTML = '';
+      if (horariosDisponiveis.length > 0) {
+        horariosDisponiveis.forEach(h => {
+          select.innerHTML += `<option value="${h}">${h}</option>`;
+        });
+      } else {
+        select.innerHTML = '<option value="">Nenhum horário disponível nesta data</option>';
+      }
     }
   });
 
-  // Botão de confirmação
+  // Botão de confirmação de agendamento
   document.getElementById('btn_confirmar_agendamento').addEventListener('click', async function() {
-    const agendamento = {
-      nome: document.getElementById('nome').value,
-      servico: document.getElementById('servico').value,
-      valor: document.querySelector('#resultado-orcamento').innerText,
-      telefone: document.getElementById('whatsapp').value,
+    if (!validarAgendamento()) return;
+    
+    const btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="loader"></span> Agendando...';
+
+    const dadosAgendamento = {
+      ...dadosOrcamento,
       data: document.getElementById('data_agendamento').value,
       horario: document.getElementById('horario_agendamento').value,
-      pagamento: document.getElementById('forma_pagamento').value,
-      observacoes: document.getElementById('obs_cliente').value
+      formaPagamento: document.getElementById('forma_pagamento').value,
+      observacoes: document.getElementById('obs_cliente').value,
+      timestamp: new Date().toISOString()
     };
 
-    // Simulação de salvamento (substitua pelo Firebase real)
-    console.log("Dados para salvar:", agendamento);
-    alert("Agendamento simulado! No código real, isso salvará no Firebase.");
-    
-    // WhatsApp (substitua SEUNUMERO)
-    const mensagem = `✅ Novo Agendamento:\nServiço: ${agendamento.servico}\nData: ${agendamento.data} às ${agendamento.horario}`;
-    window.open(`https://wa.me/5581983259341?text=${encodeURIComponent(mensagem)}`, '_blank');
+    try {
+      // Verifica disponibilidade
+      const disponivel = await verificarDisponibilidade(
+        dadosAgendamento.data, 
+        dadosAgendamento.horario
+      );
+      
+      if (!disponivel) {
+        alert("Este horário já está reservado. Por favor, escolha outro.");
+        btn.disabled = false;
+        btn.textContent = 'Confirmar Agendamento';
+        return;
+      }
+
+      // Salva no Firebase
+      await database.ref('agendamentos').push().set(dadosAgendamento);
+      enviarWhatsApp(dadosAgendamento);
+      
+    } catch (error) {
+      console.error("Erro ao agendar:", error);
+      alert("Ocorreu um erro ao agendar. Por favor, tente novamente.");
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<img src="assets/imagens/whatsapp-icon.png" alt="WhatsApp" style="width: 20px;"> Confirmar Agendamento';
+    }
   });
 }
 
-// ============= INTEGRAÇÃO =============
-// Chame esta função APÓS calcular o orçamento:
-// configurarAgendamento();
+// Validação do formulário de agendamento
+function validarAgendamento() {
+  const campos = [
+    {id: 'data_agendamento', msg: 'Selecione uma data'},
+    {id: 'horario_agendamento', msg: 'Selecione um horário'},
+    {id: 'forma_pagamento', msg: 'Selecione a forma de pagamento'}
+  ];
 
-// No final do seu arquivo script.js
-document.addEventListener("DOMContentLoaded", function() {
-  // Configuração do Flatpickr
-  flatpickr("#data_agendamento", {
-    minDate: "today",
-    dateFormat: "d/m/Y",
-    locale: "pt", // Português
-    onChange: function(selectedDate) {
-      // Ativa o próximo campo quando a data é selecionada
-      document.getElementById("horario_agendamento").disabled = false;
+  for (const campo of campos) {
+    const elemento = document.getElementById(campo.id);
+    if (!elemento.value || elemento.value === "") {
+      alert(campo.msg);
+      elemento.focus();
+      return false;
     }
-  });
+  }
+  return true;
+}
 
-  // Validação do formulário de agendamento
-  document.getElementById("btn_confirmar_agendamento").addEventListener("click", function() {
-    if (!document.getElementById("data_agendamento").value) {
-      alert("Selecione uma data para continuar");
-      document.getElementById("data_agendamento").focus();
-      return;
+// Verifica disponibilidade no Firebase
+async function verificarDisponibilidade(data, horario) {
+  try {
+    const snapshot = await database.ref('agendamentos')
+      .orderByChild('data')
+      .equalTo(data)
+      .once('value');
+    
+    if (!snapshot.exists()) return true;
+    
+    const agendamentos = snapshot.val();
+    for (const key in agendamentos) {
+      if (agendamentos[key].horario === horario) {
+        return false; // Horário já agendado
+      }
     }
-    // Restante da lógica...
-  });
-});
+    return true;
+    
+  } catch (error) {
+    console.error("Erro ao verificar disponibilidade:", error);
+    return false;
+  }
+}
 
+// Gera horários disponíveis
+function gerarHorariosDisponiveis(date) {
+  const todosHorarios = ["08:00", "10:00", "13:00", "15:00", "17:00"];
+  
+  // Limita horários no sábado
+  if (date.getDay() === 6) { // 6 = sábado
+    return todosHorarios.slice(0, 3); // Até 13:00 no sábado
+  }
+  
+  return todosHorarios;
+}
 
+// Envia mensagem para o WhatsApp
+function enviarWhatsApp(dados) {
+  const mensagem = `✅ NOVO AGENDAMENTO CONFIRMADO ✅
+
+🛠️ *Serviço:* ${dados.servico}
+👤 *Nome:* ${dados.nome}
+📍 *Endereço:* ${dados.endereco}
+📱 *WhatsApp:* ${dados.whatsapp}
+💰 *Valor:* R$ ${dados.valor}
+📅 *Data:* ${dados.data}
+⏰ *Hora:* ${dados.horario}
+💳 *Pagamento:* ${dados.formaPagamento}
+📝 *Observações:* ${dados.observacoes || "Nenhuma"}
+
+_Agendamento realizado em ${new Date().toLocaleDateString('pt-BR')}_`;
+
+  const url = `https://wa.me/${dados.whatsapp}?text=${encodeURIComponent(mensagem)}`;
+  window.open(url, '_blank');
+}
