@@ -134,7 +134,7 @@ function validarFormularioCompleto() {
   if (appState.servico === "Instalação" || appState.servico === "Limpeza") {
     servicoValido = btusSelect.value !== "";
   } else if (appState.servico === "Reparo") {
-    servicoValido = defeitoTextarea.value.trim().length > 10;
+    servicoValido = defeitoTextarea.value.trim().length > 3;
   }
 
   const dadosClientePreenchidos = nomeValido && enderecoValido && whatsappValido && servicoValido;
