@@ -1,11 +1,11 @@
 /**
  * @file script.js
- * @description Versão definitiva e consolidada do sistema de agendamento O Esquimó.
- * @version 3.1 - Final (com todas as correções integradas)
+ * @description Versão com lógica de verificação de horários em tempo real para evitar conflitos.
+ * @version 3.3 - Final (Anti-conflito)
  */
 
 // =================================================================================
-// 1. IMPORTAÇÕES E CONFIGURAÇÃO DO FIREBASE
+// 1. IMPORTAÇÕES E CONFIGURAÇÃO DO FIREBASE (Intacto)
 // =================================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -34,7 +34,7 @@ const agendamentosCollection = collection(db, "agendamentos");
 const seuWhatsApp = "5581983259341";
 
 // =================================================================================
-// 2. MAPEAMENTO DOS ELEMENTOS DO DOM
+// 2. MAPEAMENTO DOS ELEMENTOS DO DOM (Intacto)
 // =================================================================================
 const form = document.getElementById("formulario");
 const servicos = document.querySelectorAll(".servico");
@@ -57,12 +57,12 @@ const btnAgendarServico = document.getElementById("btn_agendar_servico");
 const btnAgendarServicoSpan = btnAgendarServico.querySelector('span');
 
 // =================================================================================
-// 3. ESTADO GLOBAL DA APLICAÇÃO
+// 3. ESTADO GLOBAL DA APLICAÇÃO (Intacto)
 // =================================================================================
 const appState = {
   servico: null,
   valor: 0,
-  agendamentosExistentes: [],
+  agendamentosExistentes: [], // Armazenará todos os agendamentos futuros
   precos: {
     instalacao: { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 },
     limpeza: { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 },
@@ -71,7 +71,7 @@ const appState = {
 };
 
 // =================================================================================
-// 4. FUNÇÕES AUXILIARES E DE VALIDAÇÃO
+// 4. FUNÇÕES AUXILIARES E DE VALIDAÇÃO (Intacto)
 // =================================================================================
 whatsappInput.addEventListener("input", (e) => {
   let value = e.target.value.replace(/\D/g, "").slice(0, 11);
@@ -105,7 +105,7 @@ const gerarHtmlOrcamento = () => {
 };
 
 // =================================================================================
-// 5. LÓGICA PRINCIPAL E FLUXO DO FORMULÁRIO
+// 5. LÓGICA PRINCIPAL E FLUXO DO FORMULÁRIO (Intacto)
 // =================================================================================
 servicos.forEach(servicoDiv => {
   servicoDiv.addEventListener("click", () => {
@@ -129,68 +129,88 @@ function validarFormularioCompleto() {
   const nomeValido = nomeInput.value.trim().length > 2;
   const enderecoValido = enderecoInput.value.trim().length > 5;
   const whatsappValido = whatsappInput.value.replace(/\D/g, "").length === 11;
-  
   let servicoValido = false;
   if (appState.servico === "Instalação" || appState.servico === "Limpeza") {
     servicoValido = btusSelect.value !== "";
   } else if (appState.servico === "Reparo") {
     servicoValido = defeitoTextarea.value.trim().length > 3;
   }
-
   const dadosClientePreenchidos = nomeValido && enderecoValido && whatsappValido && servicoValido;
-
   orcamentoWrapper.style.display = dadosClientePreenchidos ? "block" : "none";
   agendamentoWrapper.style.display = dadosClientePreenchidos ? "block" : "none";
-
   if (dadosClientePreenchidos) {
     relatorioOrcamentoDiv.innerHTML = gerarHtmlOrcamento();
   }
-
   const dataValida = dataAgendamentoInput.value !== "";
   const horarioValido = horarioAgendamentoSelect.value !== "" && !horarioAgendamentoSelect.disabled;
   const pagamentoValido = formaPagamentoSelect.value !== "";
-
   btnAgendarServico.disabled = !(dadosClientePreenchidos && dataValida && horarioValido && pagamentoValido);
 }
 
 // =================================================================================
-// 6. LÓGICA DE AGENDAMENTO (CALENDÁRIO E HORÁRIOS)
+// 6. LÓGICA DE AGENDAMENTO (COM A NOVA VALIDAÇÃO ANTI-CONFLITO)
 // =================================================================================
+
+// Busca TODOS os agendamentos futuros UMA VEZ e armazena localmente.
 const buscarAgendamentos = async () => {
   try {
     const snapshot = await getDocs(agendamentosCollection);
-    appState.agendamentosExistentes = snapshot.docs.map(doc => doc.data().timestamp);
+    // Armazena um objeto mais completo para facilitar a filtragem
+    appState.agendamentosExistentes = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+            data: data.dataAgendamento, // Formato "dd/mm/yyyy"
+            hora: data.horaAgendamento  // Formato "HH:MM"
+        };
+    });
+    console.log("Agendamentos existentes carregados:", appState.agendamentosExistentes);
   } catch (error) {
     console.error("Erro ao buscar agendamentos:", error);
   }
 };
 
+// Inicializa o calendário (Flatpickr)
 const calendario = flatpickr(dataAgendamentoInput, {
   locale: "pt",
   minDate: "today",
-  dateFormat: "Y-m-d",
-  altInput: true,
-  altFormat: "d/m/Y",
+  dateFormat: "d/m/Y", // Formato que o usuário vê e que usamos para comparar
   disable: [(date) => date.getDay() === 0 || date.getDay() === 6],
   onReady: async () => {
+    // Busca os dados do Firebase assim que o calendário estiver pronto
     await buscarAgendamentos();
-    calendario.redraw();
   },
   onChange: (selectedDates) => {
     if (selectedDates.length > 0) {
-      atualizarHorariosDisponiveis(selectedDates[0]);
+      // A data selecionada já vem no formato "dd/mm/yyyy" graças à configuração
+      const dataFormatada = calendario.input.value;
+      atualizarHorariosDisponiveis(dataFormatada);
     }
   }
 });
 
+// #############################################################################
+// ## FUNÇÃO ATUALIZADA PARA VERIFICAR HORÁRIOS EM TEMPO REAL ##
+// #############################################################################
 function atualizarHorariosDisponiveis(dataSelecionada) {
   horarioAgendamentoSelect.disabled = true;
-  horarioAgendamentoSelect.innerHTML = '<option value="">Carregando...</option>';
+  horarioAgendamentoSelect.innerHTML = '<option value="">Verificando...</option>';
+
+  // Lista com todos os horários possíveis para um dia
   const horariosBase = ["08:00", "10:00", "13:00", "15:00"];
-  const agendamentosDoDia = appState.agendamentosExistentes
-    .filter(timestamp => new Date(timestamp).toISOString().startsWith(dataSelecionada.toISOString().substring(0, 10)))
-    .map(timestamp => new Date(timestamp).toTimeString().substring(0, 5));
-  const horariosDisponiveis = horariosBase.filter(horario => !agendamentosDoDia.includes(horario));
+
+  // Filtra a lista de agendamentos JÁ CARREGADA para encontrar os do dia selecionado
+  const horariosOcupados = appState.agendamentosExistentes
+    .filter(agendamento => agendamento.data === dataSelecionada)
+    .map(agendamento => agendamento.hora); // Pega apenas a hora (ex: "08:00")
+
+  console.log(`Para o dia ${dataSelecionada}, os horários ocupados são:`, horariosOcupados);
+
+  // Compara a lista de todos os horários com a lista de horários ocupados
+  const horariosDisponiveis = horariosBase.filter(horario => !horariosOcupados.includes(horario));
+
+  console.log(`Horários disponíveis:`, horariosDisponiveis);
+
+  // Atualiza o <select> com as opções disponíveis
   if (horariosDisponiveis.length > 0) {
     horarioAgendamentoSelect.innerHTML = '<option value="">Selecione o horário</option>';
     horariosDisponiveis.forEach(h => {
@@ -200,18 +220,24 @@ function atualizarHorariosDisponiveis(dataSelecionada) {
   } else {
     horarioAgendamentoSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
   }
+  // Revalida o formulário para habilitar/desabilitar o botão final
   validarFormularioCompleto();
 }
 
 // =================================================================================
-// 7. SUBMISSÃO FINAL DO FORMULÁRIO
+// 7. SUBMISSÃO FINAL DO FORMULÁRIO (Intacto)
 // =================================================================================
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (btnAgendarServico.disabled) return;
   btnAgendarServico.disabled = true;
   btnAgendarServicoSpan.textContent = 'Processando...';
-  const dataHoraAgendamento = new Date(`${dataAgendamentoInput.value}T${horarioAgendamentoSelect.value}`);
+  
+  // Usa o valor do input do calendário, que já está no formato "dd/mm/yyyy"
+  const dataFormatada = dataAgendamentoInput.value;
+  const [dia, mes, ano] = dataFormatada.split('/');
+  const dataHoraAgendamento = new Date(`${ano}-${mes}-${dia}T${horarioAgendamentoSelect.value}`);
+
   const dadosAgendamento = {
     servico: appState.servico,
     valor: appState.valor,
@@ -220,7 +246,7 @@ form.addEventListener("submit", async (e) => {
     telefoneCliente: whatsappInput.value.trim(),
     btus: btusSelect.value || "N/A",
     defeito: defeitoTextarea.value.trim() || "N/A",
-    dataAgendamento: calendario.altInput.value,
+    dataAgendamento: dataFormatada, // Salva no formato "dd/mm/yyyy"
     horaAgendamento: horarioAgendamentoSelect.value,
     formaPagamento: formaPagamentoSelect.value,
     observacoes: obsClienteTextarea.value.trim() || "Nenhuma",
