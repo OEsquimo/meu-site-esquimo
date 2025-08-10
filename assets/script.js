@@ -1,16 +1,15 @@
 /**
  * @file script.js
- * @description Lógica completa e corrigida para o sistema de agendamento de serviços O Esquimó.
- * @version 2.2 - Versão final com todas as funcionalidades.
+ * @description Versão definitiva e testada do sistema de agendamento O Esquimó.
+ * @version 3.0 - Final
  */
 
-// Importações do Firebase SDK
+// =================================================================================
+// 1. IMPORTAÇÕES E CONFIGURAÇÃO DO FIREBASE
+// =================================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// =================================================================================
-// 1. CONFIGURAÇÃO E INICIALIZAÇÃO
-// =================================================================================
 const firebaseConfig = {
   apiKey: "AIzaSyCFf5gckKE6rg7MFuBYAO84aV-sNrdY2JQ",
   authDomain: "agendamento-esquimo.firebaseapp.com",
@@ -25,21 +24,20 @@ let db;
 try {
   const app = initializeApp(firebaseConfig);
   db = getFirestore(app);
-  console.log("Firebase conectado com sucesso!");
+  console.log("✅ Firebase conectado com sucesso!");
 } catch (e) {
-  console.error("Erro fatal ao inicializar o Firebase:", e);
-  alert("Erro de configuração do sistema. A página não funcionará corretamente. Contate o suporte.");
+  console.error("❌ Erro fatal ao inicializar o Firebase:", e);
+  alert("Erro de configuração do sistema. A página não funcionará corretamente.");
 }
 
 const agendamentosCollection = collection(db, "agendamentos");
-const seuWhatsApp = "5581983259341"; // Formato: 55 (país) + DDD + número
+const seuWhatsApp = "5581983259341"; // Formato internacional: 55 (país) + DDD + número
 
 // =================================================================================
 // 2. MAPEAMENTO DOS ELEMENTOS DO DOM
 // =================================================================================
 const form = document.getElementById("formulario");
 const servicos = document.querySelectorAll(".servico");
-const servicoSelecionadoInput = document.getElementById("servicoSelecionado");
 const dadosClienteWrapper = document.getElementById("dados-cliente-wrapper");
 const orcamentoWrapper = document.getElementById("orcamento-wrapper");
 const agendamentoWrapper = document.getElementById("agendamento-wrapper");
@@ -59,22 +57,24 @@ const btnAgendarServico = document.getElementById("btn_agendar_servico");
 const btnAgendarServicoSpan = btnAgendarServico.querySelector('span');
 
 // =================================================================================
-// 3. ESTADO DA APLICAÇÃO E VALORES
+// 3. ESTADO GLOBAL DA APLICAÇÃO
 // =================================================================================
 const appState = {
   servico: null,
   valor: 0,
-  agendamentosExistentes: []
-};
-const precos = {
-  instalacao: { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 },
-  limpeza: { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 },
-  reparo: 0
+  agendamentosExistentes: [],
+  precos: {
+    instalacao: { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 },
+    limpeza: { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 },
+    reparo: 0
+  }
 };
 
 // =================================================================================
 // 4. FUNÇÕES AUXILIARES E DE VALIDAÇÃO
 // =================================================================================
+
+// Aplica máscara de telefone no campo WhatsApp
 whatsappInput.addEventListener("input", (e) => {
   let value = e.target.value.replace(/\D/g, "").slice(0, 11);
   if (value.length > 2) value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
@@ -82,20 +82,22 @@ whatsappInput.addEventListener("input", (e) => {
   e.target.value = value;
 });
 
+// Calcula o valor do orçamento com base no serviço e BTUs
 const calcularValorOrcamento = () => {
-  const servico = servicoSelecionadoInput.value;
+  const servico = appState.servico;
   const btus = btusSelect.value;
-  if (servico === "Instalação") return precos.instalacao[btus] || 0;
-  if (servico === "Limpeza") return precos.limpeza[btus] || 0;
+  if (servico === "Instalação") return appState.precos.instalacao[btus] || 0;
+  if (servico === "Limpeza") return appState.precos.limpeza[btus] || 0;
   return 0;
 };
 
+// Gera o HTML completo do orçamento para exibição na tela
 const gerarHtmlOrcamento = () => {
-  const valor = calcularValorOrcamento();
-  appState.valor = valor;
-  const valorTexto = appState.servico === "Reparo" ? "Sob Análise" : `R$ ${valor.toFixed(2)}`;
+  appState.valor = calcularValorOrcamento();
+  const valorTexto = appState.servico === "Reparo" ? "Sob Análise" : `R$ ${appState.valor.toFixed(2)}`;
   const btusTexto = btusSelect.value ? `${btusSelect.options[btusSelect.selectedIndex].text}` : "N/A";
   const defeitoTexto = defeitoTextarea.value.trim();
+
   return `
     <div class="orcamento-item"><strong>Nome:</strong><span>${nomeInput.value}</span></div>
     <div class="orcamento-item"><strong>Endereço:</strong><span>${enderecoInput.value}</span></div>
@@ -108,53 +110,66 @@ const gerarHtmlOrcamento = () => {
 };
 
 // =================================================================================
-// 5. LÓGICA PRINCIPAL E FLUXO DO SISTEMA
+// 5. LÓGICA PRINCIPAL E FLUXO DO FORMULÁRIO
 // =================================================================================
+
+// Event listener para a escolha do serviço
 servicos.forEach(servicoDiv => {
   servicoDiv.addEventListener("click", () => {
     servicos.forEach(s => s.classList.remove("selecionado"));
     servicoDiv.classList.add("selecionado");
-    const servicoEscolhido = servicoDiv.dataset.servico;
-    servicoSelecionadoInput.value = servicoEscolhido;
-    appState.servico = servicoEscolhido;
+    
+    appState.servico = servicoDiv.dataset.servico;
+
     dadosClienteWrapper.style.display = "block";
-    campoBtusWrapper.style.display = (servicoEscolhido === "Instalação" || servicoEscolhido === "Limpeza") ? "block" : "none";
-    campoDefeitoWrapper.style.display = servicoEscolhido === "Reparo" ? "block" : "none";
-    btusSelect.required = (servicoEscolhido === "Instalação" || servicoEscolhido === "Limpeza");
-    defeitoTextarea.required = servicoEscolhido === "Reparo";
+    campoBtusWrapper.style.display = (appState.servico === "Instalação" || appState.servico === "Limpeza") ? "block" : "none";
+    campoDefeitoWrapper.style.display = appState.servico === "Reparo" ? "block" : "none";
+    
+    btusSelect.required = (appState.servico === "Instalação" || appState.servico === "Limpeza");
+    defeitoTextarea.required = appState.servico === "Reparo";
+
     nomeInput.scrollIntoView({ behavior: "smooth", block: "center" });
     nomeInput.focus();
     validarFormularioCompleto();
   });
 });
 
+// Valida o formulário inteiro a cada interação do usuário
 form.addEventListener("input", validarFormularioCompleto);
 
 function validarFormularioCompleto() {
   const nomeValido = nomeInput.value.trim().length > 2;
   const enderecoValido = enderecoInput.value.trim().length > 5;
   const whatsappValido = whatsappInput.value.replace(/\D/g, "").length === 11;
+  
   let servicoValido = false;
   if (appState.servico === "Instalação" || appState.servico === "Limpeza") {
     servicoValido = btusSelect.value !== "";
   } else if (appState.servico === "Reparo") {
     servicoValido = defeitoTextarea.value.trim().length > 10;
   }
+
   const dadosClientePreenchidos = nomeValido && enderecoValido && whatsappValido && servicoValido;
+
   orcamentoWrapper.style.display = dadosClientePreenchidos ? "block" : "none";
   agendamentoWrapper.style.display = dadosClientePreenchidos ? "block" : "none";
+
   if (dadosClientePreenchidos) {
     relatorioOrcamentoDiv.innerHTML = gerarHtmlOrcamento();
   }
+
   const dataValida = dataAgendamentoInput.value !== "";
-  const horarioValido = horarioAgendamentoSelect.value !== "";
+  const horarioValido = horarioAgendamentoSelect.value !== "" && !horarioAgendamentoSelect.disabled;
   const pagamentoValido = formaPagamentoSelect.value !== "";
+
   btnAgendarServico.disabled = !(dadosClientePreenchidos && dataValida && horarioValido && pagamentoValido);
 }
 
 // =================================================================================
 // 6. LÓGICA DE AGENDAMENTO (CALENDÁRIO E HORÁRIOS)
 // =================================================================================
+
+// Busca agendamentos existentes no Firebase para bloquear horários
 const buscarAgendamentos = async () => {
   try {
     const snapshot = await getDocs(agendamentosCollection);
@@ -164,6 +179,7 @@ const buscarAgendamentos = async () => {
   }
 };
 
+// Inicializa o calendário (Flatpickr)
 const calendario = flatpickr(dataAgendamentoInput, {
   locale: "pt",
   minDate: "today",
@@ -176,18 +192,24 @@ const calendario = flatpickr(dataAgendamentoInput, {
     calendario.redraw();
   },
   onChange: (selectedDates) => {
-    if (selectedDates.length > 0) atualizarHorariosDisponiveis(selectedDates[0]);
+    if (selectedDates.length > 0) {
+      atualizarHorariosDisponiveis(selectedDates[0]);
+    }
   }
 });
 
+// Atualiza os horários disponíveis com base na data e regras de negócio
 function atualizarHorariosDisponiveis(dataSelecionada) {
   horarioAgendamentoSelect.disabled = true;
   horarioAgendamentoSelect.innerHTML = '<option value="">Carregando...</option>';
+
   const horariosBase = ["08:00", "10:00", "13:00", "15:00"];
   const agendamentosDoDia = appState.agendamentosExistentes
     .filter(timestamp => new Date(timestamp).toISOString().startsWith(dataSelecionada.toISOString().substring(0, 10)))
     .map(timestamp => new Date(timestamp).toTimeString().substring(0, 5));
+  
   const horariosDisponiveis = horariosBase.filter(horario => !agendamentosDoDia.includes(horario));
+
   if (horariosDisponiveis.length > 0) {
     horarioAgendamentoSelect.innerHTML = '<option value="">Selecione o horário</option>';
     horariosDisponiveis.forEach(h => {
@@ -201,7 +223,7 @@ function atualizarHorariosDisponiveis(dataSelecionada) {
 }
 
 // =================================================================================
-// 7. SUBMISSÃO DO FORMULÁRIO
+// 7. SUBMISSÃO FINAL DO FORMULÁRIO
 // =================================================================================
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -231,7 +253,7 @@ form.addEventListener("submit", async (e) => {
   try {
     // PASSO 1: Salvar no Firebase
     const docRef = await addDoc(agendamentosCollection, dadosAgendamento);
-    console.log("Documento salvo com ID:", docRef.id);
+    console.log("✅ SUCESSO! Documento salvo no Firebase com o ID:", docRef.id);
 
     // PASSO 2: Montar mensagem para o WhatsApp com EMOJIS
     const mensagemWhatsApp = `✅ *Novo Agendamento Confirmado* ✅
@@ -250,13 +272,17 @@ form.addEventListener("submit", async (e) => {
     
     alert("Agendamento salvo com sucesso! Você será redirecionado para o WhatsApp para enviar a confirmação.");
     
+    // Abre o WhatsApp em uma nova aba
     window.open(urlWhatsApp, "_blank");
     
+    // Recarrega a página para um novo agendamento após um pequeno intervalo
     setTimeout(() => window.location.reload(), 500);
 
   } catch (error) {
-    console.error("ERRO AO SALVAR AGENDAMENTO:", error);
-    alert("Houve um erro grave ao salvar seu agendamento. Por favor, verifique sua conexão com a internet e tente novamente.");
+    console.error("❌ ERRO CRÍTICO AO SALVAR AGENDAMENTO:", error);
+    alert("Houve uma falha ao salvar seu agendamento. Por favor, verifique sua conexão com a internet e tente novamente. Se o erro persistir, contate o suporte.");
+    
+    // Reabilita o botão em caso de erro para que o usuário possa tentar de novo
     btnAgendarServico.disabled = false;
     btnAgendarServicoSpan.textContent = 'Tentar Novamente';
   }
