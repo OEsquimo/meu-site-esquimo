@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Estilos para Sistema de Agendamento - O Esquimó v2.0
+   Estilos para Sistema de Agendamento - O Esquimó v2.2
    ========================================================================== */
 
 /* 1. Variáveis de Cor e Fontes Globais
@@ -24,6 +24,10 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
@@ -67,10 +71,16 @@ body {
   margin-bottom: 35px;
   padding-bottom: 35px;
   border-bottom: 1px solid var(--cor-borda);
+  animation: fadeIn 0.5s ease-in-out;
 }
 .step:last-of-type {
   border-bottom: none;
   padding-bottom: 10px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .step-title {
@@ -119,7 +129,7 @@ body {
 .servico.selecionado {
   border-color: var(--cor-primaria);
   background-color: #f0f7ff;
-  box-shadow: 0 0 0 3px var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
 .servico img {
   width: 100%;
@@ -177,6 +187,8 @@ textarea {
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid var(--cor-borda);
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .orcamento-item:last-child {
   border-bottom: none;
@@ -186,6 +198,7 @@ textarea {
 }
 .orcamento-item span {
   text-align: right;
+  color: var(--cor-texto);
 }
 .orcamento-total {
   margin-top: 15px;
@@ -241,12 +254,13 @@ textarea {
   width: 28px;
   height: 28px;
 }
+.final-button:has(span:contains("Tentar Novamente")) {
+    background: linear-gradient(45deg, var(--cor-erro), #c0392b);
+}
 
 /* 6. Responsividade
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   body { padding: 10px; }
-  .container { padding: 15px; }
+  .container { padding: 20px; }
   .step-title { font-size: 1.3rem; }
-  .servicos-imagens { grid-template-columns: 1fr 1fr; }
-}
