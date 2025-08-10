@@ -1,7 +1,7 @@
 /**
  * @file script.js
- * @description Versão definitiva e testada do sistema de agendamento O Esquimó.
- * @version 3.0 - Final
+ * @description Versão definitiva e consolidada do sistema de agendamento O Esquimó.
+ * @version 3.1 - Final (com todas as correções integradas)
  */
 
 // =================================================================================
@@ -31,7 +31,7 @@ try {
 }
 
 const agendamentosCollection = collection(db, "agendamentos");
-const seuWhatsApp = "5581983259341"; // Formato internacional: 55 (país) + DDD + número
+const seuWhatsApp = "5581983259341";
 
 // =================================================================================
 // 2. MAPEAMENTO DOS ELEMENTOS DO DOM
@@ -73,8 +73,6 @@ const appState = {
 // =================================================================================
 // 4. FUNÇÕES AUXILIARES E DE VALIDAÇÃO
 // =================================================================================
-
-// Aplica máscara de telefone no campo WhatsApp
 whatsappInput.addEventListener("input", (e) => {
   let value = e.target.value.replace(/\D/g, "").slice(0, 11);
   if (value.length > 2) value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
@@ -82,7 +80,6 @@ whatsappInput.addEventListener("input", (e) => {
   e.target.value = value;
 });
 
-// Calcula o valor do orçamento com base no serviço e BTUs
 const calcularValorOrcamento = () => {
   const servico = appState.servico;
   const btus = btusSelect.value;
@@ -91,13 +88,11 @@ const calcularValorOrcamento = () => {
   return 0;
 };
 
-// Gera o HTML completo do orçamento para exibição na tela
 const gerarHtmlOrcamento = () => {
   appState.valor = calcularValorOrcamento();
   const valorTexto = appState.servico === "Reparo" ? "Sob Análise" : `R$ ${appState.valor.toFixed(2)}`;
   const btusTexto = btusSelect.value ? `${btusSelect.options[btusSelect.selectedIndex].text}` : "N/A";
   const defeitoTexto = defeitoTextarea.value.trim();
-
   return `
     <div class="orcamento-item"><strong>Nome:</strong><span>${nomeInput.value}</span></div>
     <div class="orcamento-item"><strong>Endereço:</strong><span>${enderecoInput.value}</span></div>
@@ -112,29 +107,22 @@ const gerarHtmlOrcamento = () => {
 // =================================================================================
 // 5. LÓGICA PRINCIPAL E FLUXO DO FORMULÁRIO
 // =================================================================================
-
-// Event listener para a escolha do serviço
 servicos.forEach(servicoDiv => {
   servicoDiv.addEventListener("click", () => {
     servicos.forEach(s => s.classList.remove("selecionado"));
     servicoDiv.classList.add("selecionado");
-    
     appState.servico = servicoDiv.dataset.servico;
-
     dadosClienteWrapper.style.display = "block";
     campoBtusWrapper.style.display = (appState.servico === "Instalação" || appState.servico === "Limpeza") ? "block" : "none";
     campoDefeitoWrapper.style.display = appState.servico === "Reparo" ? "block" : "none";
-    
     btusSelect.required = (appState.servico === "Instalação" || appState.servico === "Limpeza");
     defeitoTextarea.required = appState.servico === "Reparo";
-
     nomeInput.scrollIntoView({ behavior: "smooth", block: "center" });
     nomeInput.focus();
     validarFormularioCompleto();
   });
 });
 
-// Valida o formulário inteiro a cada interação do usuário
 form.addEventListener("input", validarFormularioCompleto);
 
 function validarFormularioCompleto() {
@@ -168,8 +156,6 @@ function validarFormularioCompleto() {
 // =================================================================================
 // 6. LÓGICA DE AGENDAMENTO (CALENDÁRIO E HORÁRIOS)
 // =================================================================================
-
-// Busca agendamentos existentes no Firebase para bloquear horários
 const buscarAgendamentos = async () => {
   try {
     const snapshot = await getDocs(agendamentosCollection);
@@ -179,14 +165,13 @@ const buscarAgendamentos = async () => {
   }
 };
 
-// Inicializa o calendário (Flatpickr)
 const calendario = flatpickr(dataAgendamentoInput, {
   locale: "pt",
   minDate: "today",
   dateFormat: "Y-m-d",
   altInput: true,
   altFormat: "d/m/Y",
-  disable: [(date) => date.getDay() === 0 || date.getDay() === 6], // Desabilita Sábado e Domingo
+  disable: [(date) => date.getDay() === 0 || date.getDay() === 6],
   onReady: async () => {
     await buscarAgendamentos();
     calendario.redraw();
@@ -198,18 +183,14 @@ const calendario = flatpickr(dataAgendamentoInput, {
   }
 });
 
-// Atualiza os horários disponíveis com base na data e regras de negócio
 function atualizarHorariosDisponiveis(dataSelecionada) {
   horarioAgendamentoSelect.disabled = true;
   horarioAgendamentoSelect.innerHTML = '<option value="">Carregando...</option>';
-
   const horariosBase = ["08:00", "10:00", "13:00", "15:00"];
   const agendamentosDoDia = appState.agendamentosExistentes
     .filter(timestamp => new Date(timestamp).toISOString().startsWith(dataSelecionada.toISOString().substring(0, 10)))
     .map(timestamp => new Date(timestamp).toTimeString().substring(0, 5));
-  
   const horariosDisponiveis = horariosBase.filter(horario => !agendamentosDoDia.includes(horario));
-
   if (horariosDisponiveis.length > 0) {
     horarioAgendamentoSelect.innerHTML = '<option value="">Selecione o horário</option>';
     horariosDisponiveis.forEach(h => {
@@ -228,12 +209,9 @@ function atualizarHorariosDisponiveis(dataSelecionada) {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (btnAgendarServico.disabled) return;
-
   btnAgendarServico.disabled = true;
   btnAgendarServicoSpan.textContent = 'Processando...';
-
   const dataHoraAgendamento = new Date(`${dataAgendamentoInput.value}T${horarioAgendamentoSelect.value}`);
-  
   const dadosAgendamento = {
     servico: appState.servico,
     valor: appState.valor,
@@ -249,13 +227,9 @@ form.addEventListener("submit", async (e) => {
     timestamp: dataHoraAgendamento.getTime(),
     status: "Agendado"
   };
-
   try {
-    // PASSO 1: Salvar no Firebase
     const docRef = await addDoc(agendamentosCollection, dadosAgendamento);
     console.log("✅ SUCESSO! Documento salvo no Firebase com o ID:", docRef.id);
-
-    // PASSO 2: Montar mensagem para o WhatsApp com EMOJIS
     const mensagemWhatsApp = `✅ *Novo Agendamento Confirmado* ✅
 -----------------------------------
 🛠️ *Serviço:* ${dadosAgendamento.servico}
@@ -267,22 +241,13 @@ form.addEventListener("submit", async (e) => {
 ⏰ *Hora:* ${dadosAgendamento.horaAgendamento}
 💳 *Pagamento:* ${dadosAgendamento.formaPagamento}
 📝 *Observações:* ${dadosAgendamento.observacoes}`;
-
     const urlWhatsApp = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagemWhatsApp)}`;
-    
     alert("Agendamento salvo com sucesso! Você será redirecionado para o WhatsApp para enviar a confirmação.");
-    
-    // Abre o WhatsApp em uma nova aba
     window.open(urlWhatsApp, "_blank");
-    
-    // Recarrega a página para um novo agendamento após um pequeno intervalo
     setTimeout(() => window.location.reload(), 500);
-
   } catch (error) {
     console.error("❌ ERRO CRÍTICO AO SALVAR AGENDAMENTO:", error);
     alert("Houve uma falha ao salvar seu agendamento. Por favor, verifique sua conexão com a internet e tente novamente. Se o erro persistir, contate o suporte.");
-    
-    // Reabilita o botão em caso de erro para que o usuário possa tentar de novo
     btnAgendarServico.disabled = false;
     btnAgendarServicoSpan.textContent = 'Tentar Novamente';
   }
