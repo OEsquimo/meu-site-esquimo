@@ -1,14 +1,14 @@
 /**
  * @file script.js
- * @description Versão com lógica de verificação de horários em tempo real para evitar conflitos.
- * @version 3.3 - Final (Anti-conflito)
+ * @description Versão final com lógica de verificação de horários 100% dinâmica e anti-conflito.
+ * @version 4.0 - Final (Dinâmico)
  */
 
 // =================================================================================
 // 1. IMPORTAÇÕES E CONFIGURAÇÃO DO FIREBASE (Intacto)
 // =================================================================================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCFf5gckKE6rg7MFuBYAO84aV-sNrdY2JQ",
@@ -62,7 +62,6 @@ const btnAgendarServicoSpan = btnAgendarServico.querySelector('span');
 const appState = {
   servico: null,
   valor: 0,
-  agendamentosExistentes: [], // Armazenará todos os agendamentos futuros
   precos: {
     instalacao: { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 },
     limpeza: { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 },
@@ -148,132 +147,126 @@ function validarFormularioCompleto() {
 }
 
 // =================================================================================
-// 6. LÓGICA DE AGENDAMENTO (COM A NOVA VALIDAÇÃO ANTI-CONFLITO)
+// 6. LÓGICA DE AGENDAMENTO (LÓGICA 100% DINÂMICA)
 // =================================================================================
-
-// Busca TODOS os agendamentos futuros UMA VEZ e armazena localmente.
-const buscarAgendamentos = async () => {
-  try {
-    const snapshot = await getDocs(agendamentosCollection);
-    // Armazena um objeto mais completo para facilitar a filtragem
-    appState.agendamentosExistentes = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-            data: data.dataAgendamento, // Formato "dd/mm/yyyy"
-            hora: data.horaAgendamento  // Formato "HH:MM"
-        };
-    });
-    console.log("Agendamentos existentes carregados:", appState.agendamentosExistentes);
-  } catch (error) {
-    console.error("Erro ao buscar agendamentos:", error);
-  }
-};
 
 // Inicializa o calendário (Flatpickr)
 const calendario = flatpickr(dataAgendamentoInput, {
   locale: "pt",
   minDate: "today",
-  dateFormat: "d/m/Y", // Formato que o usuário vê e que usamos para comparar
+  dateFormat: "d/m/Y",
   disable: [(date) => date.getDay() === 0 || date.getDay() === 6],
-  onReady: async () => {
-    // Busca os dados do Firebase assim que o calendário estiver pronto
-    await buscarAgendamentos();
-  },
   onChange: (selectedDates) => {
     if (selectedDates.length > 0) {
-      // A data selecionada já vem no formato "dd/mm/yyyy" graças à configuração
       const dataFormatada = calendario.input.value;
       atualizarHorariosDisponiveis(dataFormatada);
     }
   }
 });
 
-// #############################################################################
-// ## FUNÇÃO ATUALIZADA PARA VERIFICAR HORÁRIOS EM TEMPO REAL ##
-// #############################################################################
-function atualizarHorariosDisponiveis(dataSelecionada) {
+// FUNÇÃO ATUALIZADA PARA CONSULTAR O FIREBASE A CADA MUDANÇA DE DATA
+async function atualizarHorariosDisponiveis(dataSelecionada) {
   horarioAgendamentoSelect.disabled = true;
-  horarioAgendamentoSelect.innerHTML = '<option value="">Verificando...</option>';
+  horarioAgendamentoSelect.innerHTML = '<option value="">Verificando horários...</option>';
 
-  // Lista com todos os horários possíveis para um dia
-  const horariosBase = ["08:00", "10:00", "13:00", "15:00"];
+  try {
+    // 1. Define a lista de todos os horários possíveis
+    const horariosBase = ["08:00", "10:00", "13:00", "15:00"];
 
-  // Filtra a lista de agendamentos JÁ CARREGADA para encontrar os do dia selecionado
-  const horariosOcupados = appState.agendamentosExistentes
-    .filter(agendamento => agendamento.data === dataSelecionada)
-    .map(agendamento => agendamento.hora); // Pega apenas a hora (ex: "08:00")
+    // 2. Cria uma consulta ao Firebase para buscar agendamentos APENAS para a data selecionada
+    const q = query(agendamentosCollection, where("dataAgendamento", "==", dataSelecionada));
+    const querySnapshot = await getDocs(q);
 
-  console.log(`Para o dia ${dataSelecionada}, os horários ocupados são:`, horariosOcupados);
+    // 3. Extrai apenas os horários dos documentos encontrados
+    const horariosOcupados = querySnapshot.docs.map(doc => doc.data().horaAgendamento);
+    console.log(`Para o dia ${dataSelecionada}, os horários ocupados são:`, horariosOcupados);
 
-  // Compara a lista de todos os horários com a lista de horários ocupados
-  const horariosDisponiveis = horariosBase.filter(horario => !horariosOcupados.includes(horario));
+    // 4. Filtra a lista base, removendo os horários que já estão ocupados
+    const horariosDisponiveis = horariosBase.filter(horario => !horariosOcupados.includes(horario));
+    console.log(`Horários disponíveis:`, horariosDisponiveis);
 
-  console.log(`Horários disponíveis:`, horariosDisponiveis);
-
-  // Atualiza o <select> com as opções disponíveis
-  if (horariosDisponiveis.length > 0) {
-    horarioAgendamentoSelect.innerHTML = '<option value="">Selecione o horário</option>';
-    horariosDisponiveis.forEach(h => {
-      horarioAgendamentoSelect.innerHTML += `<option value="${h}">${h}</option>`;
-    });
-    horarioAgendamentoSelect.disabled = false;
-  } else {
-    horarioAgendamentoSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
+    // 5. Atualiza o <select> com as opções que sobraram
+    if (horariosDisponiveis.length > 0) {
+      horarioAgendamentoSelect.innerHTML = '<option value="">Selecione um horário</option>';
+      horariosDisponiveis.forEach(h => {
+        horarioAgendamentoSelect.innerHTML += `<option value="${h}">${h}</option>`;
+      });
+      horarioAgendamentoSelect.disabled = false;
+    } else {
+      horarioAgendamentoSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
+    }
+  } catch (error) {
+    console.error("Erro ao buscar horários disponíveis:", error);
+    horarioAgendamentoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+  } finally {
+    // Revalida o formulário para habilitar/desabilitar o botão final
+    validarFormularioCompleto();
   }
-  // Revalida o formulário para habilitar/desabilitar o botão final
-  validarFormularioCompleto();
 }
 
 // =================================================================================
-// 7. SUBMISSÃO FINAL DO FORMULÁRIO (Intacto)
+// 7. SUBMISSÃO FINAL DO FORMULÁRIO (COM VERIFICAÇÃO ANTI-CONFLITO)
 // =================================================================================
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (btnAgendarServico.disabled) return;
-  btnAgendarServico.disabled = true;
-  btnAgendarServicoSpan.textContent = 'Processando...';
-  
-  // Usa o valor do input do calendário, que já está no formato "dd/mm/yyyy"
-  const dataFormatada = dataAgendamentoInput.value;
-  const [dia, mes, ano] = dataFormatada.split('/');
-  const dataHoraAgendamento = new Date(`${ano}-${mes}-${dia}T${horarioAgendamentoSelect.value}`);
 
-  const dadosAgendamento = {
-    servico: appState.servico,
-    valor: appState.valor,
-    nomeCliente: nomeInput.value.trim(),
-    enderecoCliente: enderecoInput.value.trim(),
-    telefoneCliente: whatsappInput.value.trim(),
-    btus: btusSelect.value || "N/A",
-    defeito: defeitoTextarea.value.trim() || "N/A",
-    dataAgendamento: dataFormatada, // Salva no formato "dd/mm/yyyy"
-    horaAgendamento: horarioAgendamentoSelect.value,
-    formaPagamento: formaPagamentoSelect.value,
-    observacoes: obsClienteTextarea.value.trim() || "Nenhuma",
-    timestamp: dataHoraAgendamento.getTime(),
-    status: "Agendado"
-  };
+  btnAgendarServico.disabled = true;
+  btnAgendarServicoSpan.textContent = 'Verificando horário...';
+
+  const dataSelecionada = dataAgendamentoInput.value;
+  const horaSelecionada = horarioAgendamentoSelect.value;
+
   try {
+    // ETAPA DE SEGURANÇA: Verifica o horário novamente antes de salvar
+    const q = query(agendamentosCollection, where("dataAgendamento", "==", dataSelecionada), where("horaAgendamento", "==", horaSelecionada));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      // Se o snapshot não estiver vazio, significa que alguém agendou neste exato momento.
+      alert("Desculpe, este horário acabou de ser preenchido! Por favor, selecione outro horário.");
+      btnAgendarServico.disabled = false;
+      btnAgendarServicoSpan.textContent = 'Agendar Serviço';
+      // Atualiza a lista de horários para remover a opção que foi preenchida
+      atualizarHorariosDisponiveis(dataSelecionada);
+      return; // Interrompe a execução
+    }
+
+    // Se o horário estiver livre, prossiga com o agendamento
+    btnAgendarServicoSpan.textContent = 'Salvando...';
+    
+    const [dia, mes, ano] = dataSelecionada.split('/');
+    const dataHoraAgendamento = new Date(`${ano}-${mes}-${dia}T${horaSelecionada}`);
+
+    const dadosAgendamento = {
+      servico: appState.servico,
+      valor: appState.valor,
+      nomeCliente: nomeInput.value.trim(),
+      enderecoCliente: enderecoInput.value.trim(),
+      telefoneCliente: whatsappInput.value.trim(),
+      btus: btusSelect.value || "N/A",
+      defeito: defeitoTextarea.value.trim() || "N/A",
+      dataAgendamento: dataSelecionada,
+      horaAgendamento: horaSelecionada,
+      formaPagamento: formaPagamentoSelect.value,
+      observacoes: obsClienteTextarea.value.trim() || "Nenhuma",
+      timestamp: dataHoraAgendamento.getTime(),
+      status: "Agendado"
+    };
+
     const docRef = await addDoc(agendamentosCollection, dadosAgendamento);
-    console.log("✅ SUCESSO! Documento salvo no Firebase com o ID:", docRef.id);
-    const mensagemWhatsApp = `✅ *Novo Agendamento Confirmado* ✅
------------------------------------
-🛠️ *Serviço:* ${dadosAgendamento.servico}
-👤 *Cliente:* ${dadosAgendamento.nomeCliente}
-📍 *Endereço:* ${dadosAgendamento.enderecoCliente}
-📞 *Contato:* ${dadosAgendamento.telefoneCliente}
-💰 *Valor:* ${appState.valor > 0 ? `R$ ${appState.valor.toFixed(2)}` : 'Sob Análise'}
-🗓️ *Data:* ${dadosAgendamento.dataAgendamento}
-⏰ *Hora:* ${dadosAgendamento.horaAgendamento}
-💳 *Pagamento:* ${dadosAgendamento.formaPagamento}
-📝 *Observações:* ${dadosAgendamento.observacoes}`;
+    console.log("✅ SUCESSO! Documento salvo com o ID:", docRef.id);
+
+    const mensagemWhatsApp = `✅ *Novo Agendamento Confirmado* ✅\n-----------------------------------\n🛠️ *Serviço:* ${dadosAgendamento.servico}\n👤 *Cliente:* ${dadosAgendamento.nomeCliente}\n📍 *Endereço:* ${dadosAgendamento.enderecoCliente}\n📞 *Contato:* ${dadosAgendamento.telefoneCliente}\n💰 *Valor:* ${appState.valor > 0 ? `R$ ${appState.valor.toFixed(2)}` : 'Sob Análise'}\n🗓️ *Data:* ${dadosAgendamento.dataAgendamento}\n⏰ *Hora:* ${dadosAgendamento.horaAgendamento}\n💳 *Pagamento:* ${dadosAgendamento.formaPagamento}\n📝 *Observações:* ${dadosAgendamento.observacoes}`;
     const urlWhatsApp = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagemWhatsApp)}`;
-    alert("Agendamento salvo com sucesso! Você será redirecionado para o WhatsApp para enviar a confirmação.");
+    
+    alert("Agendamento salvo com sucesso! Você será redirecionado para o WhatsApp.");
     window.open(urlWhatsApp, "_blank");
     setTimeout(() => window.location.reload(), 500);
+
   } catch (error) {
     console.error("❌ ERRO CRÍTICO AO SALVAR AGENDAMENTO:", error);
-    alert("Houve uma falha ao salvar seu agendamento. Por favor, verifique sua conexão com a internet e tente novamente. Se o erro persistir, contate o suporte.");
+    alert("Houve uma falha ao salvar seu agendamento. Por favor, verifique sua conexão com a internet e tente novamente.");
     btnAgendarServico.disabled = false;
     btnAgendarServicoSpan.textContent = 'Tentar Novamente';
   }
