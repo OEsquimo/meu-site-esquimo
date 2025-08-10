@@ -112,5 +112,17 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pt.js"></script>
   <script src="assets/script.js"></script>
+<script>
+    // Se a página já foi carregada antes, força recarregar ignorando cache
+    window.onload = function() {
+        if (performance.navigation.type !== performance.navigation.TYPE_RELOAD) {
+            location.reload(true);
+        }
+    };
+</script>
+
+
+
+  
 </body>
 </html>
