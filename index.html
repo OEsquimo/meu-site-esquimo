@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <!-- Estilos -->
-  <link rel="stylesheet" href="assets/style.css?v=12" />
+  <link rel="stylesheet" href="assets/style.css?v=2.1" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body>
@@ -122,14 +122,14 @@
 
   <!-- Scripts -->
   <!-- Firebase SDKs -->
-  <script type="module" src="assets/script.js?v=12"></script>
+  <script type="module" src="assets/script.js?v=2.1"></script>
   
   <!-- Bibliotecas Externas -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://npmcdn.com/flatpickr/dist/l10n/pt.js"></script>
   
   <script>
-    // Script para data de atualização (mantido)
+    // Script para data de atualização
     const dataModificacao = new Date(document.lastModified);
     document.getElementById("ultima-atualizacao").textContent = "Última atualização: " + dataModificacao.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
   </script>
