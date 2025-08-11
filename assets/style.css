@@ -122,8 +122,6 @@ body {
 .servicos-imagens {
 
   grid-template-columns: repeat(3, 1fr); /* Fixa 3 colunas */
-
-  display: flex;
   gap: 20px;
   justify-content: space-between; /* espaça igualmente */
   flex-wrap: nowrap; /* não permite quebra de linha */
