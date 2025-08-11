@@ -1,19 +1,17 @@
 /* ==========================================================================
-   Estilos para Sistema de Agendamento - O Esquimó v2.4
+   Estilos para Sistema de Agendamento - O Esquimó v3.0
    ========================================================================== */
 
 /* 1. Variáveis de Cor e Fontes Globais */
 :root {
-  --cor-primaria: #6bb9f0;       /* Azul claro principal */
-  --cor-primaria-escura: #3498db; /* Azul mais escuro */
-  --cor-secundaria: #2c3e50;     /* Azul escuro para textos */
-  --cor-fundo: #f8fbfe;           /* Branco azulado muito claro */
-  --cor-container: #ffffff;        /* Branco puro */
-  --cor-borda: #d6e6f2;           /* Azul muito claro para bordas */
-  --cor-sucesso: #2ecc71;         /* Verde para sucesso */
-  --cor-erro: #e74c3c;            /* Vermelho para erros */
-  --cor-texto: #4a6b8a;           /* Azul acinzentado para texto */
-  --sombra-leve: 0 4px 12px rgba(52, 152, 219, 0.1);
+  --azul-claro: #6bb9f0;
+  --azul-medio: #3498db;
+  --azul-escuro: #2c3e50;
+  --branco: #ffffff;
+  --branco-azulado: #f8fbfe;
+  --borda-azulada: #d6e6f2;
+  --texto-azulado: #4a6b8a;
+  --sombra-leve: 0 4px 12px rgba(107, 185, 240, 0.1);
   --sombra-media: 0 8px 20px rgba(52, 152, 219, 0.15);
   --fonte-principal: 'Poppins', sans-serif;
 }
@@ -32,63 +30,61 @@ html {
 body {
   font-family: var(--fonte-principal);
   line-height: 1.7;
-  color: var(--cor-texto);
-  background-color: var(--cor-fundo);
+  color: var(--texto-azulado);
+  background-color: var(--branco-azulado);
   padding: 20px;
 }
 
 /* 3. Estrutura Principal */
 .topo img {
   width: 100%;
-  height: 280px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 16px;
-  margin-bottom: 30px;
+  border-radius: 12px;
+  margin-bottom: 25px;
   box-shadow: var(--sombra-media);
-  border: 1px solid var(--cor-borda);
+  border: 1px solid var(--borda-azulada);
 }
 
 .container {
   max-width: 750px;
   margin: 0 auto 30px;
-  background-color: var(--cor-container);
-  padding: 30px 40px;
-  border-radius: 16px;
+  background-color: var(--branco);
+  padding: 25px;
+  border-radius: 12px;
   box-shadow: var(--sombra-leve);
-  border: 1px solid var(--cor-borda);
+  border: 1px solid var(--borda-azulada);
 }
 
 .rodape {
   text-align: center;
-  margin-top: 40px;
+  margin-top: 30px;
   font-size: 0.85rem;
-  color: var(--cor-primaria-escura);
-  padding: 15px;
+  color: var(--azul-medio);
+  padding: 12px;
+  background-color: var(--branco);
+  border-radius: 8px;
+  border: 1px solid var(--borda-azulada);
 }
 
 /* 4. Estilos dos Passos */
 .step {
-  margin-bottom: 35px;
-  padding-bottom: 35px;
-  border-bottom: 1px solid var(--cor-borda);
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.step:last-of-type {
-  border-bottom: none;
-  padding-bottom: 10px;
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid var(--borda-azulada);
+  animation: fadeIn 0.4s ease-out;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .step-title {
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  color: var(--cor-secundaria);
-  margin-bottom: 25px;
+  color: var(--azul-escuro);
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
 }
@@ -97,260 +93,98 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
-  color: white;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
+  color: var(--branco);
   border-radius: 50%;
-  margin-right: 15px;
-  font-size: 1.1rem;
-  box-shadow: 0 3px 8px rgba(52, 152, 219, 0.2);
+  margin-right: 12px;
+  font-size: 1rem;
+  box-shadow: var(--sombra-leve);
 }
 
-/* 5. Componentes Específicos */
-/* Serviços */
+/* 5. Componentes Específicos - Serviços Otimizados */
 .servicos-imagens {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  width: 100%;
 }
 
 .servico {
   text-align: center;
   cursor: pointer;
-  padding: 20px;
-  border-radius: 12px;
-  border: 2px solid var(--cor-borda);
-  transition: all 0.3s ease;
-  background-color: var(--cor-container);
+  padding: 15px;
+  border-radius: 10px;
+  border: 2px solid var(--borda-azulada);
+  transition: all 0.25s ease;
+  background-color: var(--branco);
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 0;
 }
 
 .servico:hover {
-  transform: translateY(-5px);
+  transform: translateY(-3px);
   box-shadow: var(--sombra-media);
-  border-color: var(--cor-primaria);
+  border-color: var(--azul-claro);
 }
 
 .servico.selecionado {
-  border-color: var(--cor-primaria-escura);
-  background-color: #f0f7ff;
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.3);
+  border-color: var(--azul-medio);
+  background-color: rgba(107, 185, 240, 0.08);
+  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.15);
 }
 
 .servico-img-container {
   width: 100%;
-  height: 160px;
+  aspect-ratio: 1/1; /* Mantém proporção quadrada */
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 12px;
   overflow: hidden;
   border-radius: 8px;
-  background-color: #f5fafd;
+  background-color: rgba(214, 230, 242, 0.3);
 }
 
 .servico img {
-  width: 100%;
-  height: 100%;
+  width: auto;
+  max-width: 90%;
+  height: auto;
+  max-height: 90%;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 6px;
 }
 
 .servico p {
   font-weight: 600;
-  color: var(--cor-secundaria);
-  font-size: 1.1rem;
+  color: var(--azul-escuro);
+  font-size: 0.95rem;
   margin-top: auto;
 }
 
-/* Campos de Formulário */
+/* 6. Formulários e Botões */
 label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: var(--cor-secundaria);
+  color: var(--azul-escuro);
 }
 
-input[type="text"],
-input[type="tel"],
-select,
-textarea {
+input, select, textarea {
   width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 20px;
-  border: 1px solid var(--cor-borda);
+  padding: 12px 15px;
+  margin-bottom: 18px;
+  border: 1px solid var(--borda-azulada);
   border-radius: 8px;
   font-size: 1rem;
   font-family: var(--fonte-principal);
-  transition: all 0.3s;
-  background-color: #fcfdfe;
-  color: var(--cor-secundaria);
+  transition: all 0.25s;
+  background-color: var(--branco);
+  color: var(--azul-escuro);
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-  border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.2);
-  outline: none;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-/* Orçamento */
-#relatorio-orcamento {
-  background-color: #f8fbfe;
-  border: 1px solid var(--cor-borda);
-  border-radius: 12px;
-  padding: 25px;
-}
-
-.orcamento-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--cor-borda);
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.orcamento-item:last-child {
-  border-bottom: none;
-}
-
-.orcamento-item strong {
-  color: var(--cor-secundaria);
-}
-
-.orcamento-item span {
-  text-align: right;
-  color: var(--cor-texto);
-}
-
-.orcamento-total {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 2px solid var(--cor-primaria);
-  display: flex;
-  justify-content: space-between;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--cor-secundaria);
-}
-
-.orcamento-total span {
-  color: var(--cor-primaria-escura);
-}
-
-/* Botão Final */
-.final-button {
-  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
-  color: white;
-  border: none;
-  padding: 16px 25px;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  font-family: var(--fonte-principal);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  width: 100%;
-  transition: all 0.3s ease;
-  margin-top: 20px;
-  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
-}
-
-.final-button:hover:not(:disabled) {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
-}
-
-.final-button:disabled {
-  background: #d1d9e0;
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-.final-button img {
-  width: 28px;
-  height: 28px;
-  filter: brightness(0) invert(1);
-}
-
-.final-button:has(span:contains("Tentar Novamente")) {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-}
-
-/* 6. Responsividade */
-@media (max-width: 768px) {
-  body {
-    padding: 15px;
-  }
-  
-  .container {
-    padding: 25px;
-  }
-  
-  .topo img {
-    height: 220px;
-  }
-  
-  .step-title {
-    font-size: 1.4rem;
-  }
-  
-  .servicos-imagens {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-  
-  .servico-img-container {
-    height: 140px;
-  }
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 20px;
-  }
-  
-  .servicos-imagens {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .servico {
-    padding: 15px;
-  }
-  
-  .servico-img-container {
-    height: 120px;
-  }
-  
-  .final-button {
-    padding: 14px 20px;
-    font-size: 1.1rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .servicos-imagens {
-    grid-template-columns: 1fr;
-  }
-  
-  .step-title {
-    font-size: 1.3rem;
-  }
-  
-  .step-title span {
-    width: 32px;
-    height: 32px;
-  }
-}
+input:focus, select:focus, textarea:focus {
+  borde
