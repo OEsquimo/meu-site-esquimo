@@ -1,273 +1,273 @@
-/* ==========================================================================
-   Estilos para Sistema de Agendamento - O Esquimó v3.2
-   ========================================================================== */
+/**
+ * @file script.js
+ * @description Versão final com lógica de verificação de horários 100% dinâmica e anti-conflito.
+ * @version 4.0 - Final (Dinâmico)
+ */
 
-/* 1. Global Color and Font Variables */
-:root {
-  --azul-claro: #6bb9f0;
-  --azul-medio: #3498db;
-  --azul-escuro: #2c3e50;
-  --branco: #ffffff;
-  --branco-azulado: #f8fbfe;
-  --borda-azulada: #d6e6f2;
-  --texto-azulado: #4a6b8a;
-  --sombra-leve: 0 4px 12px rgba(107, 185, 240, 0.1);
-  --sombra-media: 0 8px 20px rgba(52, 152, 219, 0.15);
-  --fonte-principal: 'Poppins', sans-serif;
+// =================================================================================
+// 1. IMPORTAÇÕES E CONFIGURAÇÃO DO FIREBASE (Intacto)
+// =================================================================================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCFf5gckKE6rg7MFuBYAO84aV-sNrdY2JQ",
+  authDomain: "agendamento-esquimo.firebaseapp.com",
+  projectId: "agendamento-esquimo",
+  storageBucket: "agendamento-esquimo.appspot.com",
+  messagingSenderId: "348946727206",
+  appId: "1:348946727206:web:f5989788f13c259be0c1e7",
+  measurementId: "G-Z0EMQ3XQ1D"
+};
+
+let db;
+try {
+  const app = initializeApp(firebaseConfig);
+  db = getFirestore(app);
+  console.log("✅ Firebase conectado com sucesso!");
+} catch (e) {
+  console.error("❌ Erro fatal ao inicializar o Firebase:", e);
+  alert("Erro de configuração do sistema. A página não funcionará corretamente.");
 }
 
-/* 2. Base Reset and Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+const agendamentosCollection = collection(db, "agendamentos");
+const seuWhatsApp = "5581983259341";
 
-html {
-  scroll-behavior: smooth;
-}
+// =================================================================================
+// 2. MAPEAMENTO DOS ELEMENTOS DO DOM (Intacto)
+// =================================================================================
+const form = document.getElementById("formulario");
+const servicos = document.querySelectorAll(".servico");
+const dadosClienteWrapper = document.getElementById("dados-cliente-wrapper");
+const orcamentoWrapper = document.getElementById("orcamento-wrapper");
+const agendamentoWrapper = document.getElementById("agendamento-wrapper");
+const nomeInput = document.getElementById("nome");
+const enderecoInput = document.getElementById("endereco");
+const whatsappInput = document.getElementById("whatsapp");
+const btusSelect = document.getElementById("btus");
+const defeitoTextarea = document.getElementById("defeito");
+const campoBtusWrapper = document.getElementById("campo-btus-wrapper");
+const campoDefeitoWrapper = document.getElementById("campo-defeito-wrapper");
+const dataAgendamentoInput = document.getElementById("data_agendamento");
+const horarioAgendamentoSelect = document.getElementById("horario_agendamento");
+const formaPagamentoSelect = document.getElementById("forma_pagamento");
+const obsClienteTextarea = document.getElementById("obs_cliente");
+const relatorioOrcamentoDiv = document.getElementById("relatorio-orcamento");
+const btnAgendarServico = document.getElementById("btn_agendar_servico");
+const btnAgendarServicoSpan = btnAgendarServico.querySelector('span');
 
-body {
-  font-family: var(--fonte-principal);
-  line-height: 1.7;
-  color: var(--texto-azulado);
-  background-color: var(--branco-azulado);
-  padding: 20px;
-}
-
-/* 3. Main Structure */
-.topo img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 25px;
-  box-shadow: var(--sombra-media);
-  border: 1px solid var(--borda-azulada);
-}
-
-.container {
-  max-width: 750px;
-  margin: 0 auto 30px;
-  background-color: var(--branco);
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: var(--sombra-leve);
-  border: 1px solid var(--borda-azulada);
-}
-
-.rodape {
-  text-align: center;
-  margin-top: 30px;
-  font-size: 0.85rem;
-  color: var(--azul-medio);
-  padding: 12px;
-  background-color: var(--branco);
-  border-radius: 8px;
-  border: 1px solid var(--borda-azulada);
-}
-
-/* 4. Step Styles */
-.step {
-  margin-bottom: 30px;
-  padding-bottom: 25px;
-  border-bottom: 1px solid var(--borda-azulada);
-  animation: fadeIn 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.step-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--azul-escuro);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-}
-
-.step-title span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
-  color: var(--branco);
-  border-radius: 50%;
-  margin-right: 12px;
-  font-size: 1rem;
-  box-shadow: var(--sombra-leve);
-}
-
-/* 5. Services Section - 3 Columns Fixed */
-.servicos-imagens {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Fixed 3-column layout */
-  gap: 15px;
-  width: 100%;
-}
-
-.servico {
-  text-align: center;
-  cursor: pointer;
-  padding: 15px;
-  border-radius: 10px;
-  border: 2px solid var(--borda-azulada);
-  transition: all 0.25s ease;
-  background-color: var(--branco);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-width: 0;
-}
-
-.servico:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
-  border-color: var(--azul-claro);
-}
-
-.servico.selecionado {
-  border-color: var(--azul-medio);
-  background-color: rgba(107, 185, 240, 0.08);
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.15);
-}
-
-.servico-img-container {
-  width: 100%;
-  aspect-ratio: 1/1; /* Square containers */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: rgba(214, 230, 242, 0.3);
-}
-
-.servico img {
-  width: auto;
-  max-width: 90%;
-  height: auto;
-  max-height: 90%;
-  object-fit: contain; /* Ensures full image visibility */
-}
-
-.servico p {
-  font-weight: 600;
-  color: var(--azul-escuro);
-  font-size: 0.95rem;
-  margin-top: auto; /* Aligns text to bottom */
-}
-
-/* 6. Form and Button Styles */
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: var(--azul-escuro);
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 18px;
-  border: 1px solid var(--borda-azulada);
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: var(--fonte-principal);
-  transition: all 0.25s;
-  background-color: var(--branco);
-  color: var(--azul-escuro);
-}
-
-input:focus, select:focus, textarea:focus {
-  border-color: var(--azul-claro);
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.15);
-  outline: none;
-}
-
-.final-button {
-  background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
-  color: var(--branco);
-  border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  transition: all 0.25s ease;
-  margin-top: 20px;
-  box-shadow: var(--sombra-leve);
-}
-
-.final-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-media);
-}
-
-/* 7. Responsive Adjustments */
-@media (max-width: 768px) {
-  body {
-    padding: 15px;
+// =================================================================================
+// 3. ESTADO GLOBAL DA APLICAÇÃO (Intacto)
+// =================================================================================
+const appState = {
+  servico: null,
+  valor: 0,
+  precos: {
+    instalacao: { "9000": 500, "12000": 600, "18000": 700, "24000": 800, "30000": 900 },
+    limpeza: { "9000": 180, "12000": 230, "18000": 280, "24000": 330, "30000": 380 },
+    reparo: 0
   }
-  
-  .topo img {
-    height: 180px;
+};
+
+// =================================================================================
+// 4. FUNÇÕES AUXILIARES E DE VALIDAÇÃO (Intacto)
+// =================================================================================
+whatsappInput.addEventListener("input", (e) => {
+  let value = e.target.value.replace(/\D/g, "").slice(0, 11);
+  if (value.length > 2) value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
+  if (value.length > 9) value = `${value.substring(0, 9)}-${value.substring(9)}`;
+  e.target.value = value;
+});
+
+const calcularValorOrcamento = () => {
+  const servico = appState.servico;
+  const btus = btusSelect.value;
+  if (servico === "Instalação") return appState.precos.instalacao[btus] || 0;
+  if (servico === "Limpeza") return appState.precos.limpeza[btus] || 0;
+  return 0;
+};
+
+const gerarHtmlOrcamento = () => {
+  appState.valor = calcularValorOrcamento();
+  const valorTexto = appState.servico === "Reparo" ? "Sob Análise" : `R$ ${appState.valor.toFixed(2)}`;
+  const btusTexto = btusSelect.value ? `${btusSelect.options[btusSelect.selectedIndex].text}` : "N/A";
+  const defeitoTexto = defeitoTextarea.value.trim();
+  return `
+    <div class="orcamento-item"><strong>Nome:</strong><span>${nomeInput.value}</span></div>
+    <div class="orcamento-item"><strong>Endereço:</strong><span>${enderecoInput.value}</span></div>
+    <div class="orcamento-item"><strong>Contato:</strong><span>${whatsappInput.value}</span></div>
+    <div class="orcamento-item"><strong>Serviço:</strong><span>${appState.servico}</span></div>
+    ${(appState.servico === "Instalação" || appState.servico === "Limpeza") ? `<div class="orcamento-item"><strong>Capacidade:</strong><span>${btusTexto}</span></div>` : ''}
+    ${appState.servico === "Reparo" ? `<div class="orcamento-item"><strong>Problema:</strong><span>${defeitoTexto}</span></div>` : ''}
+    <div class="orcamento-total"><strong>Valor Total:</strong><span>${valorTexto}</span></div>
+  `;
+};
+
+// =================================================================================
+// 5. LÓGICA PRINCIPAL E FLUXO DO FORMULÁRIO (Intacto)
+// =================================================================================
+servicos.forEach(servicoDiv => {
+  servicoDiv.addEventListener("click", () => {
+    servicos.forEach(s => s.classList.remove("selecionado"));
+    servicoDiv.classList.add("selecionado");
+    appState.servico = servicoDiv.dataset.servico;
+    dadosClienteWrapper.style.display = "block";
+    campoBtusWrapper.style.display = (appState.servico === "Instalação" || appState.servico === "Limpeza") ? "block" : "none";
+    campoDefeitoWrapper.style.display = appState.servico === "Reparo" ? "block" : "none";
+    btusSelect.required = (appState.servico === "Instalação" || appState.servico === "Limpeza");
+    defeitoTextarea.required = appState.servico === "Reparo";
+    nomeInput.scrollIntoView({ behavior: "smooth", block: "center" });
+    nomeInput.focus();
+    validarFormularioCompleto();
+  });
+});
+
+form.addEventListener("input", validarFormularioCompleto);
+
+function validarFormularioCompleto() {
+  const nomeValido = nomeInput.value.trim().length > 2;
+  const enderecoValido = enderecoInput.value.trim().length > 5;
+  const whatsappValido = whatsappInput.value.replace(/\D/g, "").length === 11;
+  let servicoValido = false;
+  if (appState.servico === "Instalação" || appState.servico === "Limpeza") {
+    servicoValido = btusSelect.value !== "";
+  } else if (appState.servico === "Reparo") {
+    servicoValido = defeitoTextarea.value.trim().length > 3;
   }
-  
-  .container {
-    padding: 20px;
+  const dadosClientePreenchidos = nomeValido && enderecoValido && whatsappValido && servicoValido;
+  orcamentoWrapper.style.display = dadosClientePreenchidos ? "block" : "none";
+  agendamentoWrapper.style.display = dadosClientePreenchidos ? "block" : "none";
+  if (dadosClientePreenchidos) {
+    relatorioOrcamentoDiv.innerHTML = gerarHtmlOrcamento();
   }
-  
-  .servicos-imagens {
-    gap: 12px;
+  const dataValida = dataAgendamentoInput.value !== "";
+  const horarioValido = horarioAgendamentoSelect.value !== "" && !horarioAgendamentoSelect.disabled;
+  const pagamentoValido = formaPagamentoSelect.value !== "";
+  btnAgendarServico.disabled = !(dadosClientePreenchidos && dataValida && horarioValido && pagamentoValido);
+}
+
+// =================================================================================
+// 6. LÓGICA DE AGENDAMENTO (LÓGICA 100% DINÂMICA)
+// =================================================================================
+
+// Inicializa o calendário (Flatpickr)
+const calendario = flatpickr(dataAgendamentoInput, {
+  locale: "pt",
+  minDate: "today",
+  dateFormat: "d/m/Y",
+  disable: [(date) => date.getDay() === 0 || date.getDay() === 6],
+  onChange: (selectedDates) => {
+    if (selectedDates.length > 0) {
+      const dataFormatada = calendario.input.value;
+      atualizarHorariosDisponiveis(dataFormatada);
+    }
+  }
+});
+
+// FUNÇÃO ATUALIZADA PARA CONSULTAR O FIREBASE A CADA MUDANÇA DE DATA
+async function atualizarHorariosDisponiveis(dataSelecionada) {
+  horarioAgendamentoSelect.disabled = true;
+  horarioAgendamentoSelect.innerHTML = '<option value="">Verificando horários...</option>';
+
+  try {
+    // 1. Define a lista de todos os horários possíveis
+    const horariosBase = ["08:00", "10:00", "13:00", "15:00"];
+
+    // 2. Cria uma consulta ao Firebase para buscar agendamentos APENAS para a data selecionada
+    const q = query(agendamentosCollection, where("dataAgendamento", "==", dataSelecionada));
+    const querySnapshot = await getDocs(q);
+
+    // 3. Extrai apenas os horários dos documentos encontrados
+    const horariosOcupados = querySnapshot.docs.map(doc => doc.data().horaAgendamento);
+    console.log(`Para o dia ${dataSelecionada}, os horários ocupados são:`, horariosOcupados);
+
+    // 4. Filtra a lista base, removendo os horários que já estão ocupados
+    const horariosDisponiveis = horariosBase.filter(horario => !horariosOcupados.includes(horario));
+    console.log(`Horários disponíveis:`, horariosDisponiveis);
+
+    // 5. Atualiza o <select> com as opções que sobraram
+    if (horariosDisponiveis.length > 0) {
+      horarioAgendamentoSelect.innerHTML = '<option value="">Selecione um horário</option>';
+      horariosDisponiveis.forEach(h => {
+        horarioAgendamentoSelect.innerHTML += `<option value="${h}">${h}</option>`;
+      });
+      horarioAgendamentoSelect.disabled = false;
+    } else {
+      horarioAgendamentoSelect.innerHTML = '<option value="">Nenhum horário disponível</option>';
+    }
+  } catch (error) {
+    console.error("Erro ao buscar horários disponíveis:", error);
+    horarioAgendamentoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+  } finally {
+    // Revalida o formulário para habilitar/desabilitar o botão final
+    validarFormularioCompleto();
   }
 }
 
-@media (max-width: 480px) {
-  .servicos-imagens {
-    grid-template-columns: repeat(3, 1fr); /* Maintains 3 columns */
-    gap: 8px;
-  }
-  
-  .servico {
-    padding: 10px;
-  }
-  
-  .servico p {
-    font-size: 0.85rem;
-  }
-  
-  .final-button {
-    padding: 12px 16px;
-    font-size: 1rem;
-  }
-}
+// =================================================================================
+// 7. SUBMISSÃO FINAL DO FORMULÁRIO (COM VERIFICAÇÃO ANTI-CONFLITO)
+// =================================================================================
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (btnAgendarServico.disabled) return;
 
-@media (max-width: 360px) {
-  .servicos-imagens {
-    gap: 6px;
+  btnAgendarServico.disabled = true;
+  btnAgendarServicoSpan.textContent = 'Verificando horário...';
+
+  const dataSelecionada = dataAgendamentoInput.value;
+  const horaSelecionada = horarioAgendamentoSelect.value;
+
+  try {
+    // ETAPA DE SEGURANÇA: Verifica o horário novamente antes de salvar
+    const q = query(agendamentosCollection, where("dataAgendamento", "==", dataSelecionada), where("horaAgendamento", "==", horaSelecionada));
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      // Se o snapshot não estiver vazio, significa que alguém agendou neste exato momento.
+      alert("Desculpe, este horário acabou de ser preenchido! Por favor, selecione outro horário.");
+      btnAgendarServico.disabled = false;
+      btnAgendarServicoSpan.textContent = 'Agendar Serviço';
+      // Atualiza a lista de horários para remover a opção que foi preenchida
+      atualizarHorariosDisponiveis(dataSelecionada);
+      return; // Interrompe a execução
+    }
+
+    // Se o horário estiver livre, prossiga com o agendamento
+    btnAgendarServicoSpan.textContent = 'Salvando...';
+    
+    const [dia, mes, ano] = dataSelecionada.split('/');
+    const dataHoraAgendamento = new Date(`${ano}-${mes}-${dia}T${horaSelecionada}`);
+
+    const dadosAgendamento = {
+      servico: appState.servico,
+      valor: appState.valor,
+      nomeCliente: nomeInput.value.trim(),
+      enderecoCliente: enderecoInput.value.trim(),
+      telefoneCliente: whatsappInput.value.trim(),
+      btus: btusSelect.value || "N/A",
+      defeito: defeitoTextarea.value.trim() || "N/A",
+      dataAgendamento: dataSelecionada,
+      horaAgendamento: horaSelecionada,
+      formaPagamento: formaPagamentoSelect.value,
+      observacoes: obsClienteTextarea.value.trim() || "Nenhuma",
+      timestamp: dataHoraAgendamento.getTime(),
+      status: "Agendado"
+    };
+
+    const docRef = await addDoc(agendamentosCollection, dadosAgendamento);
+    console.log("✅ SUCESSO! Documento salvo com o ID:", docRef.id);
+
+    const mensagemWhatsApp = `✅ *Novo Agendamento Confirmado* ✅\n-----------------------------------\n🛠️ *Serviço:* ${dadosAgendamento.servico}\n👤 *Cliente:* ${dadosAgendamento.nomeCliente}\n📍 *Endereço:* ${dadosAgendamento.enderecoCliente}\n📞 *Contato:* ${dadosAgendamento.telefoneCliente}\n💰 *Valor:* ${appState.valor > 0 ? `R$ ${appState.valor.toFixed(2)}` : 'Sob Análise'}\n🗓️ *Data:* ${dadosAgendamento.dataAgendamento}\n⏰ *Hora:* ${dadosAgendamento.horaAgendamento}\n💳 *Pagamento:* ${dadosAgendamento.formaPagamento}\n📝 *Observações:* ${dadosAgendamento.observacoes}`;
+    const urlWhatsApp = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagemWhatsApp)}`;
+    
+    alert("Agendamento salvo com sucesso! Você será redirecionado para o WhatsApp.");
+    window.open(urlWhatsApp, "_blank");
+    setTimeout(() => window.location.reload(), 500);
+
+  } catch (error) {
+    console.error("❌ ERRO CRÍTICO AO SALVAR AGENDAMENTO:", error);
+    alert("Houve uma falha ao salvar seu agendamento. Por favor, verifique sua conexão com a internet e tente novamente.");
+    btnAgendarServico.disabled = false;
+    btnAgendarServicoSpan.textContent = 'Tentar Novamente';
   }
-  
-  .servico {
-    padding: 8px;
-  }
-  
-  .servico p {
-    font-size: 0.8rem;
-  }
-  
-  .step-title {
-    font-size: 1.3rem;
-  }
-}
+});
