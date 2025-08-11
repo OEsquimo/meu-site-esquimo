@@ -132,9 +132,10 @@ body {
 }
 .servico img {
   width: 100%;
-  aspect-ratio: 4/3; /* Proporção consistente */
-  object-fit: cover;
+  aspect-ratio: 1 / 1; /* Quadrado (ou use 4/3 para retrato) */
+  object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
   border-radius: 8px;
+  display: block; /* Remove espaços indesejados abaixo da imagem */
 }
 
 /* Responsividade */
