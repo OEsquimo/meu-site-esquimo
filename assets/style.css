@@ -120,6 +120,9 @@ body {
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
 .servicos-imagens {
+
+  grid-template-columns: repeat(3, 1fr); /* Fixa 3 colunas */
+
   display: flex;
   gap: 20px;
   justify-content: space-between; /* espaça igualmente */
