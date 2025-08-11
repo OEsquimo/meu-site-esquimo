@@ -1,25 +1,24 @@
 /* ==========================================================================
-   Estilos para Sistema de Agendamento - O Esquimó v2.2
+   Estilos para Sistema de Agendamento - O Esquimó v2.4
    ========================================================================== */
 
-/* 1. Variáveis de Cor e Fontes Globais
-   -------------------------------------------------------------------------- */
+/* 1. Variáveis de Cor e Fontes Globais */
 :root {
-  --cor-primaria: #3498db;    /* Azul vibrante */
-  --cor-secundaria: #2c3e50; /* Azul escuro (texto) */
-  --cor-fundo: #f4f7f9;       /* Cinza muito claro */
-  --cor-container: #ffffff;
-  --cor-borda: #e1e8ed;
-  --cor-sucesso: #2ecc71;
-  --cor-erro: #e74c3c;
-  --cor-texto: #555;
-  --sombra-leve: 0 4px 15px rgba(0, 0, 0, 0.05);
-  --sombra-media: 0 8px 25px rgba(0, 0, 0, 0.1);
+  --cor-primaria: #6bb9f0;       /* Azul claro principal */
+  --cor-primaria-escura: #3498db; /* Azul mais escuro */
+  --cor-secundaria: #2c3e50;     /* Azul escuro para textos */
+  --cor-fundo: #f8fbfe;           /* Branco azulado muito claro */
+  --cor-container: #ffffff;        /* Branco puro */
+  --cor-borda: #d6e6f2;           /* Azul muito claro para bordas */
+  --cor-sucesso: #2ecc71;         /* Verde para sucesso */
+  --cor-erro: #e74c3c;            /* Vermelho para erros */
+  --cor-texto: #4a6b8a;           /* Azul acinzentado para texto */
+  --sombra-leve: 0 4px 12px rgba(52, 152, 219, 0.1);
+  --sombra-media: 0 8px 20px rgba(52, 152, 219, 0.15);
   --fonte-principal: 'Poppins', sans-serif;
 }
 
-/* 2. Reset e Estilos Base
-   -------------------------------------------------------------------------- */
+/* 2. Reset e Estilos Base */
 * {
   margin: 0;
   padding: 0;
@@ -38,8 +37,7 @@ body {
   padding: 20px;
 }
 
-/* 3. Estrutura Principal (Header, Main, Footer)
-   -------------------------------------------------------------------------- */
+/* 3. Estrutura Principal */
 .topo img {
   width: 100%;
   height: 280px;
@@ -47,32 +45,35 @@ body {
   border-radius: 16px;
   margin-bottom: 30px;
   box-shadow: var(--sombra-media);
+  border: 1px solid var(--cor-borda);
 }
 
 .container {
   max-width: 750px;
   margin: 0 auto 30px;
   background-color: var(--cor-container);
-  padding: 20px 40px 40px;
+  padding: 30px 40px;
   border-radius: 16px;
   box-shadow: var(--sombra-leve);
+  border: 1px solid var(--cor-borda);
 }
 
 .rodape {
   text-align: center;
   margin-top: 40px;
-  font-size: 0.8rem;
-  color: #999;
+  font-size: 0.85rem;
+  color: var(--cor-primaria-escura);
+  padding: 15px;
 }
 
-/* 4. Estilos dos Passos (Sections)
-   -------------------------------------------------------------------------- */
+/* 4. Estilos dos Passos */
 .step {
   margin-bottom: 35px;
   padding-bottom: 35px;
   border-bottom: 1px solid var(--cor-borda);
   animation: fadeIn 0.5s ease-in-out;
 }
+
 .step:last-of-type {
   border-bottom: none;
   padding-bottom: 10px;
@@ -91,57 +92,78 @@ body {
   display: flex;
   align-items: center;
 }
+
 .step-title span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  background-color: var(--cor-primaria);
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
   color: white;
   border-radius: 50%;
   margin-right: 15px;
   font-size: 1.1rem;
+  box-shadow: 0 3px 8px rgba(52, 152, 219, 0.2);
 }
 
-/* 5. Componentes Específicos
-   -------------------------------------------------------------------------- */
-
-/* Escolha de Serviço */
+/* 5. Componentes Específicos */
+/* Serviços */
 .servicos-imagens {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 20px;
 }
+
 .servico {
   text-align: center;
   cursor: pointer;
-  padding: 15px;
+  padding: 20px;
   border-radius: 12px;
   border: 2px solid var(--cor-borda);
   transition: all 0.3s ease;
+  background-color: var(--cor-container);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
+
 .servico:hover {
   transform: translateY(-5px);
   box-shadow: var(--sombra-media);
   border-color: var(--cor-primaria);
 }
+
 .servico.selecionado {
-  border-color: var(--cor-primaria);
+  border-color: var(--cor-primaria-escura);
   background-color: #f0f7ff;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.3);
 }
+
+.servico-img-container {
+  width: 100%;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  overflow: hidden;
+  border-radius: 8px;
+  background-color: #f5fafd;
+}
+
 .servico img {
   width: 100%;
-  height: 130px;
-  object-fit: cover;
+  height: 100%;
+  object-fit: contain;
   border-radius: 8px;
-  margin-bottom: 15px;
 }
+
 .servico p {
   font-weight: 600;
   color: var(--cor-secundaria);
   font-size: 1.1rem;
+  margin-top: auto;
 }
 
 /* Campos de Formulário */
@@ -151,6 +173,7 @@ label {
   font-weight: 500;
   color: var(--cor-secundaria);
 }
+
 input[type="text"],
 input[type="tel"],
 select,
@@ -162,14 +185,19 @@ textarea {
   border-radius: 8px;
   font-size: 1rem;
   font-family: var(--fonte-principal);
-  transition: border-color 0.3s, box-shadow 0.3s;
-  background-color: #fdfdfd;
+  transition: all 0.3s;
+  background-color: #fcfdfe;
+  color: var(--cor-secundaria);
 }
-input:focus, select:focus, textarea:focus {
+
+input:focus,
+select:focus,
+textarea:focus {
   border-color: var(--cor-primaria);
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.2);
   outline: none;
 }
+
 textarea {
   min-height: 120px;
   resize: vertical;
@@ -177,29 +205,34 @@ textarea {
 
 /* Orçamento */
 #relatorio-orcamento {
-  background-color: #f8f9fa;
+  background-color: #f8fbfe;
   border: 1px solid var(--cor-borda);
   border-radius: 12px;
   padding: 25px;
 }
+
 .orcamento-item {
   display: flex;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px solid var(--cor-borda);
   flex-wrap: wrap;
   gap: 10px;
 }
+
 .orcamento-item:last-child {
   border-bottom: none;
 }
+
 .orcamento-item strong {
   color: var(--cor-secundaria);
 }
+
 .orcamento-item span {
   text-align: right;
   color: var(--cor-texto);
 }
+
 .orcamento-total {
   margin-top: 15px;
   padding-top: 15px;
@@ -210,21 +243,14 @@ textarea {
   font-weight: 700;
   color: var(--cor-secundaria);
 }
-.orcamento-total span {
-  color: var(--cor-primaria);
-}
 
-/* Calendário */
-#data_agendamento {
-  cursor: pointer;
-}
-.flatpickr-day.disabled {
-  color: #ccc;
+.orcamento-total span {
+  color: var(--cor-primaria-escura);
 }
 
 /* Botão Final */
 .final-button {
-  background: linear-gradient(45deg, var(--cor-sucesso), #27ae60);
+  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-escura));
   color: white;
   border: none;
   padding: 16px 25px;
@@ -240,27 +266,91 @@ textarea {
   width: 100%;
   transition: all 0.3s ease;
   margin-top: 20px;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
 }
+
 .final-button:hover:not(:disabled) {
   transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
+  box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
 }
+
 .final-button:disabled {
-  background: #bdc3c7;
+  background: #d1d9e0;
   cursor: not-allowed;
   opacity: 0.8;
 }
+
 .final-button img {
   width: 28px;
   height: 28px;
-}
-.final-button:has(span:contains("Tentar Novamente")) {
-    background: linear-gradient(45deg, var(--cor-erro), #c0392b);
+  filter: brightness(0) invert(1);
 }
 
-/* 6. Responsividade
-   -------------------------------------------------------------------------- */
+.final-button:has(span:contains("Tentar Novamente")) {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+}
+
+/* 6. Responsividade */
 @media (max-width: 768px) {
-  body { padding: 10px; }
-  .container { padding: 20px; }
-  .step-title { font-size: 1.3rem; }
+  body {
+    padding: 15px;
+  }
+  
+  .container {
+    padding: 25px;
+  }
+  
+  .topo img {
+    height: 220px;
+  }
+  
+  .step-title {
+    font-size: 1.4rem;
+  }
+  
+  .servicos-imagens {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .servico-img-container {
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 20px;
+  }
+  
+  .servicos-imagens {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .servico {
+    padding: 15px;
+  }
+  
+  .servico-img-container {
+    height: 120px;
+  }
+  
+  .final-button {
+    padding: 14px 20px;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .servicos-imagens {
+    grid-template-columns: 1fr;
+  }
+  
+  .step-title {
+    font-size: 1.3rem;
+  }
+  
+  .step-title span {
+    width: 32px;
+    height: 32px;
+  }
+}
