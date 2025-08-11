@@ -119,30 +119,24 @@ body {
   background-color: #f0f7ff;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
-.servicos-imagens {
 
-  grid-template-columns: repeat(3, 1fr); /* Fixa 3 colunas */
+.servicos-imagens {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
   gap: 20px;
-  justify-content: space-between; /* espaça igualmente */
-  flex-wrap: nowrap; /* não permite quebra de linha */
-  overflow-x: auto; /* permite scroll horizontal se necessário */
 }
 
 .servico {
-  flex: 1 1 0; /* permite crescer e encolher igualmente */
-  max-width: 33.33%; /* no máximo 1/3 da largura do container */
-  box-sizing: border-box;
+  /* Remove propriedades de Flexbox */
+  width: 100%; /* Ocupa toda a célula do Grid */
 }
 
 .servico img {
   width: 100%;
-  height: auto; /* mantém proporção */
-  object-fit: contain; /* garante que a imagem inteira fique visível */
+  height: 180px; /* Altura fixa para uniformidade */
+  object-fit: cover; /* Preenche o espaço cortando excedentes */
   border-radius: 8px;
-  margin-bottom: 15px;
-  display: block;
 }
-
 
 .servico p {
   font-weight: 600;
