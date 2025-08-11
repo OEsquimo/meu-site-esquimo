@@ -104,65 +104,49 @@ body {
 }
 
 /* 5. Services Section - 3 Columns Fixed */
+
+/* Imagens lado a lado da seleção */
 .servicos-imagens {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Fixed 3-column layout */
-  gap: 15px;
-  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .servico {
-  text-align: center;
+  flex: 1;
   cursor: pointer;
-  padding: 15px;
+  background: white;
   border-radius: 10px;
-  border: 2px solid var(--borda-azulada);
-  transition: all 0.25s ease;
-  background-color: var(--branco);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-width: 0;
-}
-
-.servico:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
-  border-color: var(--azul-claro);
-}
-
-.servico.selecionado {
-  border-color: var(--azul-medio);
-  background-color: rgba(107, 185, 240, 0.08);
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.15);
-}
-
-.servico-img-container {
-  width: 100%;
-  aspect-ratio: 1/1; /* Square containers */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: rgba(214, 230, 242, 0.3);
+  text-align: center;
+  padding: 10px 5px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 0 5px #ccc;
 }
 
 .servico img {
-  width: auto;
-  max-width: 90%;
-  height: auto;
-  max-height: 90%;
-  object-fit: contain; /* Ensures full image visibility */
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 10px;
+  user-select: none;
+  pointer-events: none; /* Para garantir que o clique seja no div */
 }
 
 .servico p {
+  margin-top: 8px;
   font-weight: 600;
-  color: var(--azul-escuro);
-  font-size: 0.95rem;
-  margin-top: auto; /* Aligns text to bottom */
+  color: #003366;
+  user-select: none;
 }
+
+/* Efeito quando clicado */
+.servico.selecionado,
+.servico:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 85, 170, 0.6);
+  border: 2px solid #0055aa;
+}
+
 
 /* 6. Form and Button Styles */
 label {
