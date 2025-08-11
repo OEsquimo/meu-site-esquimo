@@ -139,11 +139,7 @@ body {
 }
 
 /* Responsividade */
-@media (max-width: 900px) {
-  .servicos-imagens {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
+
 @media (max-width: 600px) {
   .servicos-imagens {
     grid-template-columns: 3fr;
