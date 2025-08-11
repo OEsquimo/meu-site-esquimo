@@ -143,8 +143,8 @@ body {
 }
 
 .servico p {
-  margin-top: 6px;
-  font-size: 0.8rem; /* Texto menor */
+  margin-top: 5px;
+  font-size: 0.15rem; /* Texto menor */
   font-weight: 600;
   text-align: center;
   color: var(--cor-secundaria);
