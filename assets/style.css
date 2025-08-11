@@ -176,22 +176,15 @@ input:focus, select:focus, textarea:focus {
 }
 
 .final-button {
-  background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
-  color: var(--branco);
-  border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  transition: all 0.25s ease;
-  margin-top: 20px;
-  box-shadow: var(--sombra-leve);
+  padding: 10px 16px;       /* menos altura e largura */
+  font-size: 1rem;          /* texto um pouco menor */
+  gap: 8px;                 /* menos espaço entre ícone e texto */
+}
+
+.final-button img {
+  width: 18px;              /* tamanho fixo do ícone */
+  height: 18px;
+  object-fit: contain;
 }
 
 .final-button:hover {
