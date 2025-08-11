@@ -119,24 +119,36 @@ body {
   background-color: #f0f7ff;
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
-
+/* Serviços - Grid responsivo */
 .servicos-imagens {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 colunas iguais */
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
-
 .servico {
-  /* Remove propriedades de Flexbox */
-  width: 100%; /* Ocupa toda a célula do Grid */
+  width: 100%;
+  min-width: 0; /* Corrige overflow */
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
 }
-
 .servico img {
   width: 100%;
-  height: 180px; /* Altura fixa para uniformidade */
-  object-fit: cover; /* Preenche o espaço cortando excedentes */
+  aspect-ratio: 4/3; /* Proporção consistente */
+  object-fit: cover;
   border-radius: 8px;
 }
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .servicos-imagens {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 600px) {
+  .servicos-imagens {
+    grid-template-columns: 1fr;
+  }
+}
+
 
 .servico p {
   font-weight: 600;
