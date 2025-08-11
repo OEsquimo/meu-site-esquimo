@@ -120,37 +120,44 @@ body {
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
 /* Serviços - Grid responsivo */
+
+/* Serviços - Grid 3 colunas SEMPRE */
 .servicos-imagens {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 20px;
+  grid-template-columns: repeat(3, 1fr); /* Sempre 3 colunas */
+  gap: 12px; /* Espaço menor entre imagens */
 }
+
 .servico {
-  width: 100%;
-  min-width: 0; /* Corrige overflow */
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
 }
+
 .servico img {
   width: 100%;
-  aspect-ratio: 1 / 1; /* Quadrado (ou use 4/3 para retrato) */
-  object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+  height: auto;
+  aspect-ratio: 1 / 1; /* Mantém quadrado */
+  object-fit: cover;
   border-radius: 8px;
-  display: block; /* Remove espaços indesejados abaixo da imagem */
 }
-
-/* Responsividade */
-
-@media (max-width: 600px) {
-  .servicos-imagens {
-    grid-template-columns: 3fr;
-  }
-}
-
 
 .servico p {
+  margin-top: 6px;
+  font-size: 0.8rem; /* Texto menor */
   font-weight: 600;
+  text-align: center;
   color: var(--cor-secundaria);
-  font-size: 1.1rem;
+}
+
+/* Ajuste para telas muito pequenas (opcional) */
+@media (max-width: 400px) {
+  .servicos-imagens {
+    gap: 8px; /* Espaço ainda menor */
+  }
+  .servico p {
+    font-size: 0.7rem; /* Texto ainda menor */
+  }
 }
 
 /* Campos de Formulário */
