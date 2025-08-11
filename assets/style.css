@@ -1,22 +1,25 @@
 /* ==========================================================================
-   Estilos para Sistema de Agendamento - O Esquimó v3.2
+   Estilos para Sistema de Agendamento - O Esquimó v2.2
    ========================================================================== */
 
-/* 1. Global Color and Font Variables */
+/* 1. Variáveis de Cor e Fontes Globais
+   -------------------------------------------------------------------------- */
 :root {
-  --azul-claro: #6bb9f0;
-  --azul-medio: #3498db;
-  --azul-escuro: #2c3e50;
-  --branco: #ffffff;
-  --branco-azulado: #f8fbfe;
-  --borda-azulada: #d6e6f2;
-  --texto-azulado: #4a6b8a;
-  --sombra-leve: 0 4px 12px rgba(107, 185, 240, 0.1);
-  --sombra-media: 0 8px 20px rgba(52, 152, 219, 0.15);
+  --cor-primaria: #3498db;    /* Azul vibrante */
+  --cor-secundaria: #2c3e50; /* Azul escuro (texto) */
+  --cor-fundo: #f4f7f9;       /* Cinza muito claro */
+  --cor-container: #ffffff;
+  --cor-borda: #e1e8ed;
+  --cor-sucesso: #2ecc71;
+  --cor-erro: #e74c3c;
+  --cor-texto: #555;
+  --sombra-leve: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --sombra-media: 0 8px 25px rgba(0, 0, 0, 0.1);
   --fonte-principal: 'Poppins', sans-serif;
 }
 
-/* 2. Base Reset and Styles */
+/* 2. Reset e Estilos Base
+   -------------------------------------------------------------------------- */
 * {
   margin: 0;
   padding: 0;
@@ -30,244 +33,234 @@ html {
 body {
   font-family: var(--fonte-principal);
   line-height: 1.7;
-  color: var(--texto-azulado);
-  background-color: var(--branco-azulado);
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
   padding: 20px;
 }
 
-/* 3. Main Structure */
+/* 3. Estrutura Principal (Header, Main, Footer)
+   -------------------------------------------------------------------------- */
 .topo img {
   width: 100%;
-  height: 220px;
+  height: 280px;
   object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 25px;
+  border-radius: 16px;
+  margin-bottom: 30px;
   box-shadow: var(--sombra-media);
-  border: 1px solid var(--borda-azulada);
 }
 
 .container {
   max-width: 750px;
   margin: 0 auto 30px;
-  background-color: var(--branco);
-  padding: 25px;
-  border-radius: 12px;
+  background-color: var(--cor-container);
+  padding: 20px 40px 40px;
+  border-radius: 16px;
   box-shadow: var(--sombra-leve);
-  border: 1px solid var(--borda-azulada);
 }
 
 .rodape {
   text-align: center;
-  margin-top: 30px;
-  font-size: 0.85rem;
-  color: var(--azul-medio);
-  padding: 12px;
-  background-color: var(--branco);
-  border-radius: 8px;
-  border: 1px solid var(--borda-azulada);
+  margin-top: 40px;
+  font-size: 0.8rem;
+  color: #999;
 }
 
-/* 4. Step Styles */
+/* 4. Estilos dos Passos (Sections)
+   -------------------------------------------------------------------------- */
 .step {
-  margin-bottom: 30px;
-  padding-bottom: 25px;
-  border-bottom: 1px solid var(--borda-azulada);
-  animation: fadeIn 0.4s ease-out;
+  margin-bottom: 35px;
+  padding-bottom: 35px;
+  border-bottom: 1px solid var(--cor-borda);
+  animation: fadeIn 0.5s ease-in-out;
+}
+.step:last-of-type {
+  border-bottom: none;
+  padding-bottom: 10px;
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .step-title {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 600;
-  color: var(--azul-escuro);
-  margin-bottom: 20px;
+  color: var(--cor-secundaria);
+  margin-bottom: 25px;
   display: flex;
   align-items: center;
 }
-
 .step-title span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
-  color: var(--branco);
+  width: 32px;
+  height: 32px;
+  background-color: var(--cor-primaria);
+  color: white;
   border-radius: 50%;
-  margin-right: 12px;
-  font-size: 1rem;
-  box-shadow: var(--sombra-leve);
+  margin-right: 15px;
+  font-size: 1.1rem;
 }
 
-/* 5. Services Section - 3 Columns Fixed */
+/* 5. Componentes Específicos
+   -------------------------------------------------------------------------- */
+
+/* Escolha de Serviço */
 .servicos-imagens {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Fixed 3-column layout */
-  gap: 15px;
-  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
 }
-
 .servico {
   text-align: center;
   cursor: pointer;
   padding: 15px;
-  border-radius: 10px;
-  border: 2px solid var(--borda-azulada);
-  transition: all 0.25s ease;
-  background-color: var(--branco);
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-width: 0;
+  border-radius: 12px;
+  border: 2px solid var(--cor-borda);
+  transition: all 0.3s ease;
 }
-
 .servico:hover {
-  transform: translateY(-3px);
+  transform: translateY(-5px);
   box-shadow: var(--sombra-media);
-  border-color: var(--azul-claro);
+  border-color: var(--cor-primaria);
 }
-
 .servico.selecionado {
-  border-color: var(--azul-medio);
-  background-color: rgba(107, 185, 240, 0.08);
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.15);
+  border-color: var(--cor-primaria);
+  background-color: #f0f7ff;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
 }
-
-.servico-img-container {
-  width: 100%;
-  aspect-ratio: 1/1; /* Square containers */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-  overflow: hidden;
-  border-radius: 8px;
-  background-color: rgba(214, 230, 242, 0.3);
-}
-
 .servico img {
-  width: auto;
-  max-width: 90%;
-  height: auto;
-  max-height: 90%;
-  object-fit: contain; /* Ensures full image visibility */
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
 }
-
 .servico p {
   font-weight: 600;
-  color: var(--azul-escuro);
-  font-size: 0.95rem;
-  margin-top: auto; /* Aligns text to bottom */
+  color: var(--cor-secundaria);
+  font-size: 1.1rem;
 }
 
-/* 6. Form and Button Styles */
+/* Campos de Formulário */
 label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: var(--azul-escuro);
+  color: var(--cor-secundaria);
 }
-
-input, select, textarea {
+input[type="text"],
+input[type="tel"],
+select,
+textarea {
   width: 100%;
-  padding: 12px 15px;
-  margin-bottom: 18px;
-  border: 1px solid var(--borda-azulada);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--cor-borda);
   border-radius: 8px;
   font-size: 1rem;
   font-family: var(--fonte-principal);
-  transition: all 0.25s;
-  background-color: var(--branco);
-  color: var(--azul-escuro);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #fdfdfd;
 }
-
 input:focus, select:focus, textarea:focus {
-  border-color: var(--azul-claro);
-  box-shadow: 0 0 0 3px rgba(107, 185, 240, 0.15);
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
   outline: none;
 }
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
 
+/* Orçamento */
+#relatorio-orcamento {
+  background-color: #f8f9fa;
+  border: 1px solid var(--cor-borda);
+  border-radius: 12px;
+  padding: 25px;
+}
+.orcamento-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--cor-borda);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.orcamento-item:last-child {
+  border-bottom: none;
+}
+.orcamento-item strong {
+  color: var(--cor-secundaria);
+}
+.orcamento-item span {
+  text-align: right;
+  color: var(--cor-texto);
+}
+.orcamento-total {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid var(--cor-primaria);
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--cor-secundaria);
+}
+.orcamento-total span {
+  color: var(--cor-primaria);
+}
+
+/* Calendário */
+#data_agendamento {
+  cursor: pointer;
+}
+.flatpickr-day.disabled {
+  color: #ccc;
+}
+
+/* Botão Final */
 .final-button {
-  background: linear-gradient(135deg, var(--azul-claro), var(--azul-medio));
-  color: var(--branco);
+  background: linear-gradient(45deg, var(--cor-sucesso), #27ae60);
+  color: white;
   border: none;
-  padding: 14px 20px;
-  border-radius: 10px;
-  font-size: 1.1rem;
+  padding: 16px 25px;
+  border-radius: 12px;
+  font-size: 1.2rem;
   font-weight: 600;
+  font-family: var(--fonte-principal);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 15px;
   width: 100%;
-  transition: all 0.25s ease;
+  transition: all 0.3s ease;
   margin-top: 20px;
-  box-shadow: var(--sombra-leve);
 }
-
-.final-button:hover {
-  transform: translateY(-2px);
+.final-button:hover:not(:disabled) {
+  transform: translateY(-3px);
   box-shadow: var(--sombra-media);
 }
+.final-button:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+.final-button img {
+  width: 28px;
+  height: 28px;
+}
+.final-button:has(span:contains("Tentar Novamente")) {
+    background: linear-gradient(45deg, var(--cor-erro), #c0392b);
+}
 
-/* 7. Responsive Adjustments */
+/* 6. Responsividade
+   -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
-  body {
-    padding: 15px;
-  }
-  
-  .topo img {
-    height: 180px;
-  }
-  
-  .container {
-    padding: 20px;
-  }
-  
-  .servicos-imagens {
-    gap: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .servicos-imagens {
-    grid-template-columns: repeat(3, 1fr); /* Maintains 3 columns */
-    gap: 8px;
-  }
-  
-  .servico {
-    padding: 10px;
-  }
-  
-  .servico p {
-    font-size: 0.85rem;
-  }
-  
-  .final-button {
-    padding: 12px 16px;
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 360px) {
-  .servicos-imagens {
-    gap: 6px;
-  }
-  
-  .servico {
-    padding: 8px;
-  }
-  
-  .servico p {
-    font-size: 0.8rem;
-  }
-  
-  .step-title {
-    font-size: 1.3rem;
-  }
-}
+  body { padding: 10px; }
+  .container { padding: 20px; }
+  .step-title { font-size: 1.3rem; }
