@@ -156,6 +156,41 @@ label {
   color: var(--azul-escuro);
 }
 
+
+#btn_agendar_servico {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px; /* Espaço entre imagem e texto */
+  
+  background-color: #25D366; /* Verde WhatsApp */
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#btn_agendar_servico img {
+  width: 24px;
+  height: 24px;
+}
+
+#btn_agendar_servico:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#btn_agendar_servico:not(:disabled):hover {
+  background-color: #1ebe57;
+}
+
+
+
 input, select, textarea {
   width: 100%;
   padding: 12px 15px;
@@ -175,22 +210,8 @@ input:focus, select:focus, textarea:focus {
   outline: none;
 }
 
-.final-button {
-  padding: 10px 16px;       /* menos altura e largura */
-  font-size: 1rem;          /* texto um pouco menor */
-  gap: 8px;                 /* menos espaço entre ícone e texto */
-}
 
-.final-button img {
-  width: 18px;              /* tamanho fixo do ícone */
-  height: 18px;
-  object-fit: contain;
-}
 
-.final-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sombra-media);
-}
 
 /* 7. Responsive Adjustments */
 @media (max-width: 768px) {
