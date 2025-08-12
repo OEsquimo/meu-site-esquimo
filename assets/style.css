@@ -144,7 +144,8 @@ body {
 
 .servico p {
   margin-top: 5px;
-  font-size: 18px; /* Texto menor */
+  font-size: clamp(14px, 1vw + 1rem, 20px);
+ /* Texto menor */
   font-weight: 600;
   text-align: center;
   color: var(--cor-secundaria);
