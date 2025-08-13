@@ -1,4 +1,4 @@
-i/* ==========================================================================
+ki/* ==========================================================================
    Estilos para Sistema de Agendamento - O Esquimó v2.2
    ========================================================================== */
 
@@ -45,7 +45,7 @@ body {
   height: 260px;
   object-fit: cover;
   border-radius: 16px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   box-shadow: var(--sombra-media);
 }
 
