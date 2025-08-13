@@ -7,7 +7,7 @@
 :root {
   --cor-primaria: #3498db;    /* Azul vibrante */
   --cor-secundaria: #2c3e50; /* Azul escuro (texto) */
-  --cor-fundo: #0000FF;       /* Cinza muito claro */
+  --cor-fundo: #F0F8FF;       /* Cinza muito claro */
   --cor-container: #ffffff;
   --cor-borda: #e1e8ed;
   --cor-sucesso: #2ecc71;
