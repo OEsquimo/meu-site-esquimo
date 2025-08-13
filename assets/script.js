@@ -257,7 +257,19 @@ form.addEventListener("submit", async (e) => {
     const docRef = await addDoc(agendamentosCollection, dadosAgendamento);
     console.log("✅ SUCESSO! Documento salvo com o ID:", docRef.id);
 
-    const mensagemWhatsApp = `✅ *Novo Agendamento Confirmado* ✅\n-----------------------------------\n🛠️ *Serviço:* ${dadosAgendamento.servico}\n👤 *Cliente:* ${dadosAgendamento.nomeCliente}\n📍 *Endereço:* ${dadosAgendamento.enderecoCliente}\n📞 *Contato:* ${dadosAgendamento.telefoneCliente}\n💰 *Valor:* ${appState.valor > 0 ? `R$ ${appState.valor.toFixed(2)}` : 'Sob Análise'}\n🗓️ *Data:* ${dadosAgendamento.dataAgendamento}\n⏰ *Hora:* ${dadosAgendamento.horaAgendamento}\n💳 *Pagamento:* ${dadosAgendamento.formaPagamento}\n📝 *Observações:* ${dadosAgendamento.observacoes}`;
+    const mensagemWhatsApp = 
+      `✅ *Novo Agendamento Confirmado* ✅\n-----------------------------------\n
+      👤 *Cliente:* ${dadosAgendamento.nomeCliente}\n
+      📍 *Endereço:* ${dadosAgendamento.enderecoCliente}\n
+      📞 *Contato:* ${dadosAgendamento.telefoneCliente}\n
+      🛠️ *Serviço:* ${dadosAgendamento.servico}\n
+      ❄️ *Capacidade:* ${(dadosAgendamento.servico === "Instalação" || dadosAgendamento.servico === "Limpeza") ? `${dadosAgendamento.btus}` : 'N/A'}\n
+      💰 *Valor:* ${appState.valor > 0 ? `R$ ${appState.valor.toFixed(2)}` : 'Sob Análise'}\n
+      🗓️ *Data:* ${dadosAgendamento.dataAgendamento}\n
+      ⏰ *Hora:* ${dadosAgendamento.horaAgendamento}\n
+      💳 *Pagamento:* ${dadosAgendamento.formaPagamento}\n
+      📝 *Observações:* ${dadosAgendamento.observacoes}`;
+    
     const urlWhatsApp = `https://wa.me/${seuWhatsApp}?text=${encodeURIComponent(mensagemWhatsApp)}`;
     
     alert("Agendamento salvo com sucesso! Você será redirecionado para o WhatsApp.");
